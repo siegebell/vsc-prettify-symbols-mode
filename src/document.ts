@@ -24,7 +24,7 @@ export class PrettyDocumentController implements vscode.Disposable {
   private subscriptions : vscode.Disposable[] = [];
 
   private uglyDecoration: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
-		color: "transparent; font-size: 0.5pt", // for some reason, the cursor dissappears if the font is too small or display:none
+		color: "black; font-size: 0pt", // for some reason, the cursor dissappears if the font is too small or display:none
   });
 
   constructor(doc: vscode.TextDocument, prettySubstitutions: Substitution[]) {
@@ -85,11 +85,13 @@ export class PrettyDocumentController implements vscode.Disposable {
           preDecorationType: vscode.window.createTextEditorDecorationType({
             after: {
               contentText: prettySubst.pretty,
+              color: 'initial; font-size: initial',
             },
           }),
           postDecorationType: vscode.window.createTextEditorDecorationType({
             before: {
               contentText: prettySubst.pretty,
+              color: 'initial; font-size: initial',
             },
           }),
         });
@@ -142,10 +144,11 @@ export class PrettyDocumentController implements vscode.Disposable {
 
           const subst = this.prettyDecorations[matchIdx-1];
           this.uglyDecorationRanges.push(new vscode.Range(line.range.start.line,start,line.range.end.line,end));
-          if (end < line.text.length)
-            subst.postRanges.push(new vscode.Range(line.range.end.line,end,line.range.end.line,end));
-          else
-            subst.preRanges.push(new vscode.Range(line.range.start.line,start-1,line.range.start.line,start));
+          subst.postRanges.push(new vscode.Range(line.range.start.line,start,line.range.end.line,end));
+          // if (end < line.text.length)
+          //   subst.postRanges.push(new vscode.Range(line.range.end.line,end,line.range.end.line,end));
+          // else
+          //   subst.preRanges.push(new vscode.Range(line.range.start.line,start-1,line.range.start.line,start));
         } catch(e) {}
       }
     }
