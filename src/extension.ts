@@ -10,7 +10,6 @@ let prettySymbolsEnabled = true;
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
 	function registerTextEditorCommand(commandId:string, run:(editor:vscode.TextEditor,edit:vscode.TextEditorEdit,...args:any[])=>void): void {
     context.subscriptions.push(vscode.commands.registerTextEditorCommand(commandId, run));
   }
@@ -31,6 +30,10 @@ export function activate(context: vscode.ExtensionContext) {
   // registerCommand('cursorRight', cursorRight);
   // registerCommand('cursorDown', cursorDown);
   // registerCommand('cursorUp', cursorUp);
+  registerTextEditorCommand('extension.prettyCursorLeft', cursorLeft);
+  registerTextEditorCommand('extension.prettyCursorRight', cursorRight);
+  registerTextEditorCommand('extension.prettyCursorLeftSelect', cursorLeftSelect);
+  registerTextEditorCommand('extension.prettyCursorRightSelect', cursorRightSelect);
 
   reloadConfiguration();
 
@@ -40,34 +43,49 @@ export function activate(context: vscode.ExtensionContext) {
 
 }
 
-function cursorLeft() {
-  const editor = vscode.window.activeTextEditor;
-  const prettyDoc = documents.get(editor.document.uri);
-  if(prettyDoc)
-    prettyDoc.cursorLeft(editor);
+async function cursorLeft(editor: vscode.TextEditor) {
+  const before = editor.selections;
+  await vscode.commands.executeCommand('cursorLeft',editor);
+  try {
+    const after = editor.selections;
+    const prettyDoc = documents.get(editor.document.uri);
+    if(prettyDoc)
+      prettyDoc.adjustCursor(editor, before, after);
+  } catch(e) {}
 }
 
-function cursorRight() {
-  const editor = vscode.window.activeTextEditor;
-  const prettyDoc = documents.get(editor.document.uri);
-  if(prettyDoc)
-    prettyDoc.cursorRight(editor);
+async function cursorRight(editor: vscode.TextEditor) {
+  const before = editor.selections;
+  await vscode.commands.executeCommand('cursorRight',editor);
+  try {
+    const after = editor.selections;
+    const prettyDoc = documents.get(editor.document.uri);
+    if(prettyDoc)
+      prettyDoc.adjustCursor(editor, before, after);
+  } catch(e) {}
 }
 
-function cursorDown() {
-  const editor = vscode.window.activeTextEditor;
-  const prettyDoc = documents.get(editor.document.uri);
-  if(prettyDoc)
-    prettyDoc.cursorDown(editor);
+async function cursorLeftSelect(editor: vscode.TextEditor) {
+  const before = editor.selections;
+  await vscode.commands.executeCommand('cursorLeftSelect',editor);
+  try {
+    const after = editor.selections;
+    const prettyDoc = documents.get(editor.document.uri);
+    if(prettyDoc)
+      prettyDoc.adjustCursorSelect(editor, before, after);
+  } catch(e) {}
 }
 
-function cursorUp() {
-  const editor = vscode.window.activeTextEditor;
-  const prettyDoc = documents.get(editor.document.uri);
-  if(prettyDoc)
-    prettyDoc.cursorUp(editor);
+async function cursorRightSelect(editor: vscode.TextEditor) {
+  const before = editor.selections;
+  await vscode.commands.executeCommand('cursorRightSelect',editor);
+  try {
+    const after = editor.selections;
+    const prettyDoc = documents.get(editor.document.uri);
+    if(prettyDoc)
+      prettyDoc.adjustCursorSelect(editor, before, after);
+  } catch(e) {}
 }
-
 
 function onConfigurationChanged(){
   reloadConfiguration();

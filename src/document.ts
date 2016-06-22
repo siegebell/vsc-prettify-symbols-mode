@@ -173,24 +173,27 @@ export class PrettyDocumentController implements vscode.Disposable {
     this.applyDecorations(this.getEditors()); 
   }
 
-  public cursorLeft(editor: vscode.TextEditor) {
-    const adjustment = pos.adjustCaretLeft(editor.selection.active, this.uglyDecorationRanges, editor.document); 
-    editor.selection = new vscode.Selection(adjustment.pos,adjustment.pos);
+  public adjustCursor(editor: vscode.TextEditor, before: vscode.Selection[], after: vscode.Selection[]) {
+    let adjustedSelections : vscode.Selection[] = [];
+    after.forEach((sel,idx) => {
+      if(idx > before.length)
+        return;
+      const adjusted = pos.adjustCursorMovement(before[idx].active,sel.active,this.document,this.uglyDecorationRanges);
+      adjustedSelections.push(new vscode.Selection(adjusted,adjusted));
+    });
+    editor.selections = adjustedSelections;
   }
 
-  public cursorRight(editor: vscode.TextEditor) {
-    const adjustment = pos.adjustCaretRight(editor.selection.active, this.uglyDecorationRanges, editor.document); 
-    editor.selection = new vscode.Selection(adjustment.pos,adjustment.pos);
+  public adjustCursorSelect(editor: vscode.TextEditor, before: vscode.Selection[], after: vscode.Selection[]) {
+    let adjustedSelections : vscode.Selection[] = [];
+    after.forEach((sel,idx) => {
+      if(idx > before.length)
+        return;
+      const adjusted = pos.adjustCursorMovement(before[idx].active,sel.active,this.document,this.uglyDecorationRanges);
+      adjustedSelections.push(new vscode.Selection(sel.anchor,adjusted));
+    });
+    editor.selections = adjustedSelections;
   }
 
-  public cursorDown(editor: vscode.TextEditor) {
-    const adjustment = pos.adjustCaret(editor.selection.active, editor.document, this.uglyDecorationRanges, 'down'); 
-    editor.selection = new vscode.Selection(adjustment.pos,adjustment.pos);
-  }
 
-  public cursorUp(editor: vscode.TextEditor) {
-    const adjustment = pos.adjustCaret(editor.selection.active, editor.document, this.uglyDecorationRanges, 'up'); 
-    editor.selection = new vscode.Selection(adjustment.pos,adjustment.pos);
-  }
-  
 }

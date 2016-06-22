@@ -71,6 +71,18 @@ export function adjustCaret(cursorPos: vscode.Position, doc: vscode.TextDocument
 	return {pos: newCursorPos, range: undefined };
 }
 
+export function adjustCursorMovement(start: vscode.Position, end: vscode.Position, doc: vscode.TextDocument, avoidRanges) {
+  try {
+		const match = findInSortedRanges(end, avoidRanges, {excludeStart: true, excludeEnd: true});
+		if(match) {
+      if(start.line==end.line && start.character > end.character)
+        return match.range.start; // moving left
+      else if(start.line==end.line && start.character < end.character)
+        return match.range.end; // moving right
+    }
+	} catch(e) {}
+	return end;
+}
 
 // function findClosestInPrettyDecorations(pos: vscode.Position, prettySubsts: PrettySubstitution[], options: {excludeStart?: boolean, excludeEnd?: boolean} = {excludeStart: false, excludeEnd: false}) {
 // 	for(let prettyIdx = 0; prettyIdx < prettySubsts.length; ++prettyIdx) {
