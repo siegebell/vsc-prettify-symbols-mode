@@ -10,6 +10,7 @@
 	"editor.rulers": [80],
 	"workbench.editor.showTabs": true,
 	"editor.tabSize": 2,
+	"editor.insertSpaces": true,
 	"terminal.integrated.shell.windows": "C:\\cygwin64\\cygwin.bat",
-  "files.eol": "\n",
+  "files.eol": "\n"
 }
