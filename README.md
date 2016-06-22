@@ -24,3 +24,4 @@ Substitutions work by matching any string that satisfies the `"ugly"` pattern an
 
 * The substitutions do not preserve syntax coloring.
 * Cursor movement may be unpredictable around the substitutions.
+* This extension is only available for ~version 1.2.x of vscode.
