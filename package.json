@@ -17,7 +17,9 @@
   "contributes": {
     "commands": [
       {"command": "extension.enablePrettySymbols","title": "Enable prettify symbols mode"},
-      {"command": "extension.disablePrettySymbols","title": "Disable prettify symbols mode"}],
+      {"command": "extension.disablePrettySymbols","title": "Disable prettify symbols mode"},
+      {"command": "extension.enablePrettyCursor","title": "Enable cursor adjustments in prettify symbols mode"},
+      {"command": "extension.disablePrettyCursor","title": "Disable cursor adjustments in prettify symbols mode"}],
     "keybindings": [
      { "command": "extension.prettyCursorLeft"
      , "key": "left"
@@ -70,7 +72,7 @@
                   "properties": {
                     "ugly": {
                       "type": "string",
-                      "default": "\\b(Qed)[.]",
+                      "default": "\\b(Qed.)",
                       "description": "A Javascript regular expression. There must be exactly one matching group (i.e. a plain-parenthesized expression), which specifies the 'ugly' string to be replaced. Everything before and after this expression will be used to determined context. For example, '\\\\\\b' matches a word boundary. REMEMBER to escape your strings!! Writing '\\b' instead of '\\\\\\b' will denote a backspace instead of a word boundary. To match a literal backslash, you must write '\\\\\\\\\\\\\\' because it will be escaped by both JSON and Javascript's RegExp library."
                     },
                     "pretty": {
@@ -98,10 +100,10 @@
                 { "pre": "\\b", "ugly": "fun",      "post": "\\b", "pretty": "λ"},
                 { "pre": "\\b", "ugly": "False",    "post": "\\b", "pretty": "⊥"},
                 { "pre": "\\b", "ugly": "True",     "post": "\\b", "pretty": "⊤"},
-                { "pre": "\\b", "ugly": "Defined",  "post": "[.]", "pretty": "□"},
-                { "pre": "\\b", "ugly": "Admitted", "post": "[.]", "pretty": "😱"},
-                { "pre": "\\b", "ugly": "Proof",    "post": "[.]", "pretty": "∵"},
-                { "pre": "\\b", "ugly": "Qed",      "post": "[.]", "pretty": "∎"},
+                { "pre": "\\b", "ugly": "Defined[.]",  "post": "(?:$|\\s)", "pretty": "□"},
+                { "pre": "\\b", "ugly": "Admitted[.]", "post": "(?:$|\\s)", "pretty": "😱"},
+                { "pre": "\\b", "ugly": "Proof[.]",    "post": "(?:$|\\s)", "pretty": "∵"},
+                { "pre": "\\b", "ugly": "Qed[.]",      "post": "(?:$|\\s)", "pretty": "∎"},
                 { "ugly": "/\\\\",     "pretty": "∧"},
                 { "ugly": "\\\\/",     "pretty": "∨"},
                 { "ugly": "[=][>]",    "pretty": "⇒"},
@@ -117,7 +119,7 @@
               ]},
             { "language": "fsharp",
               "substitutions": [
-                { "pre": "\\b", "ugly": "fun", "post": "\\b", "pretty": "funλ"},
+                { "pre": "\\b", "ugly": "fun", "post": "\\b", "pretty": "λ"},
                 { "ugly": "[=][>]",  "pretty": "⇒"},
                 { "ugly": "[-][>]",  "pretty": "⟶"}
               ]} ]

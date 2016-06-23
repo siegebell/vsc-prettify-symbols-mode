@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import {Substitution} from './configuration';
 
-export function adjustCursorMovement(start: vscode.Position, end: vscode.Position, doc: vscode.TextDocument, avoidRanges) {
+export function adjustCursorMovement(start: vscode.Position, end: vscode.Position, doc: vscode.TextDocument, avoidRanges: vscode.Range[]) {
   try {
 		const match = findInSortedRanges(end, avoidRanges, {excludeStart: true, excludeEnd: true});
 		if(match) {
