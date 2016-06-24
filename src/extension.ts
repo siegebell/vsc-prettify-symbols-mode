@@ -26,6 +26,15 @@ export function activate(context: vscode.ExtensionContext) {
     prettySymbolsEnabled = true;
     reloadConfiguration();
   });
+  registerTextEditorCommand('extension.togglePrettySymbols', (editor: vscode.TextEditor) => {
+    if(prettySymbolsEnabled) {
+      prettySymbolsEnabled = false;
+      unloadDocuments();
+    } else {
+      prettySymbolsEnabled = true;
+      reloadConfiguration();
+    }
+  });
   registerTextEditorCommand('extension.disablePrettyCursor', (editor: vscode.TextEditor) => {
     prettyCursorEnabled = false;
   });

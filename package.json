@@ -18,6 +18,7 @@
     "commands": [
       {"command": "extension.enablePrettySymbols","title": "Enable prettify symbols mode"},
       {"command": "extension.disablePrettySymbols","title": "Disable prettify symbols mode"},
+      {"command": "extension.togglePrettySymbols","title": "Toggle prettify symbols mode"},
       {"command": "extension.enablePrettyCursor","title": "Enable cursor adjustments in prettify symbols mode"},
       {"command": "extension.disablePrettyCursor","title": "Disable cursor adjustments in prettify symbols mode"}],
     // "keybindings": [
