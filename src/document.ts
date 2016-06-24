@@ -245,7 +245,7 @@ export class PrettyDocumentController implements vscode.Disposable {
     // this.cachedLines = [];
     if(debugging)
       this.debugDecorations.forEach((val) => val.ranges = []);
-    const startTime = new Date().getTime();
+    // const startTime = new Date().getTime();
     this.changedUglies = false; // assume no changes need to be made for now
     for(const change of event.contentChanges) {
       try {
@@ -273,8 +273,6 @@ export class PrettyDocumentController implements vscode.Disposable {
         console.error(e);
       }
     }
-    const endTime = new Date().getTime();
-    console.log(endTime - startTime + "ms")
 
     if(this.changedUglies || true)
       this.applyDecorations(this.getEditors());
