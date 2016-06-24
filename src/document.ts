@@ -11,11 +11,7 @@ const inactiveEditorDecorationTimeout = 200;
 interface PrettySubstitution {
 	ugly: RegExp,
 	pretty: string,
-	// preDecorationType: vscode.TextEditorDecorationType,
 	decorationType: vscode.TextEditorDecorationType,
-	// prettyCursorPreDecorationType: vscode.TextEditorDecorationType,
-	// prettyCursorPostDecorationType: vscode.TextEditorDecorationType,
-	// preRanges: vscode.Range[],
 	ranges: DisjointRangeSet;
 }
 
@@ -34,7 +30,6 @@ export class PrettyDocumentController implements vscode.Disposable {
   private prettyDecorations : PrettySubstitution[] = [];
   private prettySubstitutions : Substitution[] = [];  
   private uglyAll = new RegExp("","g");
-  // private uglyDecorationRanges: vscode.Range[] = [];
   private uglyDecorationRanges = new DisjointRangeSet();
   private subscriptions : vscode.Disposable[] = [];
   private changedUglies = false; // flag used to determine if the uglies have been updated
