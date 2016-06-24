@@ -1,6 +1,6 @@
 # Prettify Symbols Mode
 
-[Prettify Symbols Mode](https://www.emacswiki.org/emacs/PrettySymbol) for [Visual Studio Code (^1.2.x)](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=4&cad=rja&uact=8&ved=0ahUKEwiW5sbU_LfNAhUDVz4KHXUGBpYQFggtMAM&url=https%3A%2F%2Fcode.visualstudio.com%2F&usg=AFQjCNFJKyN71_pTGlo3tbjTpAWVghKtHg).
+[Prettify Symbols Mode](https://www.emacswiki.org/emacs/PrettySymbol) for [Visual Studio Code (^1.2.x)](https://code.visualstudio.com).
 
 Prettify symbols mode makes *visual* substitutions to your source code, e.g. displaying `fun` as `λ`, while never touching your code itself.
 
