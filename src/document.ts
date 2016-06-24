@@ -10,11 +10,11 @@ interface PrettySubstitution {
 	ugly: RegExp,
 	pretty: string,
 	// preDecorationType: vscode.TextEditorDecorationType,
-	postDecorationType: vscode.TextEditorDecorationType,
+	decorationType: vscode.TextEditorDecorationType,
 	// prettyCursorPreDecorationType: vscode.TextEditorDecorationType,
 	// prettyCursorPostDecorationType: vscode.TextEditorDecorationType,
 	// preRanges: vscode.Range[],
-	postRanges: DisjointRangeSet;
+	ranges: DisjointRangeSet;
 }
 
 function arrayEqual<T>(a1: T[], a2: T[], isEqual: (x:T,y:T)=>boolean = ((x,y) => x==y)) : boolean {
@@ -38,8 +38,12 @@ export class PrettyDocumentController implements vscode.Disposable {
   private changedUglies = false; // flag used to determine if the uglies have been updated
 
   private uglyDecoration: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
-		color: "black; font-size: 0pt", // for some reason, the cursor dissappears if the font is too small or display:none
+		color: "black; font-size: 0pt", // for some reason, the cursor disappears if the font is too small or display:none
   });
+  // private cursorDecoration: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
+	// 	outlineColor: 'black', outlineStyle: 'solid', outlineWidth: '1pt',
+  // });
+  // private cursorDecorationRanges: vscode.Range[] = [];
 
   constructor(doc: vscode.TextDocument, prettySubstitutions: Substitution[]) {
     this.document = doc;
@@ -52,6 +56,7 @@ export class PrettyDocumentController implements vscode.Disposable {
     this.applyDecorations(this.getEditors());
 
     this.subscriptions.push(this.uglyDecoration);
+    // this.subscriptions.push(this.cursorDecoration);
     this.subscriptions.push(vscode.workspace.onDidChangeTextDocument((e) => {
       if(e.document == this.document)
         this.onChangeDocument(e);
@@ -73,15 +78,17 @@ export class PrettyDocumentController implements vscode.Disposable {
 
   private unloadDecorations() {
     this.uglyDecorationRanges = new DisjointRangeSet();
+    // this.cursorDecorationRanges = [];
     for(const subst of this.prettyDecorations) {
-      subst.postRanges = new DisjointRangeSet();
+      subst.ranges = new DisjointRangeSet();
     }
     this.debugDecorations.forEach((val) => val.ranges = []);
+    // this.getEditors().forEach((e) => e.setDecorations(this.cursorDecoration, this.cursorDecorationRanges));
 
     this.applyDecorations(this.getEditors());
 
     for(const oldDecoration of this.prettyDecorations) {
-      oldDecoration.postDecorationType.dispose();
+      oldDecoration.decorationType.dispose();
     }
 
   }
@@ -96,15 +103,8 @@ export class PrettyDocumentController implements vscode.Disposable {
         this.prettyDecorations.push({
           ugly: new RegExp(uglyStr,"g"),
           pretty: prettySubst.pretty,
-          // preRanges: [],
-          postRanges: new DisjointRangeSet(),
-          // preDecorationType: vscode.window.createTextEditorDecorationType({
-          //   after: {
-          //     contentText: prettySubst.pretty,
-          //     color: 'initial; font-size: initial',
-          //   },
-          // }),
-          postDecorationType: vscode.window.createTextEditorDecorationType({
+          ranges: new DisjointRangeSet(),
+          decorationType: vscode.window.createTextEditorDecorationType({
             before: {
               contentText: prettySubst.pretty,
               color: 'initial; font-size: initial',
@@ -119,16 +119,23 @@ export class PrettyDocumentController implements vscode.Disposable {
     this.uglyAll = new RegExp(uglyAllStrings.join('|'), 'g');
   }
 
+  private applyDecorationsTimeout = undefined;
   private applyDecorations(editors: Iterable<vscode.TextEditor>) {
-    for(const editor of editors) {
-      editor.setDecorations(this.uglyDecoration,this.uglyDecorationRanges.getRanges());
-      for(const subst of this.prettyDecorations) {
-        // editor.setDecorations(subst.preDecorationType,subst.preRanges);
-        editor.setDecorations(subst.postDecorationType,subst.postRanges.getRanges());
-      }
-      if(debugging)
-        this.debugDecorations.forEach((val) => editor.setDecorations(val.dec,val.ranges));
-    }	
+    // settings many decorations is pretty slow, so only call this at most ~20ms
+    if(this.applyDecorationsTimeout)
+      return;
+    this.applyDecorationsTimeout = setTimeout(() => {
+      for(const editor of editors) {
+        editor.setDecorations(this.uglyDecoration,this.uglyDecorationRanges.getRanges());
+        for(const subst of this.prettyDecorations) {
+          // editor.setDecorations(subst.preDecorationType,subst.preRanges);
+          editor.setDecorations(subst.decorationType,subst.ranges.getRanges());
+        }
+        if(debugging)
+          this.debugDecorations.forEach((val) => editor.setDecorations(val.dec,val.ranges));
+      }	
+      this.applyDecorationsTimeout = undefined;
+    }, 20);
   }
 
   // helper function to determine which ugly has been matched
@@ -214,12 +221,12 @@ export class PrettyDocumentController implements vscode.Disposable {
       const extraOverlap = new vscode.Range(range.end,newUglyRanges.getEnd());
       this.uglyDecorationRanges.removeOverlapping(extraOverlap);
       for(const subst of this.prettyDecorations)
-        subst.postRanges.removeOverlapping(extraOverlap);
+        subst.ranges.removeOverlapping(extraOverlap);
     }
 
     // add the new pretties & ugly ducklings
     this.uglyDecorationRanges.insertRanges(newUglyRanges);
-    this.prettyDecorations.forEach((pretty,idx) => pretty.postRanges.insertRanges(newPrettyRanges[idx]));
+    this.prettyDecorations.forEach((pretty,idx) => pretty.ranges.insertRanges(newPrettyRanges[idx]));
 
     if(!newUglyRanges.isEmpty()) {
       this.changedUglies = true;
@@ -235,7 +242,7 @@ export class PrettyDocumentController implements vscode.Disposable {
     ];
 
   private onChangeDocument(event: vscode.TextDocumentChangeEvent) {
-    this.cachedLines = [];
+    // this.cachedLines = [];
     if(debugging)
       this.debugDecorations.forEach((val) => val.ranges = []);
     const startTime = new Date().getTime();
@@ -251,8 +258,8 @@ export class PrettyDocumentController implements vscode.Disposable {
         this.changedUglies = true;
 
       for(const subst of this.prettyDecorations) {
-        subst.postRanges.removeOverlapping(change.range,{includeTouchingStart:true,includeTouchingEnd:true});
-        subst.postRanges.shiftRangeDelta(delta);
+        subst.ranges.removeOverlapping(change.range,{includeTouchingStart:true,includeTouchingEnd:true});
+        subst.ranges.shiftRangeDelta(delta);
       }
 
       const reparsed = this.parsePretty(editRange);
@@ -266,14 +273,17 @@ export class PrettyDocumentController implements vscode.Disposable {
         console.error(e);
       }
     }
+    const endTime = new Date().getTime();
+    console.log(endTime - startTime + "ms")
+
     if(this.changedUglies || true)
       this.applyDecorations(this.getEditors());
     else if(debugging)
       this.debugDecorations.forEach((val) => this.getEditors().forEach((e) => e.setDecorations(val.dec,val.ranges))); 
     
     // this.refresh();
-    const endTime = new Date().getTime();
-    console.log(endTime - startTime + "ms")
+    // const endTime = new Date().getTime();
+    // console.log(endTime - startTime + "ms")
   }
 
   /// reparses the document and recreates the highlights for all editors  
@@ -281,7 +291,7 @@ export class PrettyDocumentController implements vscode.Disposable {
     this.uglyDecorationRanges = new DisjointRangeSet();
     for(const subst of this.prettyDecorations) {
       // subst.preRanges = [];
-      subst.postRanges = new DisjointRangeSet();
+      subst.ranges = new DisjointRangeSet();
     }
     this.debugDecorations.forEach((val) => val.ranges = [])
     // this.applyDecorations(this.getEditors());
@@ -292,34 +302,50 @@ export class PrettyDocumentController implements vscode.Disposable {
     this.applyDecorations(this.getEditors()); 
   }
 
-  private cachedLines : {uglies: vscode.Range[], line: number}[] = [];
+  // this was an attempt to make cursor movement more responsive, but there are other bottlenecks and this seemed to have an insignificant effect
+  // private cachedLines : {uglies: vscode.Range[], line: number}[] = [];
   public adjustCursor(editor: vscode.TextEditor, before: vscode.Selection[], after: vscode.Selection[]) {
-    this.cachedLines.length = after.length;
+    let updated = false;
+    // this.cursorDecorationRanges = [];
+    // this.cachedLines.length = after.length;
     let adjustedSelections : vscode.Selection[] = [];
     after.forEach((sel,idx) => {
-      if(!this.cachedLines[idx] || this.cachedLines[idx].line != sel.active.line) {
-        this.cachedLines[idx] = {
-          uglies: this.uglyDecorationRanges.getOverlap(editor.document.lineAt(sel.active.line).range),
-          line: sel.active.line };
-      }
+      // if(!this.cachedLines[idx] || this.cachedLines[idx].line != sel.active.line) {
+      //   this.cachedLines[idx] = {
+      //     uglies: this.uglyDecorationRanges.getOverlap(editor.document.lineAt(sel.active.line).range),
+      //     line: sel.active.line };
+      // }
       
-      const adjusted = pos.adjustCursorMovement(before[idx].active,sel.active,this.document,this.cachedLines[idx].uglies);
-      adjustedSelections.push(new vscode.Selection(adjusted,adjusted));
+      const adjusted = pos.adjustCursorMovement(before[idx].active,sel.active,this.document,this.uglyDecorationRanges.getRanges());
+      // const adjusted = pos.adjustCursorMovement(before[idx].active,sel.active,this.document,this.cachedLines[idx].uglies);
+      if(!adjusted.pos.isEqual(sel.active)) {
+        updated = true;
+        // this.cursorDecorationRanges.push(adjusted.range);
+      }
+      adjustedSelections.push(new vscode.Selection(adjusted.pos,adjusted.pos));
     });
-    if(!arrayEqual(editor.selections, adjustedSelections, (x,y) => x.active.isEqual(y.active)))
+    if(updated)
       editor.selections = adjustedSelections;
+    // editor.setDecorations(this.cursorDecoration, this.cursorDecorationRanges);
   }
 
   public adjustCursorSelect(editor: vscode.TextEditor, before: vscode.Selection[], after: vscode.Selection[]) {
+    let updated = false;
+    // this.cursorDecorationRanges = []
     let adjustedSelections : vscode.Selection[] = [];
     after.forEach((sel,idx) => {
       if(idx > before.length)
         return;
       const adjusted = pos.adjustCursorMovement(before[idx].active,sel.active,this.document,this.uglyDecorationRanges.getRanges());
-      adjustedSelections.push(new vscode.Selection(sel.anchor,adjusted));
+      if(!adjusted.pos.isEqual(sel.active)) {
+        updated = true;
+        // this.cursorDecorationRanges.push(adjusted.range);
+      }
+      adjustedSelections.push(new vscode.Selection(sel.anchor,adjusted.pos));
     });
-    if(!arrayEqual(editor.selections, adjustedSelections, (x,y) => x.active.isEqual(y.active)))
+    if(updated)
       editor.selections = adjustedSelections;
+    // editor.setDecorations(this.cursorDecoration, this.cursorDecorationRanges);
   }
 
 }

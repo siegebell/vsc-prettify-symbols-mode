@@ -1,17 +1,17 @@
 import * as vscode from 'vscode';
 import {Substitution} from './configuration';
 
-export function adjustCursorMovement(start: vscode.Position, end: vscode.Position, doc: vscode.TextDocument, avoidRanges: vscode.Range[]) {
+export function adjustCursorMovement(start: vscode.Position, end: vscode.Position, doc: vscode.TextDocument, avoidRanges: vscode.Range[]) : {pos: vscode.Position, range: vscode.Range} {
   try {
 		const match = findInSortedRanges(end, avoidRanges, {excludeStart: true, excludeEnd: true});
 		if(match) {
       if(start.line==end.line && start.character > end.character)
-        return match.range.start; // moving left
+        return {pos: match.range.start, range: match.range } // moving left
       else if(start.line==end.line && start.character < end.character)
-        return match.range.end; // moving right
+        return {pos: match.range.end, range: match.range }; // moving right
     }
 	} catch(e) {}
-	return end;
+	return {pos: end, range: undefined};
 }
 
 // function findClosestInPrettyDecorations(pos: vscode.Position, prettySubsts: PrettySubstitution[], options: {excludeStart?: boolean, excludeEnd?: boolean} = {excludeStart: false, excludeEnd: false}) {
