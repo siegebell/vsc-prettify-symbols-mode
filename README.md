@@ -26,4 +26,4 @@ Substitutions work by matching any string that satisfies the `"ugly"` pattern an
 * The substitutions do not preserve syntax coloring.
 * Cursor movement goes *underneath* the substitution and the cursor will disappear.
   - you can fix cursor movement by respectively binding the left (+shift) and right (+shift) arrow keys to "extension.prettyCursorLeft", "extension.prettyCursorSelectLeft", "extension.prettyCursorRight", and "extension.prettyCursorSelectRight". However, you may notice more lag in cursor movement because of an ongoing issue with vscode.
-* This extension is only available for ~version 1.2.x of vscode (currently an "insider" build).
+* This extension is only available for version ^1.2.x of vscode (currently an "insider" build).

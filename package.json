@@ -1,131 +1,278 @@
 {
-  "name": "prettify-symbols-mode",
-  "displayName": "Prettify Symbols Mode",
-  "description": "To replace the standard text representation of various identifiers/symbols with a (arguably) more aesthetically pleasing representation (often a single unicode character would replace several ascii characters).",
-  "version": "0.0.1",
-  "publisher": "siegebell",
-  "license": "MIT license (MIT)",
-  "engines": {
-    "vscode": "^1.2.x"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "*"
-  ],
-  "main": "./out/src/extension",
-  "contributes": {
-    "commands": [
-      {"command": "extension.enablePrettySymbols","title": "Enable prettify symbols mode"},
-      {"command": "extension.disablePrettySymbols","title": "Disable prettify symbols mode"},
-      {"command": "extension.togglePrettySymbols","title": "Toggle prettify symbols mode"},
-      {"command": "extension.enablePrettyCursor","title": "Enable cursor adjustments in prettify symbols mode"},
-      {"command": "extension.disablePrettyCursor","title": "Disable cursor adjustments in prettify symbols mode"}],
-    "configuration": {
-      "type": "object",
-      "title": "Prettify symbols mode",
-      "properties": {
-        "prettifySymbolsMode.substitutions": {
-          "type": "array",
-          "description": "A list of substitution settings can be specified for each language.",
-          "items": {
-            "type": "object",
-            "properties": {
-              "language": {
-                "description": "A pattern, or list or patterns, to filter languges",
-                "anyOf": [
-                { "type": "array",
-                  "items": {
-                    "anyOf": [
-                      { "type": "string" },                  
-                      { "type": "object",
-                        "description": "A complex filter",
-                        "properties": {
-                          "language": {"type": "string" },
-                          "pattern": {"type": "string" },
-                          "scheme": {"type": "string" }   } } ] } },
-                { "type": "string", "description": "A language-id" },
-                { "type": "object",
-                  "description": "A complex filter",
-                  "properties": {
-                    "language": {"type": "string" },
-                    "pattern": {"type": "string" },
-                    "scheme": {"type": "string" }   } }  ],
-                "default": ["coq", {"pattern": "*.v"} ] },
-              "substitutions": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "ugly": {
-                      "type": "string",
-                      "default": "\\b(Qed.)",
-                      "description": "A Javascript regular expression. There must be exactly one matching group (i.e. a plain-parenthesized expression), which specifies the 'ugly' string to be replaced. Everything before and after this expression will be used to determined context. For example, '\\\\\\b' matches a word boundary. REMEMBER to escape your strings!! Writing '\\b' instead of '\\\\\\b' will denote a backspace instead of a word boundary. To match a literal backslash, you must write '\\\\\\\\\\\\\\' because it will be escaped by both JSON and Javascript's RegExp library."
-                    },
-                    "pretty": {
-                      "type": "string",
-                      "default": "∎"
-                    }
-                  },
-                  "required": [
-                    "ugly",
-                    "pretty"
-                  ]
-                }
-              }
+    "name": "prettify-symbols-mode",
+    "displayName": "Prettify Symbols Mode",
+    "description": "To replace the standard text representation of various identifiers/symbols with a (arguably) more aesthetically pleasing representation (often a single unicode character would replace several ascii characters).",
+    "version": "0.1.0",
+    "publisher": "siegebell",
+    "license": "MIT license (MIT)",
+    "engines": {
+        "vscode": "^1.2.x"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.enablePrettySymbols",
+                "title": "Enable prettify symbols mode"
             },
-            "required": [
-              "language",
-              "substitutions"
-            ]
-          },
-          "default": [
-            { "language": ["coq", {"pattern": "**/*.v"}],
-              "substitutions": [
-                { "pre": "\\b", "ugly": "forall",      "post": "\\b",       "pretty": "∀"},
-                { "pre": "\\b", "ugly": "exists",      "post": "\\b",       "pretty": "∃"},
-                { "pre": "\\b", "ugly": "fun",         "post": "\\b",       "pretty": "λ"},
-                { "pre": "\\b", "ugly": "False",       "post": "\\b",       "pretty": "⊥"},
-                { "pre": "\\b", "ugly": "True",        "post": "\\b",       "pretty": "⊤"},
-                { "pre": "\\b", "ugly": "Defined[.]",  "post": "(?:$|\\s)", "pretty": "□"},
-                { "pre": "\\b", "ugly": "Admitted[.]", "post": "(?:$|\\s)", "pretty": "😱"},
-                { "pre": "\\b", "ugly": "Proof[.]",    "post": "(?:$|\\s)", "pretty": "∵"},
-                { "pre": "\\b", "ugly": "Qed[.]",      "post": "(?:$|\\s)", "pretty": "∎"},
-                { "ugly": "/\\\\", "pretty": "∧"},
-                { "ugly": "\\\\/", "pretty": "∨"},
-                { "ugly": "=>",    "pretty": "⇒"},
-                { "ugly": ":=",    "pretty": "≜"},
-                { "ugly": "<->",   "pretty": "⟷"},
-                { "ugly": "->",    "pretty": "⟶"}
-              ]},
-            { "language": "ocaml",
-              "substitutions": [
-                { "pre": "\\b", "ugly": "fun", "post": "\\b", "pretty": "λ"},
-                { "ugly": "=>",  "pretty": "⇒"},
-                { "ugly": "->",  "pretty": "⟶"}
-              ]},
-            { "language": "fsharp",
-              "substitutions": [
-                { "pre": "\\b", "ugly": "fun", "post": "\\b", "pretty": "λ"},
-                { "ugly": "=>",  "pretty": "⇒"},
-                { "ugly": "->",  "pretty": "⟶"}
-              ]} ]
+            {
+                "command": "extension.disablePrettySymbols",
+                "title": "Disable prettify symbols mode"
+            },
+            {
+                "command": "extension.togglePrettySymbols",
+                "title": "Toggle prettify symbols mode"
+            },
+            {
+                "command": "extension.enablePrettyCursor",
+                "title": "Enable cursor adjustments in prettify symbols mode"
+            },
+            {
+                "command": "extension.disablePrettyCursor",
+                "title": "Disable cursor adjustments in prettify symbols mode"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Prettify symbols mode",
+            "properties": {
+                "prettifySymbolsMode.substitutions": {
+                    "type": "array",
+                    "description": "A list of substitution settings can be specified for each language.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "language": {
+                                "description": "A pattern, or list or patterns, to filter languges",
+                                "anyOf": [
+                                    {
+                                        "type": "array",
+                                        "items": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "description": "A complex filter",
+                                                    "properties": {
+                                                        "language": {
+                                                            "type": "string"
+                                                        },
+                                                        "pattern": {
+                                                            "type": "string"
+                                                        },
+                                                        "scheme": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "type": "string",
+                                        "description": "A language-id"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "description": "A complex filter",
+                                        "properties": {
+                                            "language": {
+                                                "type": "string"
+                                            },
+                                            "pattern": {
+                                                "type": "string"
+                                            },
+                                            "scheme": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "default": [
+                                    "coq",
+                                    {
+                                        "pattern": "*.v"
+                                    }
+                                ]
+                            },
+                            "substitutions": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "ugly": {
+                                            "type": "string",
+                                            "default": "\\b(Qed.)",
+                                            "description": "A Javascript regular expression. There must be exactly one matching group (i.e. a plain-parenthesized expression), which specifies the 'ugly' string to be replaced. Everything before and after this expression will be used to determined context. For example, '\\\\\\b' matches a word boundary. REMEMBER to escape your strings!! Writing '\\b' instead of '\\\\\\b' will denote a backspace instead of a word boundary. To match a literal backslash, you must write '\\\\\\\\\\\\\\' because it will be escaped by both JSON and Javascript's RegExp library."
+                                        },
+                                        "pretty": {
+                                            "type": "string",
+                                            "default": "∎"
+                                        }
+                                    },
+                                    "required": [
+                                        "ugly",
+                                        "pretty"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "language",
+                            "substitutions"
+                        ]
+                    },
+                    "default": [
+                        {
+                            "language": [
+                                "coq",
+                                {
+                                    "pattern": "**/*.v"
+                                }
+                            ],
+                            "substitutions": [
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "forall",
+                                    "post": "\\b",
+                                    "pretty": "∀"
+                                },
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "exists",
+                                    "post": "\\b",
+                                    "pretty": "∃"
+                                },
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "fun",
+                                    "post": "\\b",
+                                    "pretty": "λ"
+                                },
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "False",
+                                    "post": "\\b",
+                                    "pretty": "⊥"
+                                },
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "True",
+                                    "post": "\\b",
+                                    "pretty": "⊤"
+                                },
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "Defined[.]",
+                                    "post": "(?:$|\\s)",
+                                    "pretty": "□"
+                                },
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "Admitted[.]",
+                                    "post": "(?:$|\\s)",
+                                    "pretty": "😱"
+                                },
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "Proof[.]",
+                                    "post": "(?:$|\\s)",
+                                    "pretty": "∵"
+                                },
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "Qed[.]",
+                                    "post": "(?:$|\\s)",
+                                    "pretty": "∎"
+                                },
+                                {
+                                    "ugly": "/\\\\",
+                                    "pretty": "∧"
+                                },
+                                {
+                                    "ugly": "\\\\/",
+                                    "pretty": "∨"
+                                },
+                                {
+                                    "ugly": "=>",
+                                    "pretty": "⇒"
+                                },
+                                {
+                                    "ugly": ":=",
+                                    "pretty": "≜"
+                                },
+                                {
+                                    "ugly": "<->",
+                                    "pretty": "⟷"
+                                },
+                                {
+                                    "ugly": "->",
+                                    "pretty": "⟶"
+                                }
+                            ]
+                        },
+                        {
+                            "language": "ocaml",
+                            "substitutions": [
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "fun",
+                                    "post": "\\b",
+                                    "pretty": "λ"
+                                },
+                                {
+                                    "ugly": "=>",
+                                    "pretty": "⇒"
+                                },
+                                {
+                                    "ugly": "->",
+                                    "pretty": "⟶"
+                                }
+                            ]
+                        },
+                        {
+                            "language": "fsharp",
+                            "substitutions": [
+                                {
+                                    "pre": "\\b",
+                                    "ugly": "fun",
+                                    "post": "\\b",
+                                    "pretty": "λ"
+                                },
+                                {
+                                    "ugly": "=>",
+                                    "pretty": "⇒"
+                                },
+                                {
+                                    "ugly": "->",
+                                    "pretty": "⟶"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
         }
-      }
+    },
+    "scripts": {
+        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "typescript": "^1.6.2",
+        "vscode": "^0.11.13"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/siegebell/vsc-prettify-symbols-mode.git"
     }
-  },
-  "scripts": {
-    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install"
-  },
-  "devDependencies": {
-    "typescript": "^1.6.2",
-    "vscode": "^0.11.13"
-  },
-  "repository" :
-  { "type" : "git"
-  , "url" : "https://github.com/siegebell/vsc-prettify-symbols-mode.git"
-  }
 }
