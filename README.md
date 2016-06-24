@@ -4,6 +4,8 @@
 
 Prettify symbols mode makes *visual* substitutions to your source code, e.g. displaying `fun` as `λ`, while never touching your code itself.
 
+**Notice**: *this extension is not yet supported by the public release of vscode; it only works in the insider's build*.
+
 ## Configuration
 
 Once you have installed this extension, modify  `settings.json` to add language-specific substitutions. For example, the following settings will target F# files, and will make the following substitutions: `fun` -> `λ` and `=>` -> `⇒`.
