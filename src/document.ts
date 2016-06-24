@@ -4,7 +4,9 @@ import * as pos from './position';
 import {DisjointRangeSet} from './disjointrangeset';
 import * as drangeset from './disjointrangeset';
 
-let debugging = false;
+const debugging = false;
+const activeEditorDecorationTimeout = 20;
+const inactiveEditorDecorationTimeout = 200;
 
 interface PrettySubstitution {
 	ugly: RegExp,
@@ -120,22 +122,41 @@ export class PrettyDocumentController implements vscode.Disposable {
   }
 
   private applyDecorationsTimeout = undefined;
+  private applyDecorationsTimeoutActive = undefined;
   private applyDecorations(editors: Iterable<vscode.TextEditor>) {
     // settings many decorations is pretty slow, so only call this at most ~20ms
-    if(this.applyDecorationsTimeout)
-      return;
-    this.applyDecorationsTimeout = setTimeout(() => {
-      for(const editor of editors) {
-        editor.setDecorations(this.uglyDecoration,this.uglyDecorationRanges.getRanges());
-        for(const subst of this.prettyDecorations) {
-          // editor.setDecorations(subst.preDecorationType,subst.preRanges);
-          editor.setDecorations(subst.decorationType,subst.ranges.getRanges());
-        }
-        if(debugging)
-          this.debugDecorations.forEach((val) => editor.setDecorations(val.dec,val.ranges));
-      }	
-      this.applyDecorationsTimeout = undefined;
-    }, 20);
+    if(!this.applyDecorationsTimeoutActive) {
+      this.applyDecorationsTimeoutActive = setTimeout(() => {
+        for(const editor of editors) {
+          if(editor !== vscode.window.activeTextEditor)
+            break; // handle ONLY the active editr here
+          editor.setDecorations(this.uglyDecoration,this.uglyDecorationRanges.getRanges());
+          for(const subst of this.prettyDecorations) {
+            // editor.setDecorations(subst.preDecorationType,subst.preRanges);
+            editor.setDecorations(subst.decorationType,subst.ranges.getRanges());
+          }
+          if(debugging)
+            this.debugDecorations.forEach((val) => editor.setDecorations(val.dec,val.ranges));
+        }	
+        this.applyDecorationsTimeoutActive = undefined;
+      }, activeEditorDecorationTimeout);
+    }
+    if(!this.applyDecorationsTimeout) {
+      this.applyDecorationsTimeout = setTimeout(() => {
+        for(const editor of editors) {
+          // if(editor === vscode.window.activeTextEditor)
+          //   break; // handle this in another timer
+          editor.setDecorations(this.uglyDecoration,this.uglyDecorationRanges.getRanges());
+          for(const subst of this.prettyDecorations) {
+            // editor.setDecorations(subst.preDecorationType,subst.preRanges);
+            editor.setDecorations(subst.decorationType,subst.ranges.getRanges());
+          }
+          if(debugging)
+            this.debugDecorations.forEach((val) => editor.setDecorations(val.dec,val.ranges));
+        }	
+        this.applyDecorationsTimeout = undefined;
+      }, inactiveEditorDecorationTimeout);
+    }
   }
 
   // helper function to determine which ugly has been matched
