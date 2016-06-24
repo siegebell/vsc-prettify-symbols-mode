@@ -22,20 +22,6 @@
       {"command": "extension.togglePrettySymbols","title": "Toggle prettify symbols mode"},
       {"command": "extension.enablePrettyCursor","title": "Enable cursor adjustments in prettify symbols mode"},
       {"command": "extension.disablePrettyCursor","title": "Disable cursor adjustments in prettify symbols mode"}],
-    // "keybindings": [
-    //  { "command": "extension.prettyCursorLeft"
-    //  , "key": "left"
-    //  , "when": "editorTextFocus" },
-    //  { "command": "extension.prettyCursorRight"
-    //  , "key": "right"
-    //  , "when": "editorTextFocus" },
-    //  { "command": "extension.prettyCursorLeftSelect"
-    //  , "key": "shift+left"
-    //  , "when": "editorTextFocus" },
-    //  { "command": "extension.prettyCursorRightSelect"
-    //  , "key": "shift+right"
-    //  , "when": "editorTextFocus" }
-    //  ],
     "configuration": {
       "type": "object",
       "title": "Prettify symbols mode",
