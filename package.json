@@ -20,20 +20,20 @@
       {"command": "extension.disablePrettySymbols","title": "Disable prettify symbols mode"},
       {"command": "extension.enablePrettyCursor","title": "Enable cursor adjustments in prettify symbols mode"},
       {"command": "extension.disablePrettyCursor","title": "Disable cursor adjustments in prettify symbols mode"}],
-    "keybindings": [
-     { "command": "extension.prettyCursorLeft"
-     , "key": "left"
-     , "when": "editorTextFocus" },
-     { "command": "extension.prettyCursorRight"
-     , "key": "right"
-     , "when": "editorTextFocus" },
-     { "command": "extension.prettyCursorLeftSelect"
-     , "key": "shift+left"
-     , "when": "editorTextFocus" },
-     { "command": "extension.prettyCursorRightSelect"
-     , "key": "shift+right"
-     , "when": "editorTextFocus" }
-     ],
+    // "keybindings": [
+    //  { "command": "extension.prettyCursorLeft"
+    //  , "key": "left"
+    //  , "when": "editorTextFocus" },
+    //  { "command": "extension.prettyCursorRight"
+    //  , "key": "right"
+    //  , "when": "editorTextFocus" },
+    //  { "command": "extension.prettyCursorLeftSelect"
+    //  , "key": "shift+left"
+    //  , "when": "editorTextFocus" },
+    //  { "command": "extension.prettyCursorRightSelect"
+    //  , "key": "shift+right"
+    //  , "when": "editorTextFocus" }
+    //  ],
     "configuration": {
       "type": "object",
       "title": "Prettify symbols mode",
@@ -95,33 +95,33 @@
           "default": [
             { "language": ["coq", {"pattern": "**/*.v"}],
               "substitutions": [
-                { "pre": "\\b", "ugly": "forall",   "post": "\\b", "pretty": "∀"},
-                { "pre": "\\b", "ugly": "exists",   "post": "\\b", "pretty": "∃"},
-                { "pre": "\\b", "ugly": "fun",      "post": "\\b", "pretty": "λ"},
-                { "pre": "\\b", "ugly": "False",    "post": "\\b", "pretty": "⊥"},
-                { "pre": "\\b", "ugly": "True",     "post": "\\b", "pretty": "⊤"},
+                { "pre": "\\b", "ugly": "forall",      "post": "\\b",       "pretty": "∀"},
+                { "pre": "\\b", "ugly": "exists",      "post": "\\b",       "pretty": "∃"},
+                { "pre": "\\b", "ugly": "fun",         "post": "\\b",       "pretty": "λ"},
+                { "pre": "\\b", "ugly": "False",       "post": "\\b",       "pretty": "⊥"},
+                { "pre": "\\b", "ugly": "True",        "post": "\\b",       "pretty": "⊤"},
                 { "pre": "\\b", "ugly": "Defined[.]",  "post": "(?:$|\\s)", "pretty": "□"},
                 { "pre": "\\b", "ugly": "Admitted[.]", "post": "(?:$|\\s)", "pretty": "😱"},
                 { "pre": "\\b", "ugly": "Proof[.]",    "post": "(?:$|\\s)", "pretty": "∵"},
                 { "pre": "\\b", "ugly": "Qed[.]",      "post": "(?:$|\\s)", "pretty": "∎"},
-                { "ugly": "/\\\\",     "pretty": "∧"},
-                { "ugly": "\\\\/",     "pretty": "∨"},
-                { "ugly": "[=][>]",    "pretty": "⇒"},
-                { "ugly": ":=",        "pretty": "≜"},
-                { "ugly": "[<][-][>]", "pretty": "⟷"},
-                { "ugly": "[-][>]",    "pretty": "⟶"}
+                { "ugly": "/\\\\", "pretty": "∧"},
+                { "ugly": "\\\\/", "pretty": "∨"},
+                { "ugly": "=>",    "pretty": "⇒"},
+                { "ugly": ":=",    "pretty": "≜"},
+                { "ugly": "<->",   "pretty": "⟷"},
+                { "ugly": "->",    "pretty": "⟶"}
               ]},
             { "language": "ocaml",
               "substitutions": [
                 { "pre": "\\b", "ugly": "fun", "post": "\\b", "pretty": "λ"},
-                { "ugly": "[=][>]",  "pretty": "⇒"},
-                { "ugly": "[-][>]",  "pretty": "⟶"}
+                { "ugly": "=>",  "pretty": "⇒"},
+                { "ugly": "->",  "pretty": "⟶"}
               ]},
             { "language": "fsharp",
               "substitutions": [
                 { "pre": "\\b", "ugly": "fun", "post": "\\b", "pretty": "λ"},
-                { "ugly": "[=][>]",  "pretty": "⇒"},
-                { "ugly": "[-][>]",  "pretty": "⟶"}
+                { "ugly": "=>",  "pretty": "⇒"},
+                { "ugly": "->",  "pretty": "⟶"}
               ]} ]
         }
       }
