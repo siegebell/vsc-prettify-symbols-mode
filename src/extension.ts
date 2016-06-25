@@ -42,21 +42,17 @@ export function activate(context: vscode.ExtensionContext) {
     prettyCursorEnabled = true;
   });
 
-  // registerCommand('cursorLeft', cursorLeft);
-  // registerCommand('cursorRight', cursorRight);
-  // registerCommand('cursorDown', cursorDown);
-  // registerCommand('cursorUp', cursorUp);
   registerTextEditorCommand('extension.prettyCursorLeft', cursorLeft);
   registerTextEditorCommand('extension.prettyCursorRight', cursorRight);
   registerTextEditorCommand('extension.prettyCursorLeftSelect', cursorLeftSelect);
   registerTextEditorCommand('extension.prettyCursorRightSelect', cursorRightSelect);
 
-  reloadConfiguration();
 
   context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(openDocument));
   context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(closeDocument));
   context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onConfigurationChanged));
 
+  reloadConfiguration();
 }
 
 async function adjustCursor(editor: vscode.TextEditor, command: string, handler: (doc: PrettyDocumentController, editor:vscode.TextEditor, before: vscode.Selection[], after: vscode.Selection[]) => void) {
