@@ -8,18 +8,24 @@ Prettify symbols mode makes *visual* substitutions to your source code, e.g. dis
 
 ## Configuration
 
-Once you have installed this extension, modify  `settings.json` to add language-specific substitutions. For example, the following settings will target F# files, and will make the following substitutions: `fun` -> `λ` and `=>` -> `⇒`.
+Once you have installed this extension, modify  `settings.json` to add language-specific substitutions. For example, the following settings will target F# files, and will make the following substitutions: `fun` -> `λ` and `->` -> `⟶`.
 ```json
 "prettifySymbolsMode.substitutions": [{
     "language": "fsharp",
     "substitutions": [
       { "ugly": "fun", "pretty": "λ", "pre": "\\b", "post": "\\b" },
-      { "ugly": "=>", "pretty": "⇒" }
+      { "ugly": "->", "pretty": "⟶" }
     ]
 }]
 ```
 
 Substitutions work by matching any string that satisfies the `"ugly"` pattern and visually replacing it with `"pretty"`; you can optionally specify the context by providing `"pre"` and `"post"` regular expressions that must be matched for the substitution to occur. You can also target multiple languages or glob patterns at once via `"languages": ["fsharp", {"pattern":  "**/*.txt"}]`.
+
+## Variable-width symbols driving you crazy?
+
+Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix your fonts!
+
+![example fix for variable-width fonts](https://github.com/cpitclaudel/monospacifier/blob/master/demo/symbola-loop.gif)
 
 ## Known issues: *beta!*
 
