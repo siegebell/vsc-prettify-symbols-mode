@@ -1,7 +1,7 @@
 {
     "name": "prettify-symbols-mode",
     "displayName": "Prettify Symbols Mode",
-    "description": "Displays identifiers & symbols using more aesthetically pleasing symbols (often a single unicode character would replace several characters).",
+    "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
     "version": "0.1.1",
     "publisher": "siegebell",
     "license": "MIT license (MIT)",
