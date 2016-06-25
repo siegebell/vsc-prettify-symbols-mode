@@ -25,7 +25,7 @@ Substitutions work by matching any string that satisfies the `"ugly"` pattern an
 
 Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix your fonts!
 
-![example fix for variable-width fonts](https://github.com/cpitclaudel/monospacifier/blob/master/demo/symbola-loop.gif)
+![example fix for variable-width fonts](https://github.com/cpitclaudel/monospacifier/blob/master/demo/symbola-loop.gif?raw=true)
 
 ## Known issues: *beta!*
 
