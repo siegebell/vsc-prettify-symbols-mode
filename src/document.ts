@@ -35,7 +35,8 @@ export class PrettyDocumentController implements vscode.Disposable {
   private changedUglies = false; // flag used to determine if the uglies have been updated
 
   private uglyDecoration: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
-		color: "black; font-size: 0pt", // for some reason, the cursor disappears if the font is too small or display:none
+		// color: "black; font-size: 0pt", // for some reason, the cursor disappears if the font is too small or display:none
+    textDecoration: 'none; font-size: 0pt',
   });
   // private cursorDecoration: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
 	// 	outlineColor: 'black', outlineStyle: 'solid', outlineWidth: '1pt',
@@ -104,7 +105,9 @@ export class PrettyDocumentController implements vscode.Disposable {
           decorationType: vscode.window.createTextEditorDecorationType({
             before: {
               contentText: prettySubst.pretty,
-              color: 'initial; font-size: initial',
+              // color: '--color; font-size: initial',
+              // color: 'var(--color)',
+              textDecoration: 'none; font-size: initial',
             },
           }),
         });
