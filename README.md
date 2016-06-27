@@ -37,5 +37,5 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
 * Cursor movement goes *underneath* the substitution and the cursor will disappear.
   - you can fix cursor movement by respectively binding the left (+shift) and right (+shift) arrow keys to "extension.prettyCursorLeft", "extension.prettyCursorSelectLeft", "extension.prettyCursorRight", and "extension.prettyCursorSelectRight". However, you may notice more lag in cursor movement because of an ongoing issue with vscode.
 * You can write bad regular expressions that break substitutions and you will not get an error message.
-* Substitutions are only performed on *open* documents, so you may have to begin editing to activate it.
+* Substitutions are only performed on *open* documents, so you may have to begin editing to activate substitutions.
 * This extension is only available for version ^1.2.x of vscode (currently an "insider" build).
