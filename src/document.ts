@@ -142,8 +142,8 @@ export class PrettyDocumentController implements vscode.Disposable {
     if(!this.applyDecorationsTimeout) {
       this.applyDecorationsTimeout = setTimeout(() => {
         for(const editor of editors) {
-          // if(editor === vscode.window.activeTextEditor)
-          //   break; // handle this in another timer
+          if(editor === vscode.window.activeTextEditor)
+            break; // handle this in another timer
           editor.setDecorations(this.uglyDecoration,this.uglyDecorationRanges.getRanges());
           for(const subst of this.prettyDecorations) {
             // editor.setDecorations(subst.preDecorationType,subst.preRanges);
