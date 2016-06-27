@@ -12,35 +12,5 @@
 	"editor.tabSize": 2,
 	"editor.insertSpaces": true,
 	"terminal.integrated.shell.windows": "C:\\cygwin64\\cygwin.bat",
-  "files.eol": "\n",
-	"prettifySymbolsMode.substitutions": [
-    {
-      "language": {"pattern": "**/LICENSE"},
-      "substitutions": [
-        {
-          "ugly": "(c)",
-          "pretty": "©"
-        }
-      ]
-    },
-    {
-      "language": "typescript",
-      "substitutions": [
-        {
-          "pre": "\\b",
-          "ugly": "fun",
-          "post": "\\b",
-          "pretty": "λ"
-        },
-        {
-          "ugly": "=>",
-          "pretty": "⇒"
-        },
-        {
-          "ugly": "->",
-          "pretty": "⟶"
-        }
-      ]
-    }
-  ]
+  "files.eol": "\n"
 }
