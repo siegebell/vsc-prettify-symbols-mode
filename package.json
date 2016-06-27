@@ -6,7 +6,7 @@
     "publisher": "siegebell",
     "license": "MIT license (MIT)",
     "engines": {
-        "vscode": "^1.2.x"
+        "vscode": "^1.3.0"
     },
     "categories": [
         "Other"
@@ -49,27 +49,31 @@
                         "type": "object",
                         "properties": {
                             "language": {
-                                "description": "A pattern, or list or patterns, to filter languges",
+                                "description": "A pattern, or list of patterns, to specify which languages to apply these substitutions on.",
                                 "anyOf": [
                                     {
                                         "type": "array",
                                         "items": {
                                             "anyOf": [
                                                 {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
                                                 },
                                                 {
                                                     "type": "object",
                                                     "description": "A complex filter",
                                                     "properties": {
                                                         "language": {
-                                                            "type": "string"
+                                                            "type": "string",
+                                                            "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
                                                         },
                                                         "pattern": {
-                                                            "type": "string"
+                                                            "type": "string",
+                                                            "description": "glob pattern"
                                                         },
                                                         "scheme": {
-                                                            "type": "string"
+                                                            "type": "string",
+                                                            "description": "e.g. 'https' or 'file'"
                                                         }
                                                     }
                                                 }
@@ -78,20 +82,23 @@
                                     },
                                     {
                                         "type": "string",
-                                        "description": "A language-id"
+                                        "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
                                     },
                                     {
                                         "type": "object",
                                         "description": "A complex filter",
                                         "properties": {
                                             "language": {
-                                                "type": "string"
+                                                "type": "string",
+                                                "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
                                             },
                                             "pattern": {
-                                                "type": "string"
+                                                "type": "string",
+                                                "description": "glob pattern"
                                             },
                                             "scheme": {
-                                                "type": "string"
+                                                "type": "string",
+                                                "description": "e.g. 'https' or 'file'"
                                             }
                                         }
                                     }
@@ -99,23 +106,33 @@
                                 "default": [
                                     "coq",
                                     {
-                                        "pattern": "*.v"
+                                        "pattern": "**/*.v"
                                     }
                                 ]
                             },
                             "substitutions": {
                                 "type": "array",
+                                "description": "A list of substitutions",
                                 "items": {
                                     "type": "object",
                                     "properties": {
                                         "ugly": {
                                             "type": "string",
                                             "default": "\\b(Qed.)",
-                                            "description": "A Javascript regular expression. There must be exactly one matching group (i.e. a plain-parenthesized expression), which specifies the 'ugly' string to be replaced. Everything before and after this expression will be used to determined context. For example, '\\\\\\b' matches a word boundary. REMEMBER to escape your strings!! Writing '\\b' instead of '\\\\\\b' will denote a backspace instead of a word boundary. To match a literal backslash, you must write '\\\\\\\\\\\\\\' because it will be escaped by both JSON and Javascript's RegExp library."
+                                            "description": "A Javascript regular expression to specify the 'ugly' string to be replaced. For example, '\\\\\\b' matches a word boundary. Remember to escape your strings!! Writing '\\b' instead of '\\\\\\b' will denote a backspace instead of a word boundary. To match a literal backslash, you must write '\\\\\\\\\\\\\\' because it will be escaped by both JSON and Javascript's RegExp library. You may use non-matching groups, i.e. '(?:...)', but using matching groups, i.e. '(...)', will break substitutions."
                                         },
                                         "pretty": {
                                             "type": "string",
-                                            "default": "∎"
+                                            "default": "∎",
+                                            "description": "The text to replace an 'ugly' string with. You may use fancy unicode symbols and multiple characters."
+                                        },
+                                        "pre": {
+                                            "type": "string",
+                                            "description": "If specified, the text before the 'ugly' text must match this pattern. E.g. '\\\\\\b'"
+                                        },
+                                        "post": {
+                                            "type": "string",
+                                            "description": "If specified, the text following the 'ugly' text must match this pattern. E.g. '\\\\\\b'"
                                         }
                                     },
                                     "required": [
