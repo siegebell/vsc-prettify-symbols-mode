@@ -39,3 +39,92 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
 * You can write bad regular expressions that break substitutions and you will not get an error message.
 * Substitutions are only performed on *open* documents, so you may have to begin editing to activate substitutions.
 * This extension is only available for version 1.3.0 of vscode (currently an "insider" build).
+
+## Examples
+
+```json
+"prettifySymbolsMode.substitutions": [{
+  "language": "haskell",
+  "substitutions": [
+    { "ugly": "\\\\",     "pretty": "λ", "post": "\\s*(?:\\w|_).*?\\s*->" },
+    { "ugly": "<-",       "pretty": "←" },
+    { "ugly": "->",       "pretty": "→" },
+    { "ugly": "==",       "pretty": "≡" },
+    { "ugly": "/=",       "pretty": "≢" },
+    { "ugly": "\\(\\)",   "pretty": "∅" },
+    { "ugly": "sqrt\\s?", "pretty": "√", "pre": "\\b", "post": "\\b" },
+    { "ugly": "&&",       "pretty": "∧" },
+    { "ugly": "\\|\\|",   "pretty": "∨" },
+    { "ugly": "not\\s?",  "pretty": "¬", "pre": "\\b", "post": "\\b" },
+    { "ugly": ">",        "pretty": ">", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "<",        "pretty": "<", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": ">=",       "pretty": "≥", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "<=",       "pretty": "≤", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "alpha",    "pretty": "α", "pre": "\\b", "post": "\\b" },
+    { "ugly": "beta",     "pretty": "β", "pre": "\\b", "post": "\\b" },
+    { "ugly": "gamma",    "pretty": "γ", "pre": "\\b", "post": "\\b" },
+    { "ugly": "delta",    "pretty": "δ", "pre": "\\b", "post": "\\b" },
+    { "ugly": "''",       "pretty": "″" },
+    { "ugly": "'",        "pretty": "′" },
+    { "ugly": "!!",       "pretty": "‼" },
+    { "ugly": "\\.\\.",   "pretty": "…" }
+  ]},{
+  "language": "ocaml",
+  "substitutions": [
+    { "ugly": "fun",            "pretty": "λ", "pre": "\\b", "post": "\\b" },
+    { "ugly": "<-",             "pretty": "←" },
+    { "ugly": "->",             "pretty": "→" },
+    { "ugly": "=",              "pretty": "=", "pre": "[^<>=!]|^", "post": "[^<>=]|$" },
+    { "ugly": "==",             "pretty": "≡" },
+    { "ugly": "!=",             "pretty": "≢" },
+    { "ugly": "<>",             "pretty": "≠" },
+    { "ugly": "\\(\\)",         "pretty": "∅" },
+    { "ugly": "sqrt\\s?",       "pretty": "√", "pre": "\\b", "post": "\\b" },
+    { "ugly": "&&",             "pretty": "∧" },
+    { "ugly": "\\|\\|",         "pretty": "∨" },
+    { "ugly": "not\\s?",        "pretty": "¬", "pre": "\\b", "post": "\\b" },
+    { "ugly": ">",              "pretty": ">", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "<",              "pretty": "<", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": ">=",             "pretty": "≥", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "<=",             "pretty": "≤", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "alpha",          "pretty": "α", "pre": "\\b", "post": "\\b" },
+    { "ugly": "beta",           "pretty": "β", "pre": "\\b", "post": "\\b" },
+    { "ugly": "gamma",          "pretty": "γ", "pre": "\\b", "post": "\\b" },
+    { "ugly": "delta",          "pretty": "δ", "pre": "\\b", "post": "\\b" },
+    { "ugly": "''",             "pretty": "″" },
+    { "ugly": "'",              "pretty": "′" },
+    { "ugly": "List[.]for_all", "pretty": "∀", "pre": "\\b", "post": "\\b" },
+    { "ugly": "List[.]exists",  "pretty": "∃", "pre": "\\b", "post": "\\b" },
+    { "ugly": "List[.]mem",     "pretty": "∈", "pre": "\\b", "post": "\\b" },
+    { "ugly": "\\|",            "pretty": "║", "pre": "^\\s+" }
+  ]},{
+  "language": "fsharp",
+  "substitutions": [
+    { "ugly": "fun",           "pretty": "λ", "pre": "\\b", "post": "\\b" },
+    { "ugly": "<-",            "pretty": "←" },
+    { "ugly": "->",            "pretty": "→" },
+    { "ugly": "=",             "pretty": "=", "pre": "[^<>=!]|^", "post": "[^<>=]|$" },
+    { "ugly": "==",            "pretty": "≡" },
+    { "ugly": "!=",            "pretty": "≢" },
+    { "ugly": "<>",            "pretty": "≠" },
+    { "ugly": "sqrt\\s?",      "pretty": "√", "pre": "\\b", "post": "\\b" },
+    { "ugly": "&&",            "pretty": "∧" },
+    { "ugly": "\\|\\|",        "pretty": "∨" },
+    { "ugly": "not\\s?",       "pretty": "¬", "pre": "\\b", "post": "\\b" },
+    { "ugly": ">",             "pretty": ">", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "<",             "pretty": "<", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": ">=",            "pretty": "≥", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "<=",            "pretty": "≤", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "alpha",         "pretty": "α", "pre": "\\b", "post": "\\b" },
+    { "ugly": "beta",          "pretty": "β", "pre": "\\b", "post": "\\b" },
+    { "ugly": "gamma",         "pretty": "γ", "pre": "\\b", "post": "\\b" },
+    { "ugly": "delta",         "pretty": "δ", "pre": "\\b", "post": "\\b" },
+    { "ugly": "''",            "pretty": "″" },
+    { "ugly": "'",             "pretty": "′" },
+    { "ugly": "List[.]forall", "pretty": "∀", "pre": "\\b", "post": "\\b" },
+    { "ugly": "List[.]exists", "pretty": "∃", "pre": "\\b", "post": "\\b" },
+    { "ugly": ">>",            "pretty": "≫", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "<<",            "pretty": "≪", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": "\\|",           "pretty": "║", "pre": "^\\s+" }
+  ]}]
+```
