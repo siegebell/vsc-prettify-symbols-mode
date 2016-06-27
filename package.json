@@ -2,7 +2,7 @@
     "name": "prettify-symbols-mode",
     "displayName": "Prettify Symbols Mode",
     "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "publisher": "siegebell",
     "license": "MIT license (MIT)",
     "engines": {
@@ -239,90 +239,397 @@
                         {
                             "language": "haskell",
                             "substitutions": [
-                                { "ugly": "\\\\",     "pretty": "λ", "post": "\\s*(?:\\w|_).*?\\s*->" },
-                                { "ugly": "<-",       "pretty": "←" },
-                                { "ugly": "->",       "pretty": "→" },
-                                { "ugly": "==",       "pretty": "≡" },
-                                { "ugly": "/=",       "pretty": "≢" },
-                                { "ugly": "\\(\\)",   "pretty": "∅" },
-                                { "ugly": "sqrt\\s?", "pretty": "√", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "&&",       "pretty": "∧" },
-                                { "ugly": "\\|\\|",   "pretty": "∨" },
-                                { "ugly": "not\\s?",  "pretty": "¬", "pre": "\\b", "post": "\\b" },
-                                { "ugly": ">",        "pretty": ">", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "<",        "pretty": "<", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": ">=",       "pretty": "≥", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "<=",       "pretty": "≤", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "alpha",    "pretty": "α", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "beta",     "pretty": "β", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "gamma",    "pretty": "γ", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "delta",    "pretty": "δ", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "''",       "pretty": "″" },
-                                { "ugly": "'",        "pretty": "′" },
-                                { "ugly": "!!",       "pretty": "‼" },
-                                { "ugly": "\\.\\.",   "pretty": "…" }
+                                {
+                                    "ugly": "\\\\",
+                                    "pretty": "λ",
+                                    "post": "\\s*(?:\\w|_).*?\\s*->"
+                                },
+                                {
+                                    "ugly": "<-",
+                                    "pretty": "←"
+                                },
+                                {
+                                    "ugly": "->",
+                                    "pretty": "→"
+                                },
+                                {
+                                    "ugly": "==",
+                                    "pretty": "≡"
+                                },
+                                {
+                                    "ugly": "/=",
+                                    "pretty": "≢"
+                                },
+                                {
+                                    "ugly": "\\(\\)",
+                                    "pretty": "∅"
+                                },
+                                {
+                                    "ugly": "sqrt\\s?",
+                                    "pretty": "√",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "&&",
+                                    "pretty": "∧"
+                                },
+                                {
+                                    "ugly": "\\|\\|",
+                                    "pretty": "∨"
+                                },
+                                {
+                                    "ugly": "not\\s?",
+                                    "pretty": "¬",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": ">",
+                                    "pretty": ">",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "<",
+                                    "pretty": "<",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": ">=",
+                                    "pretty": "≥",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "<=",
+                                    "pretty": "≤",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "alpha",
+                                    "pretty": "α",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "beta",
+                                    "pretty": "β",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "gamma",
+                                    "pretty": "γ",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "delta",
+                                    "pretty": "δ",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "''",
+                                    "pretty": "″"
+                                },
+                                {
+                                    "ugly": "'",
+                                    "pretty": "′"
+                                },
+                                {
+                                    "ugly": "!!",
+                                    "pretty": "‼"
+                                },
+                                {
+                                    "ugly": "\\.\\.",
+                                    "pretty": "…"
+                                }
                             ]
                         },
                         {
                             "language": "ocaml",
                             "substitutions": [
-                                { "ugly": "fun",            "pretty": "λ", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "<-",             "pretty": "←" },
-                                { "ugly": "->",             "pretty": "→" },
-                                { "ugly": "=",              "pretty": "=", "pre": "[^<>=!]|^", "post": "[^<>=]|$" },
-                                { "ugly": "==",             "pretty": "≡" },
-                                { "ugly": "!=",             "pretty": "≢" },
-                                { "ugly": "<>",             "pretty": "≠" },
-                                { "ugly": "\\(\\)",         "pretty": "∅" },
-                                { "ugly": "sqrt\\s?",       "pretty": "√", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "&&",             "pretty": "∧" },
-                                { "ugly": "\\|\\|",         "pretty": "∨" },
-                                { "ugly": "not\\s?",        "pretty": "¬", "pre": "\\b", "post": "\\b" },
-                                { "ugly": ">",              "pretty": ">", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "<",              "pretty": "<", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": ">=",             "pretty": "≥", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "<=",             "pretty": "≤", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "alpha",          "pretty": "α", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "beta",           "pretty": "β", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "gamma",          "pretty": "γ", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "delta",          "pretty": "δ", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "''",             "pretty": "″" },
-                                { "ugly": "'",              "pretty": "′" },
-                                { "ugly": "List[.]for_all", "pretty": "∀", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "List[.]exists",  "pretty": "∃", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "List[.]mem",     "pretty": "∈", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "\\|",            "pretty": "║", "pre": "^\\s+" }
+                                {
+                                    "ugly": "fun",
+                                    "pretty": "λ",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "<-",
+                                    "pretty": "←"
+                                },
+                                {
+                                    "ugly": "->",
+                                    "pretty": "→"
+                                },
+                                {
+                                    "ugly": "=",
+                                    "pretty": "=",
+                                    "pre": "[^<>=!]|^",
+                                    "post": "[^<>=]|$"
+                                },
+                                {
+                                    "ugly": "==",
+                                    "pretty": "≡"
+                                },
+                                {
+                                    "ugly": "!=",
+                                    "pretty": "≢"
+                                },
+                                {
+                                    "ugly": "<>",
+                                    "pretty": "≠"
+                                },
+                                {
+                                    "ugly": "\\(\\)",
+                                    "pretty": "∅"
+                                },
+                                {
+                                    "ugly": "sqrt\\s?",
+                                    "pretty": "√",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "&&",
+                                    "pretty": "∧"
+                                },
+                                {
+                                    "ugly": "\\|\\|",
+                                    "pretty": "∨"
+                                },
+                                {
+                                    "ugly": "not\\s?",
+                                    "pretty": "¬",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": ">",
+                                    "pretty": ">",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "<",
+                                    "pretty": "<",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": ">=",
+                                    "pretty": "≥",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "<=",
+                                    "pretty": "≤",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "alpha",
+                                    "pretty": "α",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "beta",
+                                    "pretty": "β",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "gamma",
+                                    "pretty": "γ",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "delta",
+                                    "pretty": "δ",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "''",
+                                    "pretty": "″"
+                                },
+                                {
+                                    "ugly": "'",
+                                    "pretty": "′"
+                                },
+                                {
+                                    "ugly": "List[.]for_all",
+                                    "pretty": "∀",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "List[.]exists",
+                                    "pretty": "∃",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "List[.]mem",
+                                    "pretty": "∈",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "\\|",
+                                    "pretty": "║",
+                                    "pre": "^\\s+"
+                                }
                             ]
                         },
                         {
                             "language": "fsharp",
                             "substitutions": [
-                                { "ugly": "fun",           "pretty": "λ", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "<-",            "pretty": "←" },
-                                { "ugly": "->",            "pretty": "→" },
-                                { "ugly": "=",             "pretty": "=", "pre": "[^<>=!]|^", "post": "[^<>=]|$" },
-                                { "ugly": "==",            "pretty": "≡" },
-                                { "ugly": "!=",            "pretty": "≢" },
-                                { "ugly": "<>",            "pretty": "≠" },
-                                { "ugly": "sqrt\\s?",      "pretty": "√", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "&&",            "pretty": "∧" },
-                                { "ugly": "\\|\\|",        "pretty": "∨" },
-                                { "ugly": "not\\s?",       "pretty": "¬", "pre": "\\b", "post": "\\b" },
-                                { "ugly": ">",             "pretty": ">", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "<",             "pretty": "<", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": ">=",            "pretty": "≥", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "<=",            "pretty": "≤", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "alpha",         "pretty": "α", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "beta",          "pretty": "β", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "gamma",         "pretty": "γ", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "delta",         "pretty": "δ", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "''",            "pretty": "″" },
-                                { "ugly": "'",             "pretty": "′" },
-                                { "ugly": "List[.]forall", "pretty": "∀", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "List[.]exists", "pretty": "∃", "pre": "\\b", "post": "\\b" },
-                                { "ugly": ">>",            "pretty": "≫", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "<<",            "pretty": "≪", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-                                { "ugly": "\\|",           "pretty": "║", "pre": "^\\s+" }
+                                {
+                                    "ugly": "fun",
+                                    "pretty": "λ",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "<-",
+                                    "pretty": "←"
+                                },
+                                {
+                                    "ugly": "->",
+                                    "pretty": "→"
+                                },
+                                {
+                                    "ugly": "=",
+                                    "pretty": "=",
+                                    "pre": "[^<>=!]|^",
+                                    "post": "[^<>=]|$"
+                                },
+                                {
+                                    "ugly": "==",
+                                    "pretty": "≡"
+                                },
+                                {
+                                    "ugly": "!=",
+                                    "pretty": "≢"
+                                },
+                                {
+                                    "ugly": "<>",
+                                    "pretty": "≠"
+                                },
+                                {
+                                    "ugly": "sqrt\\s?",
+                                    "pretty": "√",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "&&",
+                                    "pretty": "∧"
+                                },
+                                {
+                                    "ugly": "\\|\\|",
+                                    "pretty": "∨"
+                                },
+                                {
+                                    "ugly": "not\\s?",
+                                    "pretty": "¬",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": ">",
+                                    "pretty": ">",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "<",
+                                    "pretty": "<",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": ">=",
+                                    "pretty": "≥",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "<=",
+                                    "pretty": "≤",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "alpha",
+                                    "pretty": "α",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "beta",
+                                    "pretty": "β",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "gamma",
+                                    "pretty": "γ",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "delta",
+                                    "pretty": "δ",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "''",
+                                    "pretty": "″"
+                                },
+                                {
+                                    "ugly": "'",
+                                    "pretty": "′"
+                                },
+                                {
+                                    "ugly": "List[.]forall",
+                                    "pretty": "∀",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "List[.]exists",
+                                    "pretty": "∃",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": ">>",
+                                    "pretty": "≫",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "<<",
+                                    "pretty": "≪",
+                                    "pre": "[^=<>]|^",
+                                    "post": "[^=<>]|$"
+                                },
+                                {
+                                    "ugly": "\\|",
+                                    "pretty": "║",
+                                    "pre": "^\\s+"
+                                }
                             ]
                         }
                     ]
