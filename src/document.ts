@@ -91,12 +91,19 @@ export class PrettyDocumentController implements vscode.Disposable {
 
   }
 
+  private regexpOptionalGroup(re: string) {
+    if(re)
+      return `(?:${re})`;
+    else
+      return "";
+  }
+
   private loadDecorations() {
     this.unloadDecorations();
     this.prettyDecorations = [];
     const uglyAllStrings = [];
     for(const prettySubst of this.prettySubstitutions) {
-      const uglyStr = (prettySubst.pre || "") + "(" + prettySubst.ugly + ")" + (prettySubst.post || "");
+      const uglyStr = this.regexpOptionalGroup(prettySubst.pre) + "(" + prettySubst.ugly + ")" + this.regexpOptionalGroup(prettySubst.post);
       try {
         this.prettyDecorations.push({
           ugly: new RegExp(uglyStr,"g"),
@@ -205,8 +212,8 @@ export class PrettyDocumentController implements vscode.Disposable {
       let match : RegExpExecArray;
       while(match = this.uglyAll.exec(line.text)) {
         const ugly = this.getUglyFromMatch(match, idx);
-        // if(!ugly)
-        //   break;
+        if(!ugly)
+          continue;
         newUglyRanges.insert(ugly.range);
         newPrettyRanges[ugly.prettyIndex].insert(ugly.range);
       }
@@ -224,6 +231,8 @@ export class PrettyDocumentController implements vscode.Disposable {
     while(match = this.uglyAll.exec(line.text)) {
       try {
         const ugly = this.getUglyFromMatch(match, range.end.line);
+        if(!ugly)
+          continue;
         // if we have just matched a preexisting ugly, then we are done
         if(!preexistingUgly.done && preexistingUgly.value.isEqual(ugly.range))
           break;
