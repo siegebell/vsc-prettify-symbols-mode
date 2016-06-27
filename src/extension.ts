@@ -93,10 +93,7 @@ function reloadConfiguration() {
   languageSettings = configuration.get<LanguageEntry[]>("substitutions");
 
   // Recreate the documents
-  for(const prettyDoc of documents.values()) {
-    prettyDoc.dispose();
-  }
-  documents.clear();
+  unloadDocuments();
   for(const doc of vscode.workspace.textDocuments)
     openDocument(doc);
 }
