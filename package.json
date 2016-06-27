@@ -237,41 +237,92 @@
                             ]
                         },
                         {
+                            "language": "haskell",
+                            "substitutions": [
+                                { "ugly": "\\",           "pretty": "λ", "post": "\\s*(?:\\w|_).*?\\s*->" },
+                                { "ugly": "<-",           "pretty": "←" },
+                                { "ugly": "->",           "pretty": "→" },
+                                { "ugly": "==",           "pretty": "≡" },
+                                { "ugly": "/=",           "pretty": "≢" },
+                                { "ugly": "\\(\\)",       "pretty": "∅" },
+                                { "ugly": "sqrt",         "pretty": "√", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "&&",           "pretty": "∧" },
+                                { "ugly": "||",           "pretty": "∨" },
+                                { "ugly": "not",          "pretty": "¬", "pre": "\\b", "post": "\\b" },
+                                { "ugly": ">",            "pretty": ">", "pre": "[^=<>]", "post": "[^=<>]" },
+                                { "ugly": "<",            "pretty": "<", "pre": "[^=<>]", "post": "[^=<>]" },
+                                { "ugly": ">=",           "pretty": "≥" },
+                                { "ugly": "<=",           "pretty": "≤" },
+                                { "ugly": "alpha",        "pretty": "α", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "beta",         "pretty": "β", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "gamma",        "pretty": "γ", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "delta",        "pretty": "δ", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "''",           "pretty": "″" },
+                                { "ugly": "'",            "pretty": "′" },
+                                { "ugly": "!!",          "pretty": "‼" },
+                                { "ugly": "\\.\\.",      "pretty": "…" }
+                            ]
+                        },
+                        {
                             "language": "ocaml",
                             "substitutions": [
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "fun",
-                                    "post": "\\b",
-                                    "pretty": "λ"
-                                },
-                                {
-                                    "ugly": "=>",
-                                    "pretty": "⇒"
-                                },
-                                {
-                                    "ugly": "->",
-                                    "pretty": "⟶"
-                                }
+                                { "ugly": "fun",          "pretty": "λ", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "<-",           "pretty": "←" },
+                                { "ugly": "->",           "pretty": "→" },
+                                { "ugly": "=",            "pretty": "=", "pre": "[^=]", "post": "[^=]" },
+                                { "ugly": "==",           "pretty": "≡" },
+                                { "ugly": "!=",           "pretty": "≢" },
+                                { "ugly": "<>",           "pretty": "≠" },
+                                { "ugly": "\\(\\)",       "pretty": "∅" },
+                                { "ugly": "sqrt",         "pretty": "√", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "&&",           "pretty": "∧" },
+                                { "ugly": "||",           "pretty": "∨" },
+                                { "ugly": "not",          "pretty": "¬", "pre": "\\b", "post": "\\b" },
+                                { "ugly": ">",            "pretty": ">", "pre": "[^=<>]", "post": "[^=<>]" },
+                                { "ugly": "<",            "pretty": "<", "pre": "[^=<>]", "post": "[^=<>]" },
+                                { "ugly": ">=",           "pretty": "≥" },
+                                { "ugly": "<=",           "pretty": "≤" },
+                                { "ugly": "alpha",        "pretty": "α", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "beta",         "pretty": "β", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "gamma",        "pretty": "γ", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "delta",        "pretty": "δ", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "''",           "pretty": "″" },
+                                { "ugly": "'",            "pretty": "′" },
+                                { "ugly": "List.for_all", "pretty": "∀", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "List.exists",  "pretty": "∃", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "List.mem",     "pretty": "∈", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "|",            "pretty": "║", "pre": "^\\s+" }
                             ]
                         },
                         {
                             "language": "fsharp",
                             "substitutions": [
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "fun",
-                                    "post": "\\b",
-                                    "pretty": "λ"
-                                },
-                                {
-                                    "ugly": "=>",
-                                    "pretty": "⇒"
-                                },
-                                {
-                                    "ugly": "->",
-                                    "pretty": "⟶"
-                                }
+                                { "ugly": "fun",          "pretty": "λ", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "<-",           "pretty": "←" },
+                                { "ugly": "->",           "pretty": "→" },
+                                { "ugly": "=",            "pretty": "=", "pre": "[^=]", "post": "[^=]" },
+                                { "ugly": "==",           "pretty": "≡" },
+                                { "ugly": "!=",           "pretty": "≢" },
+                                { "ugly": "<>",           "pretty": "≠" },
+                                { "ugly": "sqrt",         "pretty": "√", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "&&",           "pretty": "∧" },
+                                { "ugly": "||",           "pretty": "∨" },
+                                { "ugly": "not",          "pretty": "¬", "pre": "\\b", "post": "\\b" },
+                                { "ugly": ">",            "pretty": ">", "pre": "[^=<>]", "post": "[^=<>]" },
+                                { "ugly": "<",            "pretty": "<", "pre": "[^=<>]", "post": "[^=<>]" },
+                                { "ugly": ">=",           "pretty": "≥" },
+                                { "ugly": "<=",           "pretty": "≤" },
+                                { "ugly": "alpha",        "pretty": "α", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "beta",         "pretty": "β", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "gamma",        "pretty": "γ", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "delta",        "pretty": "δ", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "''",           "pretty": "″" },
+                                { "ugly": "'",            "pretty": "′" },
+                                { "ugly": "List.forall",  "pretty": "∀", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "List.exists",  "pretty": "∃", "pre": "\\b", "post": "\\b" },
+                                { "ugly": ">>",           "pretty": "≫" },
+                                { "ugly": "<<",           "pretty": "≪" },
+                                { "ugly": "|",            "pretty": "║", "pre": "^\\s+" }
                             ]
                         }
                     ]
