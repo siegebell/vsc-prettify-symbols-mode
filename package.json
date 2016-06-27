@@ -288,9 +288,9 @@
                                 { "ugly": "delta",        "pretty": "δ", "pre": "\\b", "post": "\\b" },
                                 { "ugly": "''",           "pretty": "″" },
                                 { "ugly": "'",            "pretty": "′" },
-                                { "ugly": "List.for_all", "pretty": "∀", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "List.exists",  "pretty": "∃", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "List.mem",     "pretty": "∈", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "List[.]for_all", "pretty": "∀", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "List[.]exists",  "pretty": "∃", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "List[.]mem",     "pretty": "∈", "pre": "\\b", "post": "\\b" },
                                 { "ugly": "|",            "pretty": "║", "pre": "^\\s+" }
                             ]
                         },
@@ -318,8 +318,8 @@
                                 { "ugly": "delta",        "pretty": "δ", "pre": "\\b", "post": "\\b" },
                                 { "ugly": "''",           "pretty": "″" },
                                 { "ugly": "'",            "pretty": "′" },
-                                { "ugly": "List.forall",  "pretty": "∀", "pre": "\\b", "post": "\\b" },
-                                { "ugly": "List.exists",  "pretty": "∃", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "List[.]forall",  "pretty": "∀", "pre": "\\b", "post": "\\b" },
+                                { "ugly": "List[.]exists",  "pretty": "∃", "pre": "\\b", "post": "\\b" },
                                 { "ugly": ">>",           "pretty": "≫" },
                                 { "ugly": "<<",           "pretty": "≪" },
                                 { "ugly": "|",            "pretty": "║", "pre": "^\\s+" }
