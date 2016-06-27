@@ -11,6 +11,6 @@
 	"workbench.editor.showTabs": true,
 	"editor.tabSize": 2,
 	"editor.insertSpaces": true,
-	"terminal.integrated.shell.windows": "C:\\cygwin64\\cygwin.bat",
+	"terminal.integrated.shell.windows": "C:\\cygwin64\\cygwin.bat", // "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell_ise.exe"
   "files.eol": "\n"
 }
