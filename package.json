@@ -2,7 +2,7 @@
     "name": "prettify-symbols-mode",
     "displayName": "Prettify Symbols Mode",
     "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
-    "version": "0.1.6",
+    "version": "0.2.0",
     "publisher": "siegebell",
     "license": "MIT license (MIT)",
     "engines": {
@@ -35,7 +35,13 @@
             "title": "Prettify symbols mode",
             "properties": {
                 "prettifySymbolsMode.revealOn": {
-                    "enum": ["cursor", "cursor-inside", "active-line", "selection", "none"],
+                    "enum": [
+                        "cursor",
+                        "cursor-inside",
+                        "active-line",
+                        "selection",
+                        "none"
+                    ],
                     "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal. This option may be overriden per-language by specifying 'revealOn' in a language entry.",
                     "default": "cursor"
                 },
@@ -113,10 +119,16 @@
                                 ]
                             },
                             "revealOn": {
-                                "enum": ["cursor", "cursor-inside", "active-line", "selection", "none"],
+                                "enum": [
+                                    "cursor",
+                                    "cursor-inside",
+                                    "active-line",
+                                    "selection",
+                                    "none"
+                                ],
                                 "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal.",
                                 "default": "cursor"
-                            },                            
+                            },
                             "adjustCursorMovement": {
                                 "type": "boolean",
                                 "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations).",
