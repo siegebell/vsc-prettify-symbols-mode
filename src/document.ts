@@ -34,6 +34,7 @@ export class PrettyDocumentController implements vscode.Disposable {
   private subscriptions : vscode.Disposable[] = [];
   private changedUglies = false; // flag used to determine if the uglies have been updated
   private revealStrategy : UglyRevelation;
+  private adjustCursorMovement : boolean;
 
   // hides a "ugly" decorations
   private uglyDecoration: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
@@ -48,10 +49,11 @@ export class PrettyDocumentController implements vscode.Disposable {
     }
   });
 
-  constructor(doc: vscode.TextDocument, prettySubstitutions: Substitution[], revealStrategy: UglyRevelation = 'none') {
+  constructor(doc: vscode.TextDocument, prettySubstitutions: Substitution[], revealStrategy: UglyRevelation = 'none', adjustCursorMovement=true) {
     this.document = doc;
     this.prettySubstitutions = prettySubstitutions;
     this.revealStrategy = revealStrategy;
+    this.adjustCursorMovement = adjustCursorMovement;
     this.loadDecorations();
 
     // Parse whole document
@@ -327,39 +329,6 @@ export class PrettyDocumentController implements vscode.Disposable {
     this.applyDecorations(this.getEditors()); 
   }
 
-  // this was an attempt to make cursor movement more responsive, but there are other bottlenecks and this seemed to have an insignificant effect
-  public adjustCursor(editor: vscode.TextEditor, before: vscode.Selection[], after: vscode.Selection[]) {
-    let updated = false;
-    let adjustedSelections : vscode.Selection[] = [];
-    after.forEach((sel,idx) => {
-      
-      const adjusted = pos.adjustCursorMovement(before[idx].active,sel.active,this.document,this.uglyDecorationRanges.getRanges());
-      if(!adjusted.pos.isEqual(sel.active)) {
-        updated = true;
-      }
-      adjustedSelections.push(new vscode.Selection(adjusted.pos,adjusted.pos));
-    });
-    if(updated)
-      editor.selections = adjustedSelections;
-  }
-
-  public adjustCursorSelect(editor: vscode.TextEditor, before: vscode.Selection[], after: vscode.Selection[]) {
-    let updated = false;
-    let adjustedSelections : vscode.Selection[] = [];
-    after.forEach((sel,idx) => {
-      if(idx > before.length)
-        return;
-      const adjusted = pos.adjustCursorMovement(before[idx].active,sel.active,this.document,this.uglyDecorationRanges.getRanges());
-      if(!adjusted.pos.isEqual(sel.active)) {
-        updated = true;
-      }
-      adjustedSelections.push(new vscode.Selection(sel.anchor,adjusted.pos));
-    });
-    if(updated)
-      editor.selections = adjustedSelections;
-  }
-
-
   private findSymbolAt(pos: vscode.Position, options: {excludeStart?: boolean, includeEnd?: boolean} = {excludeStart: false, includeEnd: false}) {
     return this.uglyDecorationRanges.find(pos,options);
   }
@@ -402,8 +371,50 @@ export class PrettyDocumentController implements vscode.Disposable {
     editor.setDecorations(this.revealedUglyDecoration, cursorRevealedRanges.getRanges());
   }
 
+
+  private lastSelections = new Map<vscode.TextEditor, vscode.Selection[]>();
+  public adjustCursor(editor: vscode.TextEditor) {
+    let updated = false;
+    let adjustedSelections : vscode.Selection[] = [];
+    let before = this.lastSelections.get(editor);
+    if(!before) {
+      this.lastSelections.set(editor,editor.selections);
+      return;
+    }
+    const after = editor.selections;
+    if(arrayEqual(before,after))
+      return;
+
+    after.forEach((sel,idx) => {
+      if(before[idx] === undefined) {
+        adjustedSelections.push(new vscode.Selection(sel.anchor,sel.active));
+        return;
+      }
+      const adjusted = pos.adjustCursorMovement(before[idx].active,sel.active,this.document,this.uglyDecorationRanges.getRanges());
+      if(!adjusted.pos.isEqual(sel.active)) {
+        updated = true;
+      }
+
+      // if anchor==active, then adjust both; otherwise just adjust the active position
+      if(sel.anchor.isEqual(sel.active))
+        adjustedSelections.push(new vscode.Selection(adjusted.pos,adjusted.pos));
+      else
+        adjustedSelections.push(new vscode.Selection(sel.anchor,adjusted.pos));
+    });
+
+    this.lastSelections.set(editor,adjustedSelections);
+
+    // could cause this method to be called again, but since we've set the
+    // last-selection to adjustedSelections, we will immediately return. 
+    if(updated)
+      editor.selections = adjustedSelections;
+  }
+
+
   public selectionChanged(editor: vscode.TextEditor) {
     this.revealSelections(editor);
+    if(this.adjustCursorMovement)
+      this.adjustCursor(editor);
   }
 
 }

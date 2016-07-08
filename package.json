@@ -19,23 +19,15 @@
         "commands": [
             {
                 "command": "extension.enablePrettySymbols",
-                "title": "Enable prettify symbols mode"
+                "title": "Prettify symbols mode: Enable"
             },
             {
                 "command": "extension.disablePrettySymbols",
-                "title": "Disable prettify symbols mode"
+                "title": "Prettify symbols mode: Disable"
             },
             {
                 "command": "extension.togglePrettySymbols",
-                "title": "Toggle prettify symbols mode"
-            },
-            {
-                "command": "extension.enablePrettyCursor",
-                "title": "Enable cursor adjustments in prettify symbols mode"
-            },
-            {
-                "command": "extension.disablePrettyCursor",
-                "title": "Disable cursor adjustments in prettify symbols mode"
+                "title": "Prettify symbols mode: Toggle"
             }
         ],
         "configuration": {
@@ -44,8 +36,13 @@
             "properties": {
                 "prettifySymbolsMode.revealOn": {
                     "enum": ["cursor", "cursor-inside", "active-line", "selection", "none"],
-                    "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal.",
+                    "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal. This option may be overriden per-language by specifying 'revealOn' in a language entry.",
                     "default": "cursor"
+                },
+                "prettifySymbolsMode.adjustCursorMovement": {
+                    "type": "boolean",
+                    "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations). This option may be overriden per-language by specifying 'adjustCursorMovement' in a language entry.",
+                    "default": false
                 },
                 "prettifySymbolsMode.substitutions": {
                     "type": "array",
@@ -120,6 +117,11 @@
                                 "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal.",
                                 "default": "cursor"
                             },                            
+                            "adjustCursorMovement": {
+                                "type": "boolean",
+                                "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations).",
+                                "default": false
+                            },
                             "substitutions": {
                                 "type": "array",
                                 "description": "A list of substitutions",

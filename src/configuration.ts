@@ -19,6 +19,7 @@ export interface LanguageEntry {
 	language:  vscode.DocumentSelector;
 	substitutions: Substitution[];
 	revealOn: UglyRevelation;
+	adjustCursorMovement: boolean;
 }
 
 export interface Settings {

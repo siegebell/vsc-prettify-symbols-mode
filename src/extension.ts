@@ -6,7 +6,6 @@ import {Settings, LanguageEntry, Substitution, UglyRevelation} from './configura
 import {PrettyDocumentController} from './document'; 
 
 let prettySymbolsEnabled = true;
-let prettyCursorEnabled = true;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -35,18 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
       reloadConfiguration();
     }
   });
-  registerTextEditorCommand('extension.disablePrettyCursor', (editor: vscode.TextEditor) => {
-    prettyCursorEnabled = false;
-  });
-  registerTextEditorCommand('extension.enablePrettyCursor', (editor: vscode.TextEditor) => {
-    prettyCursorEnabled = true;
-  });
 
-  registerTextEditorCommand('extension.prettyCursorLeft', cursorLeft);
-  registerTextEditorCommand('extension.prettyCursorRight', cursorRight);
-  registerTextEditorCommand('extension.prettyCursorLeftSelect', cursorLeftSelect);
-  registerTextEditorCommand('extension.prettyCursorRightSelect', cursorRightSelect);
-  
   context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(selectionChanged));
 
   context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(openDocument));
@@ -66,43 +54,25 @@ function selectionChanged(event: vscode.TextEditorSelectionChangeEvent) {
   }  
 }
 
-async function adjustCursor(editor: vscode.TextEditor, command: string, handler: (doc: PrettyDocumentController, editor:vscode.TextEditor, before: vscode.Selection[], after: vscode.Selection[]) => void) {
-  const before = editor.selections;
-  await vscode.commands.executeCommand(command,editor);
-  if(!prettyCursorEnabled)
-    return;
-  try {
-    const after = editor.selections;
-    const prettyDoc = documents.get(editor.document.uri);
-    if(prettyDoc)
-      handler(prettyDoc, editor, before, after)
-  } catch(e) {}
-}
-
-async function cursorLeft(editor: vscode.TextEditor) {
-  adjustCursor(editor,'cursorLeft', (d,e,b,a) => d.adjustCursor(e, b, a));
-}
-
-async function cursorRight(editor: vscode.TextEditor) {
-  adjustCursor(editor,'cursorRight', (d,e,b,a) => d.adjustCursor(e, b, a));
-}
-
-async function cursorLeftSelect(editor: vscode.TextEditor) {
-  adjustCursor(editor,'cursorLeftSelect', (d,e,b,a) => d.adjustCursorSelect(e, b, a));
-}
-
-async function cursorRightSelect(editor: vscode.TextEditor) {
-  adjustCursor(editor,'cursorRightSelect', (d,e,b,a) => d.adjustCursorSelect(e, b, a));
-}
-
 function onConfigurationChanged(){
   reloadConfiguration();
 }
+
+let defaultAdjustCursorMovement : boolean = true;
+let defaultRevelationStrategy : UglyRevelation = 'none';
 
 function reloadConfiguration() {
   const configuration = vscode.workspace.getConfiguration("prettifySymbolsMode");
   languageSettings = configuration.get<LanguageEntry[]>("substitutions");
   defaultRevelationStrategy = configuration.get<UglyRevelation>("revealOn");
+  defaultAdjustCursorMovement = configuration.get<boolean>("adjustCursorMovement");
+
+  for(const language of languageSettings) {
+    if(language.revealOn === undefined)
+      language.revealOn = defaultRevelationStrategy;
+    if(language.adjustCursorMovement === undefined)
+      language.adjustCursorMovement = defaultAdjustCursorMovement;
+  }
 
   // Recreate the documents
   unloadDocuments();
@@ -137,13 +107,6 @@ function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
     });
 }
 
-let defaultRevelationStrategy : UglyRevelation = 'none';
-function getRevelationStrategy(language: LanguageEntry) {
-  if(!language || !language.revealOn)
-    return defaultRevelationStrategy;
-  else
-    return language.revealOn;
-}
 
 function openDocument(doc: vscode.TextDocument) {
   if(!prettySymbolsEnabled)
@@ -154,8 +117,7 @@ function openDocument(doc: vscode.TextDocument) {
   } else {
     const language = getLanguageEntry(doc);
     if(language) {
-      const revelationStrategy = getRevelationStrategy(language);
-      documents.set(doc.uri, new PrettyDocumentController(doc, language.substitutions, revelationStrategy));
+      documents.set(doc.uri, new PrettyDocumentController(doc, language.substitutions, language.revealOn, language.adjustCursorMovement));
     }
   }
 }
