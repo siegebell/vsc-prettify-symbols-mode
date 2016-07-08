@@ -50,6 +50,11 @@
                     "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations). This option may be overriden per-language by specifying 'adjustCursorMovement' in a language entry.",
                     "default": false
                 },
+                "prettifySymbolsMode.prettyCursor": {
+                    "enum": ["boxed", "none"],
+                    "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change. This option may be overriden per-language by specifying 'prettyCursor' in a language entry.",
+                    "default": "boxed"
+                },
                 "prettifySymbolsMode.substitutions": {
                     "type": "array",
                     "description": "A list of substitution settings can be specified for each language.",
@@ -133,6 +138,11 @@
                                 "type": "boolean",
                                 "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations).",
                                 "default": false
+                            },
+                            "prettyCursor": {
+                                "enum": ["boxed", "none"],
+                                "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change",
+                                "default": "boxed"
                             },
                             "substitutions": {
                                 "type": "array",

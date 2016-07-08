@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode'; 
 import * as util from 'util'; 
-import {Settings, LanguageEntry, Substitution, UglyRevelation} from './configuration'; 
+import {Settings, LanguageEntry, Substitution, UglyRevelation, PrettyCursor} from './configuration'; 
 import {PrettyDocumentController} from './document'; 
 
 let prettySymbolsEnabled = true;
@@ -58,20 +58,24 @@ function onConfigurationChanged(){
   reloadConfiguration();
 }
 
-let defaultAdjustCursorMovement : boolean = true;
-let defaultRevelationStrategy : UglyRevelation = 'none';
+let defaultAdjustCursorMovement : boolean = false;
+let defaultRevelationStrategy : UglyRevelation = 'cursor';
+let defaultPrettyCursor : PrettyCursor = 'boxed';
 
 function reloadConfiguration() {
   const configuration = vscode.workspace.getConfiguration("prettifySymbolsMode");
   languageSettings = configuration.get<LanguageEntry[]>("substitutions");
   defaultRevelationStrategy = configuration.get<UglyRevelation>("revealOn");
   defaultAdjustCursorMovement = configuration.get<boolean>("adjustCursorMovement");
+  defaultPrettyCursor = configuration.get<PrettyCursor>("prettyCursor");
 
   for(const language of languageSettings) {
     if(language.revealOn === undefined)
       language.revealOn = defaultRevelationStrategy;
     if(language.adjustCursorMovement === undefined)
       language.adjustCursorMovement = defaultAdjustCursorMovement;
+    if(language.prettyCursor === undefined)
+      language.prettyCursor = defaultPrettyCursor;
   }
 
   // Recreate the documents
@@ -117,7 +121,7 @@ function openDocument(doc: vscode.TextDocument) {
   } else {
     const language = getLanguageEntry(doc);
     if(language) {
-      documents.set(doc.uri, new PrettyDocumentController(doc, language.substitutions, language.revealOn, language.adjustCursorMovement));
+      documents.set(doc.uri, new PrettyDocumentController(doc, language));
     }
   }
 }

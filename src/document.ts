@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import {Substitution, UglyRevelation} from './configuration';
+import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor} from './configuration';
 import * as pos from './position';
 import {DisjointRangeSet} from './disjointrangeset';
 import * as drangeset from './disjointrangeset';
@@ -35,6 +35,7 @@ export class PrettyDocumentController implements vscode.Disposable {
   private changedUglies = false; // flag used to determine if the uglies have been updated
   private revealStrategy : UglyRevelation;
   private adjustCursorMovement : boolean;
+  private prettyCursor: PrettyCursor;
 
   // hides a "ugly" decorations
   private uglyDecoration: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
@@ -49,12 +50,20 @@ export class PrettyDocumentController implements vscode.Disposable {
       textDecoration: 'none; font-size: 0pt',
     }
   });
+  // draws a box around a pretty symbol
+  private boxedSymbolDecoration: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
+    before: {
+      border: '0.1em solid',
+      margin: '-0em -0.05em -0em -0.1em',
+    }
+  });
 
-  constructor(doc: vscode.TextDocument, prettySubstitutions: Substitution[], revealStrategy: UglyRevelation = 'none', adjustCursorMovement=true) {
+  constructor(doc: vscode.TextDocument, settings: LanguageEntry) {
     this.document = doc;
-    this.prettySubstitutions = prettySubstitutions;
-    this.revealStrategy = revealStrategy;
-    this.adjustCursorMovement = adjustCursorMovement;
+    this.prettySubstitutions = settings.substitutions;
+    this.revealStrategy = settings.revealOn;
+    this.adjustCursorMovement = settings.adjustCursorMovement;
+    this.prettyCursor = settings.prettyCursor;
     this.loadDecorations();
 
     // Parse whole document
@@ -64,6 +73,7 @@ export class PrettyDocumentController implements vscode.Disposable {
 
     this.subscriptions.push(this.uglyDecoration);
     this.subscriptions.push(this.revealedUglyDecoration);
+    this.subscriptions.push(this.boxedSymbolDecoration);
     this.subscriptions.push(vscode.workspace.onDidChangeTextDocument((e) => {
       if(e.document == this.document)
         this.onChangeDocument(e);
@@ -339,38 +349,43 @@ export class PrettyDocumentController implements vscode.Disposable {
   }
 
   private revealSelections(editor: vscode.TextEditor) {
-    const cursorRevealedRanges = new DisjointRangeSet();
-    // add the new intersections
-    for(const selection of editor.selections) {
-      switch(this.revealStrategy) {
-        case 'cursor': {
-          const ugly = this.findSymbolAt(selection.active,{includeEnd: true});
-          if(ugly)
-            cursorRevealedRanges.insert(ugly);
-          break;
-        }
-        case 'cursor-inside': {
-          const ugly = this.findSymbolAt(selection.active,{excludeStart: true});
-          if(ugly)
-            cursorRevealedRanges.insert(ugly);
-          break;
-        }
-        case 'active-line': {
-          const line = editor.document.lineAt(selection.active.line).range;
-          const uglies = this.findSymbolsIn(line);
-          cursorRevealedRanges.insertRanges(uglies);
-          break;
-        }
-        case 'selection': {
-          const uglies = this.findSymbolsIn(new vscode.Range(selection.start, selection.end));
-          cursorRevealedRanges.insertRanges(uglies);
-          break;
-        }
+    const revealUgly = (getRange: (sel:vscode.Selection) => vscode.Range) => {
+      const cursorRevealedRanges = new DisjointRangeSet();
+      for(const selection of editor.selections) {
+        const ugly = getRange(selection);
+        if(ugly)
+          cursorRevealedRanges.insert(ugly);
       }
+      // reveal the uglies and hide the pretties
+      editor.setDecorations(this.revealedUglyDecoration, cursorRevealedRanges.getRanges());
     }
-    // reveal the uglies and hide the pretties
-    editor.setDecorations(this.revealedUglyDecoration, cursorRevealedRanges.getRanges());
-  }
+    const revealUglies = (getRanges: (sel:vscode.Selection) => DisjointRangeSet) => {
+      const cursorRevealedRanges = new DisjointRangeSet();
+      for(const selection of editor.selections) {
+        const ugly = getRanges(selection);
+        if(ugly)
+          cursorRevealedRanges.insertRanges(ugly);
+      }
+      // reveal the uglies and hide the pretties
+      editor.setDecorations(this.revealedUglyDecoration, cursorRevealedRanges.getRanges());
+    }
+
+    // add the new intersections
+    switch(this.revealStrategy) {
+      case 'cursor':
+        revealUgly((sel) => this.findSymbolAt(sel.active,{includeEnd: true}));
+        return;
+      case 'cursor-inside':
+        revealUgly((sel) => this.findSymbolAt(sel.active,{excludeStart: true}));
+        return;
+      case 'active-line':
+        revealUglies((sel) => this.findSymbolsIn(editor.document.lineAt(sel.active.line).range));
+        return;
+      case 'selection':
+        revealUglies((sel) => this.findSymbolsIn(new vscode.Range(sel.start, sel.end)));
+        return;
+    }
+ }
 
 
   private lastSelections = new Map<vscode.TextEditor, vscode.Selection[]>();
@@ -411,9 +426,30 @@ export class PrettyDocumentController implements vscode.Disposable {
       editor.selections = adjustedSelections;
   }
 
+  private renderPrettyCursor(editor: vscode.TextEditor) {
+    switch(this.prettyCursor) {
+      case 'boxed': {
+        const boxPretty = (getRange: (sel:vscode.Selection) => vscode.Range) => {
+          const cursorBoxRanges = new DisjointRangeSet();
+          for(const selection of editor.selections) {
+            const pretty = getRange(selection);
+            if(pretty)
+              cursorBoxRanges.insert(pretty);
+          }
+          // reveal the uglies and hide the pretties
+          editor.setDecorations(this.boxedSymbolDecoration, cursorBoxRanges.getRanges());
+        }
+        boxPretty((sel) => this.findSymbolAt(sel.active));
+        return;
+      }
+      default:
+        return;
+    }
+  }
 
   public selectionChanged(editor: vscode.TextEditor) {
     this.revealSelections(editor);
+    this.renderPrettyCursor(editor);
     if(this.adjustCursorMovement)
       this.adjustCursor(editor);
   }

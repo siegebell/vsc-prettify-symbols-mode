@@ -26,8 +26,14 @@ By default, "ugly" text will be revealed while contacted by a cursor. You may ov
 * `"cursor"`: reveal while a cursor contacts the symbol (default);
 * `"cursor-inside"`: reveal while a cursor is *inside* the symbol;
 * `"active-line"`: reveal all symbols while on the same line as a cursor;
-* `"selection"`: reveal all symbols while being selected or in contact with a cursor; and
+* `"selection"`: reveal all symbols while being selected or in contact with a cursor; or
 * `"none"`: do not reveal symbols.
+
+### Pretty cursor
+
+By default, any "pretty" symbol that comes into contact with the cursor will be rendered with a box outline around it. This effect is only visible if the "ugly" text is not revealed (e.g. `"revealOn": "none"`). You can control this setting by specifying `"prettifySymbolsMode.prettyCursor"`, or per-language by specifying `"prettyCursor"` within a language entry. Options are:
+* "boxed": display a box around a symbol (only visible if the "ugly" text is not revealed); or
+* "none": do not change the appearance of the symbol.
 
 ### Adjust cursor movement
 
@@ -36,6 +42,20 @@ By default, cursor movement will traverse the characters of the "ugly" text -- t
 ### Regular expressions
 
 This extension uses [Javascript's regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) syntax for `"ugly"`, `"pre"`, and `"post"` (but double-escaped because it is parsed by both JSON and regexp). You must avoid using capturing-groups or mis-parenthesized expressions as it will cause substitutions to behave unpredictably (validation is not performed so you will not receive an error message). 
+
+### Common settings for `settings.json`
+
+* **Default:** symbols are unfolded as they are traversed by the cursor. 
+```json
+"prettifySymbolsMode.renderOn": "cursor",
+"prettifySymbolsMode.adjustCursorMovement": false,
+```
+* Suggested alternative: symbols are never unfolded, generally act like a single character w.r.t. cursor movement, and are rendered with a box outline when they have a cursor focus. 
+```json
+"prettifySymbolsMode.renderOn": "none",
+"prettifySymbolsMode.adjustCursorMovement": true,
+"prettifySymbolsMode.prettyCursor": "boxed",
+```
 
 ## Variable-width symbols driving you crazy?
 
@@ -50,9 +70,10 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
 
 ## Known issues:
 
-* The cursor disappears when adjacent-to or inside of a "pretty" symbol. If this is distracting, try setting `"revealOn"` to e.g. `"cursor"`.
+* The cursor disappears when adjacent-to or inside of a "pretty" symbol. If this is distracting, try setting `"revealOn"` to e.g. `"cursor"` or `"prettyCursor"` to `"boxed"`.
 * You can write bad regular expressions that break substitutions and you will not get an error message.
 * Substitutions are only performed on *open* documents, so you may have to begin editing to activate substitutions.
+* Clicking on a symbol will lose editor focus.
 
 ## Examples
 

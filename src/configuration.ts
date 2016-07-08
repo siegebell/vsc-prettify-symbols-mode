@@ -15,11 +15,17 @@ export type UglyRevelation =
 	| 'selection'     // the cursor reveals all symbols within a selection
 	| 'none';         // the cursor does not reveal any symbol
 
+/** Controls how a symbol is rendered when a cursor is on it */
+export type PrettyCursor =
+    'boxed' // render an outline around the symbol
+	| 'none'  // do change to the symbol
+
 export interface LanguageEntry {
 	language:  vscode.DocumentSelector;
 	substitutions: Substitution[];
 	revealOn: UglyRevelation;
 	adjustCursorMovement: boolean;
+	prettyCursor: PrettyCursor;
 }
 
 export interface Settings {
