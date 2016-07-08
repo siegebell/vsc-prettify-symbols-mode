@@ -13,24 +13,4 @@
 	"editor.insertSpaces": true,
 	"terminal.integrated.shell.windows": "C:\\cygwin64\\cygwin.bat", // "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell_ise.exe"
   "files.eol": "\n"
-  // "editor.fontFamily": "'Consolas Math (Asana Symbolas)', Consolas, 'Asana monospacified for Co', 'Courier New', monospace",
-  // "editor.fontFamily": "Consolas, 'FreeSerif monospacified for Consolas', 'Courier New', monospace",
-  // "editor.fontFamily": "Consolas, 'Latin Modern Math monospacified for Consolas', 'Courier New', monospace",
-  // "editor.fontFamily": "Consolas, 'STIX Math Regular monospacified for Consolas', 'Courier New', monospace",
-  // "editor.fontFamily": "Consolas, 'Symbola monospacified for Consolas', 'Courier New', monospace",
-  // "editor.fontFamily": "Consolas, 'TeXGyreScholaMath monospacified for Consolas', 'Courier New', monospace",
-  // "editor.fontFamily": "Consolas, 'XITS Math monospacified for Consolas', 'Courier New', monospace",
-  // "prettifySymbolsMode.substitutions": [
-  //   {
-  //     "language": ["typescript"],
-  //     "substitutions": [
-  //       {
-  //         "pre": "\\b",
-  //         "ugly": "forall",
-  //         "post": "\\b",
-  //         "pretty": "∀"
-  //       }
-	// 		]
-	// 	}
-	// 	]
 }

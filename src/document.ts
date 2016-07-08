@@ -39,7 +39,8 @@ export class PrettyDocumentController implements vscode.Disposable {
   // hides a "ugly" decorations
   private uglyDecoration: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
 		// color: "black; font-size: 0pt", // for some reason, the cursor disappears if the font is too small or display:none
-    textDecoration: 'none; font-size: 0pt',
+    // The font size must be nonzero so that the (subchild) pretty text can scale it up by 1000em
+    textDecoration: 'none; font-size: 0.001em',
   });
   // reveals the "ugly" decorations; is applied on top of uglyDecoration and should take priority
   private revealedUglyDecoration: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
@@ -118,7 +119,7 @@ export class PrettyDocumentController implements vscode.Disposable {
           decorationType: vscode.window.createTextEditorDecorationType({
             before: {
               contentText: prettySubst.pretty,
-              textDecoration: 'none; font-size: initial',
+              textDecoration: 'none; font-size: 1000em',
             },
           }),
         });
