@@ -1,14 +1,14 @@
 # Prettify Symbols Mode
 
-[Prettify Symbols Mode](https://www.emacswiki.org/emacs/PrettySymbol) for [Visual Studio Code (1.3.0)](https://code.visualstudio.com).
-
 Prettify symbols mode makes *visual* substitutions to your source code, e.g. displaying `fun` as `λ`, while never touching your code itself.
 
-**Notice**: *this extension is not yet supported by the public release of vscode; it only works in the insider's build*.
+This feature is inspired by [prettify-symbols-mode for Emacs](https://www.emacswiki.org/emacs/PrettySymbol).
+
+
 
 ## Configuration
 
-Once you have installed this extension, modify  `settings.json` to add language-specific substitutions. For example, the following settings will target F# files, and will make the following substitutions: `fun` -> `λ` and `->` -> `⟶`.
+Once you have installed this extension, modify  `settings.json` to add language-specific substitutions. For example, the following settings will target F# files, rendering `fun` as `λ` and `->` as `⟶`.
 ```json
 "prettifySymbolsMode.substitutions": [{
     "language": "fsharp",
@@ -21,6 +21,24 @@ Once you have installed this extension, modify  `settings.json` to add language-
 
 Substitutions work by matching any string that satisfies the `"ugly"` pattern and visually replacing it with `"pretty"`; you can optionally specify the context by providing `"pre"` or `"post"` regular expressions that must be matched for the substitution to occur. You can also target multiple languages or glob patterns at once via `"languages": ["fsharp", {"pattern":  "**/*.txt"}]`.
 
+### Revealing symbols
+
+By default, "ugly" text will be revealed while contacted by a cursor.
+You may override this behavior by specifying `"prettifySymbolsMode.revealOn"`, or per-language by specifying `"revealOn"` within a language entry.
+Options are:
+* `"cursor"`: reveal while a cursor contacts the symbol (default);
+* `"cursor-inside"`: reveal while a cursor is *inside* the symbol;
+* `"active-line"`: reveal all symbols while on the same line as a cursor;
+* `"selection"`: reveal all symbols while being selected or in contact with a cursor; and
+* `"none"`: do not reveal symbols.
+
+### Adjust cursor movement
+
+By default, cursor movement will traverse the characters of the "ugly" text -- this will cause it to become invisible while inside the text if it is not revealed (see `"revealOn"`).
+Setting `"prettifySymbolsMode.adjustCursorMovement"` to `true` will tweak cursor movement so that "pretty" symbols behave as a single character.
+This can be overriden per-language be specifying `"adjustCursorMovement"` in a language entry.
+In particular, left or right movement will cause the cursor to jump over the symbol instead of going inside.
+However, this setting does not currently account for all kinds of cursor movement, e.g. up/down.
 
 ### Regular expressions
 
@@ -32,19 +50,20 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
 
 ![example fix for variable-width fonts](https://github.com/cpitclaudel/monospacifier/blob/master/demo/symbola-loop.gif?raw=true)
 
-## Known issues: *beta!*
+## Known issues:
 
-* Cursor movement goes *underneath* the substitution and the cursor will disappear.
-  - you can fix cursor movement by respectively binding the left (+shift) and right (+shift) arrow keys to "extension.prettyCursorLeft", "extension.prettyCursorSelectLeft", "extension.prettyCursorRight", and "extension.prettyCursorSelectRight". However, you may notice more lag in cursor movement because of an ongoing issue with vscode.
+* The cursor disappears when adjacent-to or inside of a "pretty" symbol. If this is distracting, try setting `"revealOn"` to e.g. `"cursor"`.
 * You can write bad regular expressions that break substitutions and you will not get an error message.
 * Substitutions are only performed on *open* documents, so you may have to begin editing to activate substitutions.
-* This extension is only available for version 1.3.0 of vscode (currently an "insider" build).
 
 ## Examples
 
 ```json
+"prettifySymbolsMode.revealOn": "cursor",
+"prettifySymbolsMode.adjustCursorMovement": false,
 "prettifySymbolsMode.substitutions": [{
   "language": "haskell",
+  "revealOn": "active-line",
   "substitutions": [
     { "ugly": "\\\\",     "pretty": "λ", "post": "\\s*(?:\\w|_).*?\\s*->" },
     { "ugly": "<-",       "pretty": "←" },
@@ -70,6 +89,8 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
     { "ugly": "\\.\\.",   "pretty": "…" }
   ]},{
   "language": "ocaml",
+  "revealOn": "none",
+  "adjustCursorMovement": true,
   "substitutions": [
     { "ugly": "fun",            "pretty": "λ", "pre": "\\b", "post": "\\b" },
     { "ugly": "<-",             "pretty": "←" },
