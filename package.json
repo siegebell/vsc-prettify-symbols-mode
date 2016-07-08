@@ -42,6 +42,11 @@
             "type": "object",
             "title": "Prettify symbols mode",
             "properties": {
+                "prettifySymbolsMode.revealOn": {
+                    "enum": ["cursor", "cursor-inside", "active-line", "selection", "none"],
+                    "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal.",
+                    "default": "cursor"
+                },
                 "prettifySymbolsMode.substitutions": {
                     "type": "array",
                     "description": "A list of substitution settings can be specified for each language.",
@@ -110,6 +115,11 @@
                                     }
                                 ]
                             },
+                            "revealOn": {
+                                "enum": ["cursor", "cursor-inside", "active-line", "selection", "none"],
+                                "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal.",
+                                "default": "cursor"
+                            },                            
                             "substitutions": {
                                 "type": "array",
                                 "description": "A list of substitutions",

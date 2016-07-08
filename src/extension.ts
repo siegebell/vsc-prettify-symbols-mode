@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode'; 
 import * as util from 'util'; 
-import {Settings, LanguageEntry, Substitution} from './configuration'; 
+import {Settings, LanguageEntry, Substitution, UglyRevelation} from './configuration'; 
 import {PrettyDocumentController} from './document'; 
 
 let prettySymbolsEnabled = true;
@@ -46,13 +46,24 @@ export function activate(context: vscode.ExtensionContext) {
   registerTextEditorCommand('extension.prettyCursorRight', cursorRight);
   registerTextEditorCommand('extension.prettyCursorLeftSelect', cursorLeftSelect);
   registerTextEditorCommand('extension.prettyCursorRightSelect', cursorRightSelect);
-
+  
+  context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(selectionChanged));
 
   context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(openDocument));
   context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(closeDocument));
   context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onConfigurationChanged));
 
   reloadConfiguration();
+}
+
+function selectionChanged(event: vscode.TextEditorSelectionChangeEvent) {
+  try {
+    const prettyDoc = documents.get(event.textEditor.document.uri);
+    if(prettyDoc)
+      prettyDoc.selectionChanged(event.textEditor);
+  } catch(e) {
+    console.error(e);
+  }  
 }
 
 async function adjustCursor(editor: vscode.TextEditor, command: string, handler: (doc: PrettyDocumentController, editor:vscode.TextEditor, before: vscode.Selection[], after: vscode.Selection[]) => void) {
@@ -91,6 +102,7 @@ function onConfigurationChanged(){
 function reloadConfiguration() {
   const configuration = vscode.workspace.getConfiguration("prettifySymbolsMode");
   languageSettings = configuration.get<LanguageEntry[]>("substitutions");
+  defaultRevelationStrategy = configuration.get<UglyRevelation>("revealOn");
 
   // Recreate the documents
   unloadDocuments();
@@ -117,12 +129,20 @@ function reloadConfiguration() {
 let documents = new Map<vscode.Uri,PrettyDocumentController>();
 let languageSettings : LanguageEntry[] = [];
 
-function getLanguageEntry(doc: vscode.TextDocument) {
+function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
   return languageSettings
     .find((entry) => {
       const match = vscode.languages.match(entry.language, doc);
       return match > 0;
     });
+}
+
+let defaultRevelationStrategy : UglyRevelation = 'none';
+function getRevelationStrategy(language: LanguageEntry) {
+  if(!language || !language.revealOn)
+    return defaultRevelationStrategy;
+  else
+    return language.revealOn;
 }
 
 function openDocument(doc: vscode.TextDocument) {
@@ -133,8 +153,10 @@ function openDocument(doc: vscode.TextDocument) {
     prettyDoc.refresh();
   } else {
     const language = getLanguageEntry(doc);
-    if(language)
-      documents.set(doc.uri, new PrettyDocumentController(doc, language.substitutions));
+    if(language) {
+      const revelationStrategy = getRevelationStrategy(language);
+      documents.set(doc.uri, new PrettyDocumentController(doc, language.substitutions, revelationStrategy));
+    }
   }
 }
 
