@@ -2,7 +2,7 @@
     "name": "prettify-symbols-mode",
     "displayName": "Prettify Symbols Mode",
     "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "publisher": "siegebell",
     "license": "MIT license (MIT)",
     "engines": {
@@ -51,7 +51,10 @@
                     "default": false
                 },
                 "prettifySymbolsMode.prettyCursor": {
-                    "enum": ["boxed", "none"],
+                    "enum": [
+                        "boxed",
+                        "none"
+                    ],
                     "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change. This option may be overriden per-language by specifying 'prettyCursor' in a language entry.",
                     "default": "boxed"
                 },
@@ -140,7 +143,10 @@
                                 "default": false
                             },
                             "prettyCursor": {
-                                "enum": ["boxed", "none"],
+                                "enum": [
+                                    "boxed",
+                                    "none"
+                                ],
                                 "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change",
                                 "default": "boxed"
                             },
