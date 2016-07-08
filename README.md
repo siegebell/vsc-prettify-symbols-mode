@@ -5,7 +5,6 @@ Prettify symbols mode makes *visual* substitutions to your source code, e.g. dis
 This feature is inspired by [prettify-symbols-mode for Emacs](https://www.emacswiki.org/emacs/PrettySymbol).
 
 
-
 ## Configuration
 
 Once you have installed this extension, modify  `settings.json` to add language-specific substitutions. For example, the following settings will target F# files, rendering `fun` as `λ` and `->` as `⟶`.
@@ -23,9 +22,7 @@ Substitutions work by matching any string that satisfies the `"ugly"` pattern an
 
 ### Revealing symbols
 
-By default, "ugly" text will be revealed while contacted by a cursor.
-You may override this behavior by specifying `"prettifySymbolsMode.revealOn"`, or per-language by specifying `"revealOn"` within a language entry.
-Options are:
+By default, "ugly" text will be revealed while contacted by a cursor. You may override this behavior by specifying `"prettifySymbolsMode.revealOn"`, or per-language by specifying `"revealOn"` within a language entry. Options are:
 * `"cursor"`: reveal while a cursor contacts the symbol (default);
 * `"cursor-inside"`: reveal while a cursor is *inside* the symbol;
 * `"active-line"`: reveal all symbols while on the same line as a cursor;
@@ -34,11 +31,7 @@ Options are:
 
 ### Adjust cursor movement
 
-By default, cursor movement will traverse the characters of the "ugly" text -- this will cause it to become invisible while inside the text if it is not revealed (see `"revealOn"`).
-Setting `"prettifySymbolsMode.adjustCursorMovement"` to `true` will tweak cursor movement so that "pretty" symbols behave as a single character.
-This can be overriden per-language be specifying `"adjustCursorMovement"` in a language entry.
-In particular, left or right movement will cause the cursor to jump over the symbol instead of going inside.
-However, this setting does not currently account for all kinds of cursor movement, e.g. up/down.
+By default, cursor movement will traverse the characters of the "ugly" text -- this will cause it to become invisible while inside the text if it is not revealed (see `"revealOn"`). Setting `"prettifySymbolsMode.adjustCursorMovement"` to `true` will tweak cursor movement so that "pretty" symbols behave as a single character. This can be overriden per-language be specifying `"adjustCursorMovement"` in a language entry. In particular, left or right movement will cause the cursor to jump over the symbol instead of going inside. However, this setting does not currently account for all kinds of cursor movement, e.g. up/down.
 
 ### Regular expressions
 
