@@ -43,6 +43,14 @@ By default, cursor movement will traverse the characters of the "ugly" text -- t
 
 This extension uses [Javascript's regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) syntax for `"ugly"`, `"pre"`, and `"post"` (but double-escaped because it is parsed by both JSON and regexp). You must avoid using capturing-groups or mis-parenthesized expressions as it will cause substitutions to behave unpredictably (validation is not performed so you will not receive an error message). 
 
+### Commands
+
+The following commands are available for keybinding:
+* `extension.enablePrettySymbols`: globally *enable* prettify symbols mode
+* `extension.disablePrettySymbols`: globally *disable* prettify symbols mode
+* `extension.togglePrettySymbols`: globally *toggle* prettify symbols mode
+
+
 ### Common settings for `settings.json`
 
 * **Default:** symbols are unfolded as they are traversed by the cursor. 
