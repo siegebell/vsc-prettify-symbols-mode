@@ -78,6 +78,7 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
 
 ## Known issues:
 
+**[submit new issues on github](https://github.com/siegebell/vsc-prettify-symbols-mode/issues)**
 * The cursor disappears when adjacent-to or inside of a "pretty" symbol. If this is distracting, try setting `"revealOn"` to e.g. `"cursor"` or `"prettyCursor"` to `"boxed"`.
 * You can write bad regular expressions that break substitutions and you will not get an error message.
 * Substitutions are only performed on *open* documents, so you may have to begin editing to activate substitutions.
@@ -102,10 +103,10 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
     { "ugly": "&&",       "pretty": "∧" },
     { "ugly": "\\|\\|",   "pretty": "∨" },
     { "ugly": "not\\s?",  "pretty": "¬", "pre": "\\b", "post": "\\b" },
-    { "ugly": ">",        "pretty": ">", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-    { "ugly": "<",        "pretty": "<", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-    { "ugly": ">=",       "pretty": "≥", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-    { "ugly": "<=",       "pretty": "≤", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": ">",        "pretty": ">", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
+    { "ugly": "<",        "pretty": "<", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
+    { "ugly": ">=",       "pretty": "≥", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
+    { "ugly": "<=",       "pretty": "≤", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
     { "ugly": "alpha",    "pretty": "α", "pre": "\\b", "post": "\\b" },
     { "ugly": "beta",     "pretty": "β", "pre": "\\b", "post": "\\b" },
     { "ugly": "gamma",    "pretty": "γ", "pre": "\\b", "post": "\\b" },
@@ -131,10 +132,10 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
     { "ugly": "&&",             "pretty": "∧" },
     { "ugly": "\\|\\|",         "pretty": "∨" },
     { "ugly": "not\\s?",        "pretty": "¬", "pre": "\\b", "post": "\\b" },
-    { "ugly": ">",              "pretty": ">", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-    { "ugly": "<",              "pretty": "<", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-    { "ugly": ">=",             "pretty": "≥", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-    { "ugly": "<=",             "pretty": "≤", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": ">",              "pretty": ">", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
+    { "ugly": "<",              "pretty": "<", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
+    { "ugly": ">=",             "pretty": "≥", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
+    { "ugly": "<=",             "pretty": "≤", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
     { "ugly": "alpha",          "pretty": "α", "pre": "\\b", "post": "\\b" },
     { "ugly": "beta",           "pretty": "β", "pre": "\\b", "post": "\\b" },
     { "ugly": "gamma",          "pretty": "γ", "pre": "\\b", "post": "\\b" },
@@ -159,10 +160,10 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
     { "ugly": "&&",            "pretty": "∧" },
     { "ugly": "\\|\\|",        "pretty": "∨" },
     { "ugly": "not\\s?",       "pretty": "¬", "pre": "\\b", "post": "\\b" },
-    { "ugly": ">",             "pretty": ">", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-    { "ugly": "<",             "pretty": "<", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-    { "ugly": ">=",            "pretty": "≥", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
-    { "ugly": "<=",            "pretty": "≤", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
+    { "ugly": ">",             "pretty": ">", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
+    { "ugly": "<",             "pretty": "<", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
+    { "ugly": ">=",            "pretty": "≥", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
+    { "ugly": "<=",            "pretty": "≤", "pre": "[^=\\-<>]|^", "post": "[^=\\-<>]|$" },
     { "ugly": "alpha",         "pretty": "α", "pre": "\\b", "post": "\\b" },
     { "ugly": "beta",          "pretty": "β", "pre": "\\b", "post": "\\b" },
     { "ugly": "gamma",         "pretty": "γ", "pre": "\\b", "post": "\\b" },
