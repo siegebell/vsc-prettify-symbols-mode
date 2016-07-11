@@ -173,6 +173,35 @@
                                         "post": {
                                             "type": "string",
                                             "description": "If specified, the text following the 'ugly' text must match this pattern. E.g. '\\\\\\b'"
+                                        },
+                                        "style": {
+                                            "type": "object",
+                                            "properties": {
+                                                "border": { "type": "string", "description": "CSS border property" },
+                                                "textDecoration": { "type": "string", "description": "CSS text-decoration property", "anyOf": [{"pattern": "[^;]*"}, {"enum": ["underline", "overline", "line-through"]}] },
+                                                "color": { "type": "string", "description": "CSS color property" },
+                                                "backgroundColor": { "type": "string", "description": "CSS background-color property" },
+                                                "light": {
+                                                    "type": "object",
+                                                    "description": "Styling options for vscode light themes",
+                                                    "properties": {
+                                                        "border": { "type": "string", "description": "CSS border property" },
+                                                        "textDecoration": { "type": "string", "description": "CSS text-decoration property", "anyOf": [{"pattern": "[^;]*"}, {"enum": ["underline", "overline", "line-through"]}] },
+                                                        "color": { "type": "string", "description": "CSS color property" },
+                                                        "backgroundColor": { "type": "string", "description": "CSS background-color property" }
+                                                    }
+                                                },
+                                                "dark": {
+                                                    "type": "object",
+                                                    "description": "Styling options for vscode dark themes",
+                                                    "properties": {
+                                                        "border": { "type": "string", "description": "CSS border property" },
+                                                        "textDecoration": { "type": "string", "description": "CSS text-decoration property", "anyOf": [{"pattern": "[^;]*"}, {"enum": ["underline", "overline", "line-through"]}] },
+                                                        "color": { "type": "string", "description": "CSS color property" },
+                                                        "backgroundColor": { "type": "string", "description": "CSS background-color property" }
+                                                    }
+                                                }
+                                            }
                                         }
                                     },
                                     "required": [

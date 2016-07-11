@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor} from './configuration';
+import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor, PrettyStyleProperties, PrettyStyle, assignStyleProperties} from './configuration';
 import * as pos from './position';
 import {DisjointRangeSet} from './disjointrangeset';
 import * as drangeset from './disjointrangeset';
@@ -122,16 +122,28 @@ export class PrettyDocumentController implements vscode.Disposable {
     for(const prettySubst of this.prettySubstitutions) {
       const uglyStr = this.regexpOptionalGroup(prettySubst.pre) + "(" + prettySubst.ugly + ")" + this.regexpOptionalGroup(prettySubst.post);
       try {
+        let styling : vscode.DecorationRenderOptions = { before: {}, dark: {before: {}}, light: {before: {}} };
+        if(prettySubst.style) {
+          assignStyleProperties(styling.before, prettySubst.style);
+          if(prettySubst.style.dark)
+            assignStyleProperties(styling.dark.before, prettySubst.style.dark);
+          if(prettySubst.style.light)
+            assignStyleProperties(styling.light.before, prettySubst.style.light);
+        }
+        styling.before.contentText = prettySubst.pretty;
+        // Use a dirty hack to change the font size (code injection)
+        styling.before.textDecoration = (styling.before.textDecoration || 'none') + '; font-size: 1000em';
+        // and make sure the user's textDecoration does not break our hack
+        if(styling.light.before.textDecoration)
+          styling.light.before.textDecoration = styling.light.before.textDecoration + '; font-size: 1000em';
+        if(styling.dark.before.textDecoration)
+          styling.dark.before.textDecoration = styling.dark.before.textDecoration + '; font-size: 1000em';
+
         this.prettyDecorations.push({
           ugly: new RegExp(uglyStr,"g"),
           pretty: prettySubst.pretty,
           ranges: new DisjointRangeSet(),
-          decorationType: vscode.window.createTextEditorDecorationType({
-            before: {
-              contentText: prettySubst.pretty,
-              textDecoration: 'none; font-size: 1000em',
-            },
-          }),
+          decorationType: vscode.window.createTextEditorDecorationType(styling),
         });
         uglyAllStrings.push(`(?:${uglyStr})`);
       } catch(e) {
