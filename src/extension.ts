@@ -103,6 +103,9 @@ function reloadConfiguration() {
 let documents = new Map<vscode.Uri,PrettyDocumentController>();
 let languageSettings : LanguageEntry[] = [];
 
+/** Attempts to find the best-matching language entry for the language-id of the given document.
+ * @param the document to match
+ * @returns the best-matching language entry, or else `undefined` if none was found */
 function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
   const rankings = languageSettings
     .map((entry) => ({rank: vscode.languages.match(entry.language, doc), entry: entry}))
