@@ -104,11 +104,13 @@ let documents = new Map<vscode.Uri,PrettyDocumentController>();
 let languageSettings : LanguageEntry[] = [];
 
 function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
-  return languageSettings
-    .find((entry) => {
-      const match = vscode.languages.match(entry.language, doc);
-      return match > 0;
-    });
+  const rankings = languageSettings
+    .map((entry) => ({rank: vscode.languages.match(entry.language, doc), entry: entry}))
+    .sort((x,y) => (x.rank > y.rank) ? -1 : (x.rank==y.rank) ? 0 : 1);
+  if(rankings.length == 0)
+    return undefined;
+  else
+    return rankings[0].entry;
 }
 
 
