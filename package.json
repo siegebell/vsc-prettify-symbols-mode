@@ -426,6 +426,10 @@
                                     "pretty": "≠"
                                 },
                                 {
+                                    "ugly": "\\[\\]",
+                                    "pretty": "ε"
+                                },
+                                {
                                     "ugly": "sqrt\\s?",
                                     "pretty": "√",
                                     "pre": "\\b",

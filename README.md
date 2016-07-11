@@ -127,7 +127,7 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
     { "ugly": "==",             "pretty": "≡" },
     { "ugly": "!=",             "pretty": "≢" },
     { "ugly": "<>",             "pretty": "≠" },
-    { "ugly": "\\[\\]",         "pretty": "∅" },
+    { "ugly": "\\[\\]",         "pretty": "ε" },
     { "ugly": "sqrt\\s?",       "pretty": "√", "pre": "\\b", "post": "\\b" },
     { "ugly": "&&",             "pretty": "∧" },
     { "ugly": "\\|\\|",         "pretty": "∨" },
