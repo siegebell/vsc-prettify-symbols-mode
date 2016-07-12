@@ -5,10 +5,21 @@ import * as util from 'util';
 import {Settings, LanguageEntry, Substitution, UglyRevelation, PrettyCursor} from './configuration'; 
 import {PrettyDocumentController} from './document'; 
 
+/** globally enable or disable all substitutions */
 let prettySymbolsEnabled = true;
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+/** Defaults loaded from the top-level settings; applied to language entries that do not specify each property */
+// let defaultAdjustCursorMovement : boolean = false;
+// let defaultRevelationStrategy : UglyRevelation = 'cursor';
+// let defaultPrettyCursor : PrettyCursor = 'boxed';
+
+/** Tracks all documents that substitutions are being applied to */
+let documents = new Map<vscode.Uri,PrettyDocumentController>();
+/** The current configuration */
+let settings : Settings;
+
+
+/** initialize everything; main entry point */
 export function activate(context: vscode.ExtensionContext) {
 	function registerTextEditorCommand(commandId:string, run:(editor:vscode.TextEditor,edit:vscode.TextEditorEdit,...args:any[])=>void): void {
     context.subscriptions.push(vscode.commands.registerTextEditorCommand(commandId, run));
@@ -44,6 +55,9 @@ export function activate(context: vscode.ExtensionContext) {
   reloadConfiguration();
 }
 
+
+
+/** A text editor selection changed; forward the event to the relevant document */
 function selectionChanged(event: vscode.TextEditorSelectionChangeEvent) {
   try {
     const prettyDoc = documents.get(event.textEditor.document.uri);
@@ -54,28 +68,29 @@ function selectionChanged(event: vscode.TextEditorSelectionChangeEvent) {
   }  
 }
 
+/** Te user updated their settings.json */
 function onConfigurationChanged(){
   reloadConfiguration();
 }
 
-let defaultAdjustCursorMovement : boolean = false;
-let defaultRevelationStrategy : UglyRevelation = 'cursor';
-let defaultPrettyCursor : PrettyCursor = 'boxed';
-
+/** Re-read the settings and recreate substitutions for all documents */
 function reloadConfiguration() {
   const configuration = vscode.workspace.getConfiguration("prettifySymbolsMode");
-  languageSettings = configuration.get<LanguageEntry[]>("substitutions");
-  defaultRevelationStrategy = configuration.get<UglyRevelation>("revealOn");
-  defaultAdjustCursorMovement = configuration.get<boolean>("adjustCursorMovement");
-  defaultPrettyCursor = configuration.get<PrettyCursor>("prettyCursor");
+  settings = {
+    substitutions: configuration.get<LanguageEntry[]>("substitutions")       || [],
+    revealOn: configuration.get<UglyRevelation>("revealOn")                  || "cursor",
+    adjustCursorMovement: configuration.get<boolean>("adjustCursorMovement") || false,
+    prettyCursor: configuration.get<PrettyCursor>("prettyCursor")            || "boxed",
+  };
 
-  for(const language of languageSettings) {
+  // Set default values for language-properties that were not specified
+  for(const language of settings.substitutions) {
     if(language.revealOn === undefined)
-      language.revealOn = defaultRevelationStrategy;
+      language.revealOn = settings.revealOn;
     if(language.adjustCursorMovement === undefined)
-      language.adjustCursorMovement = defaultAdjustCursorMovement;
+      language.adjustCursorMovement = settings.adjustCursorMovement;
     if(language.prettyCursor === undefined)
-      language.prettyCursor = defaultPrettyCursor;
+      language.prettyCursor = settings.prettyCursor;
   }
 
   // Recreate the documents
@@ -86,28 +101,11 @@ function reloadConfiguration() {
 
 
 
-
-
-
-// // →↔⇒⇔∃∀ ∎∴∵⋀⋁□⟷⟵⟶∧∨∎←→
-// const prettySubstitutions =
-//   [ {ugly: "\\b(forall)\\b", pretty: "∀"},
-//     {ugly: "\\b(exists)\\b", pretty: "∃"},
-//     {ugly: "(/\\\\)", pretty: "∧"},
-//     {ugly: "(\\\\/)", pretty: "∨"},
-//     {ugly: "([<][-][>])", pretty: "⟷"},
-//     {ugly: "([-][>])", pretty: "⟶"},
-//     {ugly: "\\b(Qed)[.]", pretty: "∎"},
-//   ];
-
-let documents = new Map<vscode.Uri,PrettyDocumentController>();
-let languageSettings : LanguageEntry[] = [];
-
 /** Attempts to find the best-matching language entry for the language-id of the given document.
  * @param the document to match
  * @returns the best-matching language entry, or else `undefined` if none was found */
 function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
-  const rankings = languageSettings
+  const rankings = settings.substitutions
     .map((entry) => ({rank: vscode.languages.match(entry.language, doc), entry: entry}))
     .sort((x,y) => (x.rank > y.rank) ? -1 : (x.rank==y.rank) ? 0 : 1);
   if(rankings.length == 0)
@@ -115,7 +113,6 @@ function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
   else
     return rankings[0].entry;
 }
-
 
 function openDocument(doc: vscode.TextDocument) {
   if(!prettySymbolsEnabled)
@@ -146,8 +143,7 @@ function unloadDocuments() {
   documents.clear();
 }
 
-
-// this method is called when your extension is deactivated
+/** clean-up; this extension is being unloaded */
 export function deactivate() {
   unloadDocuments();
 }
