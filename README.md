@@ -85,7 +85,7 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
 * Clicking on a symbol will lose editor focus.
 
 ## Examples
-[See the wiki for more examples -- and contribute your own!](https://github.com/siegebell/vsc-prettify-symbols-mode/wiki)
+[See the wiki for more examples &hyphen; and contribute your own!](https://github.com/siegebell/vsc-prettify-symbols-mode/wiki)
 
 The following shows a brief subset of useful substitutions for Haskell, OCaml, and F#:
 ```json
