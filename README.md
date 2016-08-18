@@ -85,6 +85,7 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
 * Clicking on a symbol will lose editor focus.
 
 ## Examples
+[See the wiki for more examples -- and contribute your own!](https://github.com/siegebell/vsc-prettify-symbols-mode/wiki)
 
 ```json
 "prettifySymbolsMode.revealOn": "cursor",
