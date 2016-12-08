@@ -18,9 +18,19 @@ let documents = new Map<vscode.Uri,PrettyDocumentController>();
 /** The current configuration */
 let settings : Settings;
 
+const onEnabledHandlers = new Set<()=>void>();
+const onDisabledHandlers = new Set<()=>void>();
+
+interface PrettifySymbolsModeAPI {
+  onDidEnable: (handler: ()=>void)=>vscode.Disposable,
+  onDidDisable: (handler: ()=>void) => vscode.Disposable,
+  isEnabled: () => boolean,
+}
+
 
 /** initialize everything; main entry point */
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext) : PrettifySymbolsModeAPI {
+  vscode.extensions.getExtension('siegebell.prettify-symbols-mode')
 	function registerTextEditorCommand(commandId:string, run:(editor:vscode.TextEditor,edit:vscode.TextEditorEdit,...args:any[])=>void): void {
     context.subscriptions.push(vscode.commands.registerTextEditorCommand(commandId, run));
   }
@@ -30,18 +40,22 @@ export function activate(context: vscode.ExtensionContext) {
 
   registerTextEditorCommand('extension.disablePrettySymbols', (editor: vscode.TextEditor) => {
     prettySymbolsEnabled = false;
+    onDisabledHandlers.forEach(h => h());
     unloadDocuments();
   });
   registerTextEditorCommand('extension.enablePrettySymbols', (editor: vscode.TextEditor) => {
     prettySymbolsEnabled = true;
+    onEnabledHandlers.forEach(h => h());
     reloadConfiguration();
   });
   registerTextEditorCommand('extension.togglePrettySymbols', (editor: vscode.TextEditor) => {
     if(prettySymbolsEnabled) {
       prettySymbolsEnabled = false;
+      onDisabledHandlers.forEach(h => h());
       unloadDocuments();
     } else {
       prettySymbolsEnabled = true;
+      onEnabledHandlers.forEach(h => h());
       reloadConfiguration();
     }
   });
@@ -53,6 +67,29 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onConfigurationChanged));
 
   reloadConfiguration();
+
+  let api : PrettifySymbolsModeAPI = {
+    onDidEnable: function(handler: ()=>void) : vscode.Disposable {
+      onEnabledHandlers.add(handler);
+      return {
+        dispose() {
+          onEnabledHandlers.delete(handler);
+        }
+      }
+    },
+    onDidDisable: function(handler: ()=>void) : vscode.Disposable {
+      onDisabledHandlers.add(handler);
+      return {
+        dispose() {
+          onDisabledHandlers.delete(handler);
+        }
+      }
+    },
+    isEnabled: function() {
+      return prettySymbolsEnabled;
+    }
+  };
+  return api;
 }
 
 
@@ -146,6 +183,7 @@ function unloadDocuments() {
 
 /** clean-up; this extension is being unloaded */
 export function deactivate() {
+  onDisabledHandlers.forEach(h => h());
   unloadDocuments();
 }
 
