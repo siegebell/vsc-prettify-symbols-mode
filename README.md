@@ -129,7 +129,7 @@ The following shows a brief subset of useful substitutions for Haskell, OCaml, a
 
 
 ## Extension API
-The API is [defined here](https://github.com/siegebell/vsc-prettify-symbols-mode/blob/master/src/api.ts)
+The API is [defined here](https://github.com/siegebell/vsc-prettify-symbols-mode/blob/master/src/api.ts).
 Usage:
 ```typescript
 const psm = vscode.extensions.getExtension<PrettifySymbolsMode>('siegebell.prettify-symbols-mode');
