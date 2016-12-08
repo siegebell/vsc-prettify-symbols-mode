@@ -1,9 +1,9 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode'; 
-import * as util from 'util'; 
-import {Settings, LanguageEntry, Substitution, UglyRevelation, PrettyCursor} from './configuration'; 
-import {PrettyDocumentController} from './document'; 
+import * as vscode from 'vscode';
+import * as util from 'util';
+import {Settings, LanguageEntry, Substitution, UglyRevelation, PrettyCursor, HideTextMethod} from './configuration';
+import {PrettyDocumentController} from './document';
 
 /** globally enable or disable all substitutions */
 let prettySymbolsEnabled = true;
@@ -65,7 +65,7 @@ function selectionChanged(event: vscode.TextEditorSelectionChangeEvent) {
       prettyDoc.selectionChanged(event.textEditor);
   } catch(e) {
     console.error(e);
-  }  
+  }
 }
 
 /** Te user updated their settings.json */
@@ -77,10 +77,11 @@ function onConfigurationChanged(){
 function reloadConfiguration() {
   const configuration = vscode.workspace.getConfiguration("prettifySymbolsMode");
   settings = {
-    substitutions: configuration.get<LanguageEntry[]>("substitutions")       || [],
-    revealOn: configuration.get<UglyRevelation>("revealOn")                  || "cursor",
-    adjustCursorMovement: configuration.get<boolean>("adjustCursorMovement") || false,
-    prettyCursor: configuration.get<PrettyCursor>("prettyCursor")            || "boxed",
+    substitutions: configuration.get<LanguageEntry[]>("substitutions",[]),
+    revealOn: configuration.get<UglyRevelation>("revealOn","cursor"),
+    adjustCursorMovement: configuration.get<boolean>("adjustCursorMovement",false),
+    prettyCursor: configuration.get<PrettyCursor>("prettyCursor","boxed"),
+    hideTextMethod: configuration.get<HideTextMethod>("hideTextMethod","hack-letterSpacing"),
   };
 
   // Set default values for language-properties that were not specified
@@ -123,7 +124,7 @@ function openDocument(doc: vscode.TextDocument) {
   } else {
     const language = getLanguageEntry(doc);
     if(language) {
-      documents.set(doc.uri, new PrettyDocumentController(doc, language));
+      documents.set(doc.uri, new PrettyDocumentController(doc, language, {hideTextMethod: settings.hideTextMethod}));
     }
   }
 }

@@ -2,7 +2,7 @@
     "name": "prettify-symbols-mode",
     "displayName": "Prettify Symbols Mode",
     "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
-    "version": "0.2.3",
+    "version": "0.3.0",
     "publisher": "siegebell",
     "license": "MIT license (MIT)",
     "engines": {
@@ -142,13 +142,22 @@
                                 "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations).",
                                 "default": false
                             },
+                            "hideTextMethod": {
+                                "enum": [
+                                    "hack-fontSize",
+                                    "hack-letterSpacing",
+                                    "none"
+                                ],
+                                "description": "How to hide substituted text",
+                                "default": "hack-letterSpacing"
+                            },
                             "prettyCursor": {
                                 "enum": [
                                     "boxed",
                                     "none"
                                 ],
                                 "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change",
-                                "default": "boxed"
+                                "default": "none"
                             },
                             "substitutions": {
                                 "type": "array",

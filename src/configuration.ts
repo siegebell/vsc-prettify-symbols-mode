@@ -63,6 +63,8 @@ export interface LanguageEntry {
 	prettyCursor: PrettyCursor;
 }
 
+export type HideTextMethod = "hack-fontSize" | "hack-letterSpacing" | "none";
+
 /** The settings for `prettifySymbolsMode.substitutions` */
 export interface Settings {
 	/** Main substitution settings, each targetting a different set of languages.
@@ -77,4 +79,6 @@ export interface Settings {
   revealOn: UglyRevelation,
 	/** rendering tweaks to a symbol when in proximity to the cursor */
   prettyCursor: PrettyCursor,
+	/** */
+	hideTextMethod: HideTextMethod,
 }
