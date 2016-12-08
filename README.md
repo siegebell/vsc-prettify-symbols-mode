@@ -126,3 +126,17 @@ The following shows a brief subset of useful substitutions for Haskell, OCaml, a
     { "ugly": "\\|",           "pretty": "║", "pre": "^\\s+" }
   ]}]
 ```
+
+
+## Extension API
+The API is [defined here](https://github.com/siegebell/vsc-prettify-symbols-mode/blob/master/src/api.ts)
+Usage:
+```typescript
+const psm = vscode.extensions.getExtension<PrettifySymbolsMode>('siegebell.prettify-symbols-mode');
+const psmExports = psm.activate()
+    .then(() => {
+        context.subscriptions.push(psm.exports.onDidEnabledChange(enabled:boolean => {
+            console.log("Prettify-symbols-mode is changed to: ' + enabled ? 'enabled' : 'disabled');
+        }));
+    })
+```

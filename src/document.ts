@@ -410,7 +410,7 @@ export class PrettyDocumentController implements vscode.Disposable {
       this.debugDecorations.forEach((val) => val.ranges = []);
     // const startTime = new Date().getTime();
     this.changedUglies = false; // assume no changes need to be made for now
-    let sortedChanges =
+    const sortedChanges =
       changes.sort((change1,change2) => change1.range.start.isAfter(change2.range.start) ? -1 : 1)
     for(const change of sortedChanges) {
       try {

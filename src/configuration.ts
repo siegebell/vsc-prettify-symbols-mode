@@ -56,11 +56,11 @@ export interface LanguageEntry {
 	/** substitution rules */
 	substitutions: Substitution[];
 	/** try to make pretty-symbol act like a single character */
-	adjustCursorMovement: boolean;
+	adjustCursorMovement?: boolean;
 	/** when to unfold a symbol to reveal its underlying text; in response to cursors or selections */
-	revealOn: UglyRevelation;
+	revealOn?: UglyRevelation;
 	/** rendering tweaks to a symbol when in proximity to the cursor */
-	prettyCursor: PrettyCursor;
+	prettyCursor?: PrettyCursor;
 }
 
 export type HideTextMethod = "hack-fontSize" | "hack-letterSpacing" | "none";

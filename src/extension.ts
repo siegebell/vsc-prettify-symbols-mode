@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import * as util from 'util';
 import {Settings, LanguageEntry, Substitution, UglyRevelation, PrettyCursor, HideTextMethod} from './configuration';
 import {PrettyDocumentController} from './document';
+import * as api from './api';
 
 /** globally enable or disable all substitutions */
 let prettySymbolsEnabled = true;
@@ -18,18 +19,11 @@ let documents = new Map<vscode.Uri,PrettyDocumentController>();
 /** The current configuration */
 let settings : Settings;
 
-const onEnabledHandlers = new Set<()=>void>();
-const onDisabledHandlers = new Set<()=>void>();
-
-interface PrettifySymbolsModeAPI {
-  onDidEnable: (handler: ()=>void)=>vscode.Disposable,
-  onDidDisable: (handler: ()=>void) => vscode.Disposable,
-  isEnabled: () => boolean,
-}
-
+const onEnabledChangeHandlers = new Set<(enabled: boolean)=>void>();
+export const additionalSubstitutions = new Set<api.LanguageEntry>();
 
 /** initialize everything; main entry point */
-export function activate(context: vscode.ExtensionContext) : PrettifySymbolsModeAPI {
+export function activate(context: vscode.ExtensionContext) : api.PrettifySymbolsMode {
   vscode.extensions.getExtension('siegebell.prettify-symbols-mode')
 	function registerTextEditorCommand(commandId:string, run:(editor:vscode.TextEditor,edit:vscode.TextEditorEdit,...args:any[])=>void): void {
     context.subscriptions.push(vscode.commands.registerTextEditorCommand(commandId, run));
@@ -38,25 +32,13 @@ export function activate(context: vscode.ExtensionContext) : PrettifySymbolsMode
     context.subscriptions.push(vscode.commands.registerCommand(commandId, run));
   }
 
-  registerTextEditorCommand('extension.disablePrettySymbols', (editor: vscode.TextEditor) => {
-    prettySymbolsEnabled = false;
-    onDisabledHandlers.forEach(h => h());
-    unloadDocuments();
-  });
-  registerTextEditorCommand('extension.enablePrettySymbols', (editor: vscode.TextEditor) => {
-    prettySymbolsEnabled = true;
-    onEnabledHandlers.forEach(h => h());
-    reloadConfiguration();
-  });
-  registerTextEditorCommand('extension.togglePrettySymbols', (editor: vscode.TextEditor) => {
+  registerCommand('extension.disablePrettySymbols', disablePrettySymbols);
+  registerCommand('extension.enablePrettySymbols', enablePrettySymbols);
+  registerCommand('extension.togglePrettySymbols', (editor: vscode.TextEditor) => {
     if(prettySymbolsEnabled) {
-      prettySymbolsEnabled = false;
-      onDisabledHandlers.forEach(h => h());
-      unloadDocuments();
+      disablePrettySymbols();
     } else {
-      prettySymbolsEnabled = true;
-      onEnabledHandlers.forEach(h => h());
-      reloadConfiguration();
+      enablePrettySymbols();
     }
   });
 
@@ -68,28 +50,31 @@ export function activate(context: vscode.ExtensionContext) : PrettifySymbolsMode
 
   reloadConfiguration();
 
-  let api : PrettifySymbolsModeAPI = {
-    onDidEnable: function(handler: ()=>void) : vscode.Disposable {
-      onEnabledHandlers.add(handler);
+  const result : api.PrettifySymbolsMode = {
+    onDidEnabledChange: function(handler: (enabled:boolean)=>void) : vscode.Disposable {
+      onEnabledChangeHandlers.add(handler);
       return {
         dispose() {
-          onEnabledHandlers.delete(handler);
+          onEnabledChangeHandlers.delete(handler);
         }
       }
     },
-    onDidDisable: function(handler: ()=>void) : vscode.Disposable {
-      onDisabledHandlers.add(handler);
-      return {
-        dispose() {
-          onDisabledHandlers.delete(handler);
-        }
-      }
-    },
-    isEnabled: function() {
+    isEnabled: function() : boolean {
       return prettySymbolsEnabled;
+    },
+    registerSubstitutions: function(substitutions: api.LanguageEntry) : vscode.Disposable {
+      additionalSubstitutions.add(substitutions);
+      // TODO: this could be smart about not unloading & reloading everything 
+      reloadConfiguration();
+      return {
+        dispose() {
+          additionalSubstitutions.delete(substitutions);
+        }
+      }
     }
   };
-  return api;
+
+  return result;
 }
 
 
@@ -137,6 +122,17 @@ function reloadConfiguration() {
     openDocument(doc);
 }
 
+function disablePrettySymbols() {
+  prettySymbolsEnabled = false;
+  onEnabledChangeHandlers.forEach(h => h(false));
+  unloadDocuments();
+}
+
+function enablePrettySymbols() {
+  prettySymbolsEnabled = true;
+  onEnabledChangeHandlers.forEach(h => h(true));
+  reloadConfiguration();
+}
 
 
 /** Attempts to find the best-matching language entry for the language-id of the given document.
@@ -145,11 +141,26 @@ function reloadConfiguration() {
 function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
   const rankings = settings.substitutions
     .map((entry) => ({rank: vscode.languages.match(entry.language, doc), entry: entry}))
+    .filter(score => score.rank > 0)
     .sort((x,y) => (x.rank > y.rank) ? -1 : (x.rank==y.rank) ? 0 : 1);
-  if(rankings.length == 0)
-    return undefined;
-  else
-    return rankings[0].entry;
+
+  let entry : LanguageEntry = rankings.length > 0
+    ? Object.assign({}, rankings[0].entry)
+    : {
+      language: doc.languageId,
+      substitutions: [],
+      adjustCursorMovement: settings.adjustCursorMovement,
+      revealOn: settings.revealOn,
+      prettyCursor: settings.prettyCursor,
+    };
+
+  for(const language of additionalSubstitutions) {
+    if(vscode.languages.match(language.language, doc) > 0) {
+      entry.substitutions.push(...language.substitutions);
+    }
+  }
+
+  return entry;
 }
 
 function openDocument(doc: vscode.TextDocument) {
@@ -160,7 +171,7 @@ function openDocument(doc: vscode.TextDocument) {
     prettyDoc.refresh();
   } else {
     const language = getLanguageEntry(doc);
-    if(language) {
+    if(language && language.substitutions.length > 0) {
       documents.set(doc.uri, new PrettyDocumentController(doc, language, {hideTextMethod: settings.hideTextMethod}));
     }
   }
@@ -183,7 +194,7 @@ function unloadDocuments() {
 
 /** clean-up; this extension is being unloaded */
 export function deactivate() {
-  onDisabledHandlers.forEach(h => h());
+  onEnabledChangeHandlers.forEach(h => h(false));
   unloadDocuments();
 }
 
