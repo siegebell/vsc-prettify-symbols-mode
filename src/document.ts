@@ -498,6 +498,8 @@ export class PrettyDocumentController implements vscode.Disposable {
 //   }
 
   private refreshTokensOnLine(line: vscode.TextLine) : {tokens: tm.IToken[], invalidated: boolean} {
+    if(!this.grammar)
+      return {tokens: [], invalidated: false};
     const prevState = this.grammarState[line.lineNumber-1] || null;
     const lineTokens = this.grammar.tokenizeLine(line.text, prevState);
     const invalidated = !this.grammarState[line.lineNumber] || !lineTokens.ruleStack.equals(this.grammarState[line.lineNumber])
