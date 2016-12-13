@@ -42,11 +42,12 @@ export function assignStyleProperties(target: PrettyStyleProperties, source: Pre
 
 /** An individual substitution */
 export interface Substitution {
-	ugly: string;        // regular expression describing the text to replace
-	pretty: string;      // plain-text symbol to show instead
-	pre?: string;        // regular expression guard on text before "ugly"
-	post?: string;       // regular expression guard on text after "ugly"
-	style?: PrettyStyle; // stylings to apply to the "pretty" text, if specified, or else the ugly text
+	ugly: string,        // regular expression describing the text to replace
+	pretty: string,      // plain-text symbol to show instead
+	pre?: string,        // regular expression guard on text before "ugly"
+	post?: string,       // regular expression guard on text after "ugly"
+	style?: PrettyStyle, // stylings to apply to the "pretty" text, if specified, or else the ugly text
+	scope?: string,      // TextMate scope; if specified, the ugly portion's range must be exactly within the given scope
 }
 
 /** The substitution settings for a language (or group of languages) */
@@ -61,6 +62,8 @@ export interface LanguageEntry {
 	revealOn?: UglyRevelation;
 	/** rendering tweaks to a symbol when in proximity to the cursor */
 	prettyCursor?: PrettyCursor;
+	/** The filename of the language's grammar. If specified, substitutions' scope entries refer to scope names in the given grammar. If set to "*", then search for a grammar.*/
+	textMateGrammar?: "*"|string;
 }
 
 export type HideTextMethod = "hack-fontSize" | "hack-letterSpacing" | "none";

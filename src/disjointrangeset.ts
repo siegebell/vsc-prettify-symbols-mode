@@ -1,115 +1,5 @@
 import * as vscode from 'vscode';
-
-// 'sticky' flag is not yet supported :(
-const lineEndingRE = /([^\r\n]*)(\r\n|\r|\n)?/;
-
-export interface RangeDelta {
-  start: vscode.Position;
-  end: vscode.Position;
-  linesDelta: number;
-  endCharactersDelta: number; // delta for positions on the same line as the end position
-}
-
-/**
- * @returns the Position (line, column) for the location (character position)
- */
-function positionAt(text: string, offset: number) : vscode.Position {
-  if(offset > text.length)
-    offset = text.length;
-  let line = 0;
-  let lastIndex = 0;
-  while(true) {
-    const match = lineEndingRE.exec(text.substring(lastIndex));
-    if(lastIndex + match[1].length >= offset)
-      return new vscode.Position(line, offset - lastIndex)
-    lastIndex+= match[0].length;
-    ++line;
-  }
-}
-
-/**
- * @returns the lines and characters represented by the text
- */
-export function toRangeDelta(oldRange:vscode.Range, text: string) : RangeDelta {
-  const newEnd = positionAt(text,text.length);
-  let charsDelta;
-  if(oldRange.start.line == oldRange.end.line)
-    charsDelta = newEnd.character - (oldRange.end.character-oldRange.start.character);
-  else
-    charsDelta = newEnd.character - oldRange.end.character;
-  
-  return {
-    start: oldRange.start,
-    end: oldRange.end,
-    linesDelta: newEnd.line-(oldRange.end.line-oldRange.start.line),
-    endCharactersDelta: charsDelta
-  };
-}
-
-export function rangeDeltaNewRange(delta: RangeDelta) : vscode.Range {
-  let x : number;
-  if (delta.linesDelta > 0) 
-    x = delta.endCharactersDelta;
-  else if (delta.linesDelta < 0 && delta.start.line == delta.end.line + delta.linesDelta) 
-    x = delta.end.character + delta.endCharactersDelta + delta.start.character;
-  else
-    x = delta.end.character + delta.endCharactersDelta;
-  return new vscode.Range(delta.start, new vscode.Position(delta.end.line + delta.linesDelta, x));
-}
-
-function positionRangeDeltaTranslate(pos: vscode.Position, delta: RangeDelta) : vscode.Position {
-  if(pos.isBefore(delta.end))
-    return pos;
-  else if (delta.end.line == pos.line) {
-    let x = pos.character + delta.endCharactersDelta;
-    if (delta.linesDelta > 0) 
-      x = x - delta.end.character;
-    else if (delta.start.line == delta.end.line + delta.linesDelta && delta.linesDelta < 0) 
-      x = x + delta.start.character;
-    return new vscode.Position(pos.line + delta.linesDelta, x);
-  }
-  else // if(pos.line > delta.end.line)
-    return new vscode.Position(pos.line + delta.linesDelta, pos.character);
-}
-
-function positionRangeDeltaTranslateEnd(pos: vscode.Position, delta: RangeDelta) : vscode.Position {
-  if(pos.isBeforeOrEqual(delta.end))
-    return pos;
-  else if (delta.end.line == pos.line) {
-    let x = pos.character + delta.endCharactersDelta;
-    if (delta.linesDelta > 0) 
-      x = x - delta.end.character;
-    else if (delta.start.line == delta.end.line + delta.linesDelta && delta.linesDelta < 0) 
-      x = x + delta.start.character;
-    return new vscode.Position(pos.line + delta.linesDelta, x);
-  }
-  else // if(pos.line > delta.end.line)
-    return new vscode.Position(pos.line + delta.linesDelta, pos.character);
-}
-
-export function rangeTranslate(range: vscode.Range, delta: RangeDelta) {
-  return new vscode.Range(
-    positionRangeDeltaTranslate(range.start, delta),
-    positionRangeDeltaTranslateEnd(range.end, delta)
-  )
-}
-
-export function rangeContains(range: vscode.Range, pos: vscode.Position, exclStart=false, inclEnd=false) {
-  return range.start.isBeforeOrEqual(pos)
-    && (!exclStart || !range.start.isEqual(pos))
-    && ((inclEnd &&  range.end.isEqual(pos)) || range.end.isAfter(pos));
-}
-
-export function maxPosition(x: vscode.Position, y: vscode.Position) {
-  if(x.line < y.line)
-    return x;
-  if(x.line < x.line)
-    return y;
-  if(x.character < y.character)
-    return x;
-  else
-    return y;
-}
+import * as textUtil from './text-util';
 
 
 /// Tracks a set of disjoint (nonoverlapping) ranges
@@ -170,6 +60,9 @@ export class DisjointRangeSet {
     this.ranges.splice.apply(this.ranges,(<any[]>[insertionIdx, 0]).concat(newRanges.ranges));
   }
 
+ /**
+ * @returns `true` on success: if there was no overlap
+ */
   public insert(range: vscode.Range) : boolean {
     const insertionIdx = this.findIndex(range.start);
     const next = this.ranges[insertionIdx];
@@ -177,6 +70,7 @@ export class DisjointRangeSet {
       return false;
     // not overlapping!
     this.ranges.splice(insertionIdx, 0, range);
+    return true;
   }
 
   public isOverlapping(range: vscode.Range) : boolean {
@@ -197,8 +91,10 @@ export class DisjointRangeSet {
     let end = begin;
     while(end < this.ranges.length && this.ranges[end].start.isBefore(range.end))
       ++end;
-    if(inclEnd && end < this.ranges.length-1 && this.ranges[end+1].start.isEqual(range.end))
+    if(inclEnd && end < this.ranges.length && this.ranges[end].start.isEqual(range.end))
       ++end;
+    // else if(inclEnd && end < this.ranges.length-1 && this.ranges[end+1].start.isEqual(range.end))
+    //   ++end;
     return this.ranges.splice(begin, end-begin);
   }
 
@@ -222,7 +118,7 @@ export class DisjointRangeSet {
       throw "idx is out of range: idx > this.ranges.length || idx < 0";
     else if(this.ranges.length == 0)
       return;
-    else if(idx < this.ranges.length && !rangeContains(this.ranges[idx],pos,exclStart,inclEnd) && this.ranges[idx].start.isBefore(pos))
+    else if(idx < this.ranges.length && !textUtil.rangeContains(this.ranges[idx],pos,exclStart,inclEnd) && this.ranges[idx].start.isBefore(pos))
       throw "idx is too big; range comes before pos";
     else if(idx > 0 && this.ranges[idx-1].end.isAfter(pos))
       throw "idx is too big; previous element comes after pos";
@@ -249,7 +145,7 @@ export class DisjointRangeSet {
     let idx = Math.floor((begin + end)/2);
     while(begin < end) {
       const range = this.ranges[idx];
-      if(rangeContains(range,pos,exclStart,inclEnd))
+      if(textUtil.rangeContains(range,pos,exclStart,inclEnd))
         break; // we've found a match
       else if(pos.isBefore(range.start) || (exclStart && pos.isEqual(range.start)))
         end = idx;
@@ -311,7 +207,7 @@ export class DisjointRangeSet {
   public find(pos: vscode.Position, options: {excludeStart?: boolean, includeEnd?: boolean} = {excludeStart: false, includeEnd: false}) : vscode.Range {
     const idx = this.findIndex(pos, options);
     const match = this.ranges[idx];
-    if(match && rangeContains(match,pos,options.excludeStart,options.includeEnd))
+    if(match && textUtil.rangeContains(match,pos,options.excludeStart,options.includeEnd))
       return match;
     else
       return undefined;
@@ -397,7 +293,7 @@ export class DisjointRangeSet {
   //   }
   // }
 
-  public shiftRangeDelta(delta: RangeDelta) : vscode.Range {
+  public shiftRangeDelta(delta: textUtil.RangeDelta) : vscode.Range {
     if(this.ranges.length == 0 || (delta.linesDelta == 0 && delta.endCharactersDelta == 0))
       return new vscode.Range(delta.start, delta.end);
 
@@ -407,11 +303,11 @@ export class DisjointRangeSet {
     if(delta.linesDelta != 0) {
       // shift all remaining lines
       for( ; idx < this.ranges.length; ++idx)
-        this.ranges[idx] = rangeTranslate(this.ranges[idx], delta);
+        this.ranges[idx] = textUtil.rangeTranslate(this.ranges[idx], delta);
     } else {
       // shift everything overlapping on the same end line
       for( ; idx < this.ranges.length && this.ranges[idx].start.line <= delta.end.line; ++idx) {
-        this.ranges[idx] = rangeTranslate(this.ranges[idx], delta);
+        this.ranges[idx] = textUtil.rangeTranslate(this.ranges[idx], delta);
       }
     }
 
@@ -425,7 +321,7 @@ export class DisjointRangeSet {
   }
 
   public shiftTextChange(target: vscode.Range, text: string) : vscode.Range {
-    return this.shiftRangeDelta(toRangeDelta(target, text));
+    return this.shiftRangeDelta(textUtil.toRangeDelta(target, text));
   }
 
   public getOverlapRanges(range: vscode.Range) : vscode.Range[] {
@@ -434,10 +330,10 @@ export class DisjointRangeSet {
     return this.ranges.slice(begin,end);
   }
 
-  public getOverlap(range: vscode.Range, options: {excludeStart?: boolean, includeEnd?: boolean} = {excludeStart: false, includeEnd: false}) : DisjointRangeSet{
+  public getOverlap(range: vscode.Range, options: {excludeStart?: boolean, includeEnd?: boolean} = {excludeStart: false, includeEnd: false}) : DisjointRangeSet {
     const begin = this.findIndex(range.start, {excludeStart: options.excludeStart,includeEnd: range.isEmpty});
     let end = this.findIndex(range.end, {excludeStart: true, includeEnd: options.includeEnd});
-    if(end < this.ranges.length && rangeContains(this.ranges[end],range.end,!range.isEmpty,options.includeEnd))
+    if(end < this.ranges.length && textUtil.rangeContains(this.ranges[end],range.end,!range.isEmpty,options.includeEnd))
       ++end;
     return DisjointRangeSet.makeFromSortedRanges(this.ranges.slice(begin,end));
   }

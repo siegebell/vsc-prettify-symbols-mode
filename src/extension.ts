@@ -2,9 +2,12 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as util from 'util';
+import * as path from 'path';
+import * as fs from 'fs';
 import {Settings, LanguageEntry, Substitution, UglyRevelation, PrettyCursor, HideTextMethod} from './configuration';
 import {PrettyDocumentController} from './document';
 import * as api from './api';
+import * as tm from './text-mate';
 
 /** globally enable or disable all substitutions */
 let prettySymbolsEnabled = true;
@@ -21,10 +24,18 @@ let settings : Settings;
 
 const onEnabledChangeHandlers = new Set<(enabled: boolean)=>void>();
 export const additionalSubstitutions = new Set<api.LanguageEntry>();
+export let textMateRegistry : tm.Registry;
+const grammarMap = new Map<string,tm.IGrammar>();
 
 /** initialize everything; main entry point */
 export function activate(context: vscode.ExtensionContext) : api.PrettifySymbolsMode {
-  vscode.extensions.getExtension('siegebell.prettify-symbols-mode')
+  try {
+    textMateRegistry = new tm.Registry();
+  } catch(err) {
+    textMateRegistry = undefined;
+    console.error(err);
+  }
+
 	function registerTextEditorCommand(commandId:string, run:(editor:vscode.TextEditor,edit:vscode.TextEditorEdit,...args:any[])=>void): void {
     context.subscriptions.push(vscode.commands.registerTextEditorCommand(commandId, run));
   }
@@ -106,6 +117,8 @@ function reloadConfiguration() {
     hideTextMethod: configuration.get<HideTextMethod>("hideTextMethod","hack-letterSpacing"),
   };
 
+  grammarMap.clear();
+
   // Set default values for language-properties that were not specified
   for(const language of settings.substitutions) {
     if(language.revealOn === undefined)
@@ -163,6 +176,33 @@ function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
   return entry;
 }
 
+interface ExtensionPackage {
+  contributes?: {
+    languages?: {id: string, configuration: string}[],
+    grammars?: {language?: string, scopeName?: string, path?: string, embeddedLanguages?: {[scopeName:string]:string}, injectTo?: string[]}[],
+  }
+}
+
+function locateGrammar(languageId: string) : tm.IGrammar {
+  for(let ext of vscode.extensions.all) {
+    try {
+      const pkg = ext.packageJSON as ExtensionPackage;
+      if(!pkg || !pkg.contributes || !pkg.contributes.grammars)
+        continue;
+
+      const lang = pkg.contributes.grammars.find(x => x.language === languageId && x.path!==undefined);
+      if(!lang)
+        continue;
+
+      const file = path.join(ext.extensionPath, lang.path);
+      console.log(`found grammar for ${languageId} at ${file}`)
+      return textMateRegistry.loadGrammarFromPathSync(file);
+    } catch(err) {
+    }
+  }
+  return undefined;
+}
+
 function openDocument(doc: vscode.TextDocument) {
   if(!prettySymbolsEnabled)
     return;
@@ -172,7 +212,16 @@ function openDocument(doc: vscode.TextDocument) {
   } else {
     const language = getLanguageEntry(doc);
     if(language && language.substitutions.length > 0) {
-      documents.set(doc.uri, new PrettyDocumentController(doc, language, {hideTextMethod: settings.hideTextMethod}));
+      let grammar : tm.IGrammar = undefined;
+      if(textMateRegistry) {
+        try {
+          grammar = grammarMap.get(doc.languageId)
+            || (language.textMateGrammar === "*" ? locateGrammar(doc.languageId) : undefined)
+            || (language.textMateGrammar ? textMateRegistry.loadGrammarFromPathSync(language.textMateGrammar) : undefined);
+          grammarMap.set(doc.languageId, grammar);
+        } catch(err) {}
+      }
+      documents.set(doc.uri, new PrettyDocumentController(doc, language, {hideTextMethod: settings.hideTextMethod, textMateGrammar: grammar}));
     }
   }
 }
