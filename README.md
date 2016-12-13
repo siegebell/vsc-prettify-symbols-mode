@@ -12,7 +12,7 @@ Once you have installed this extension, modify  `settings.json` to add language-
 "prettifySymbolsMode.substitutions": [{
     "language": "fsharp",
     "substitutions": [
-      { "ugly": "fun", "pretty": "λ", "scope": "meta.function.anonymous" },
+      { "ugly": "fun", "pretty": "λ", "scope": "keyword.other.function-definition.fsharp" },
       { "ugly": "->", "pre": "[^->]", "post": "[^->]", "pretty": "⟶" },
       { "ugly": ".+", "scope": "variable.parameter.fsharp", "pre": "^", "post": "$", "style": { "border": "1pt solid green" } }
     ]
