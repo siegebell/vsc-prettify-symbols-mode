@@ -198,6 +198,7 @@
                                         "style": {
                                             "type": "object",
                                             "properties": {
+                                                "hackCSS": { "type": "string", "description": "Hack: attempt to inject arbitrary CSS; this is unsupported and may cause problems" },
                                                 "border": { "type": "string", "description": "CSS border property" },
                                                 "textDecoration": { "type": "string", "description": "CSS text-decoration property", "anyOf": [{"pattern": "[^;]*"}, {"enum": ["underline", "overline", "line-through"]}] },
                                                 "color": { "type": "string", "description": "CSS color property" },
@@ -206,6 +207,7 @@
                                                     "type": "object",
                                                     "description": "Styling options for vscode light themes",
                                                     "properties": {
+                                                        "hackCSS": { "type": "string", "description": "Hack: attempt to inject arbitrary CSS; this is unsupported and may cause problems" },
                                                         "border": { "type": "string", "description": "CSS border property" },
                                                         "textDecoration": { "type": "string", "description": "CSS text-decoration property", "anyOf": [{"pattern": "[^;]*"}, {"enum": ["underline", "overline", "line-through"]}] },
                                                         "color": { "type": "string", "description": "CSS color property" },
@@ -216,6 +218,7 @@
                                                     "type": "object",
                                                     "description": "Styling options for vscode dark themes",
                                                     "properties": {
+                                                        "hackCSS": { "type": "string", "description": "Hack: attempt to inject arbitrary CSS; this is unsupported and may cause problems" },
                                                         "border": { "type": "string", "description": "CSS border property" },
                                                         "textDecoration": { "type": "string", "description": "CSS text-decoration property", "anyOf": [{"pattern": "[^;]*"}, {"enum": ["underline", "overline", "line-through"]}] },
                                                         "color": { "type": "string", "description": "CSS color property" },

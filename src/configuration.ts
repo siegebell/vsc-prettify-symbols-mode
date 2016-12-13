@@ -20,6 +20,7 @@ export interface PrettyStyleProperties {
 	textDecoration?: string,
 	color?: string,
 	backgroundColor?: string,
+	hackCSS?: string,
 }
 export interface PrettyStyle extends PrettyStyleProperties {
 	dark?: PrettyStyleProperties,
@@ -36,8 +37,10 @@ export function assignStyleProperties(target: PrettyStyleProperties, source: Pre
 		target.border = source.border;
 	if(source.color)
 		target.color = source.color;
-	if(source.textDecoration)
-		target.textDecoration = source.textDecoration;
+	if(source.textDecoration) {
+		target.textDecoration = source.textDecoration + (source.hackCSS ? '; ' + source.hackCSS : "");
+	} else if(source.hackCSS)
+		target.textDecoration = 'none; ' + source.hackCSS;
 }
 
 /** An individual substitution */
