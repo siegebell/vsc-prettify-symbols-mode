@@ -7,7 +7,7 @@ This feature is inspired by [prettify-symbols-mode for Emacs](https://www.emacsw
 
 ## Configuration
 
-Once you have installed this extension, modify  `settings.json` to add language-specific substitutions. For example, the following settings will target F# files, rendering `fun` as `λ`,  `->` as `⟶`, and place a border around function parameters.
+Once you have installed this extension, modify  `settings.json` to add language-specific substitutions. For example, the following settings will target F# files, rendering `fun` as `λ`,  `->` as `⟶`, and place a border around parameters.
 ```json
 "prettifySymbolsMode.substitutions": [{
     "language": "fsharp",
@@ -23,9 +23,9 @@ A substitution matches any string that satisfies the `"ugly"` pattern, visually 
 
 ### Scopes
 
-  By default, regular expressions match against a whole line of text. If `"scope"` is specified, then regular expression matches will only be performed on the parsed [TextMate] tokens that match the given scope. A small subset of TextMate scope expressions are supported. For example, a substitution with scope `"source.js comment"` will match a token with scope `"text.html.basic source.js comment.block.html"`. Multiple matches may be performed on the same token (e.g. a comment); to match the entire token, specify `"pre": "^", "post": "$"`.
+By default, regular expressions match against a whole line of text. If `"scope"` is specified, then regular expression matches will only be performed on the parsed [TextMate] tokens that match the given scope. A small subset of TextMate scope expressions are supported. For example, a substitution with scope `"source.js comment"` will match a token with scope `"text.html.basic source.js comment.block.html"`. A scoped `"ugly"` regular expression must match the entire token by default -- i.e. `"pre"` and `"post"` are respectively set to `"^"` and `"$"` by default when a scope is specified. However, `"pre"` and `"post"` can be overriden to allow multiple substitutions within a single token (e.g. a comment).
 
-*Tip: use the [scope-info](https://marketplace.visualstudio.com/items?itemName=siegebell.scope-info) extension to see the scope assigned to each token in your source.*
+*Tip: use [scope-info](https://marketplace.visualstudio.com/items?itemName=siegebell.scope-info) to see the scope assigned to each token in your source.*
 
 ### Revealing symbols
 
@@ -39,8 +39,8 @@ By default, "ugly" text will be revealed while contacted by a cursor. You may ov
 ### Pretty cursor
 
 By default, any "pretty" symbol that comes into contact with the cursor will be rendered with a box outline around it. This effect is only visible if the "ugly" text is not revealed (e.g. `"revealOn": "none"`). You can control this setting by specifying `"prettifySymbolsMode.prettyCursor"`, or per-language by specifying `"prettyCursor"` within a language entry. Options are:
-* "boxed": display a box around a symbol (only visible if the "ugly" text is not revealed); or
-* "none": do not change the appearance of the symbol.
+* `"boxed"`: display a box around a symbol (only visible if the "ugly" text is not revealed); or
+* `"none"`: do not change the appearance of the symbol.
 
 ### Adjust cursor movement
 
@@ -48,10 +48,10 @@ By default, cursor movement will traverse the characters of the "ugly" text -- t
 
 ### Styling
 
-A tiny subset of CSS can be used to apply styling to the substitution text by setting `"style"`; styles can be specialized for light and dark themees. If `"pretty"` is not specified, then`"style"` must be specified: the result being that all "ugly" matches will have the style applied to them.
+A tiny subset of CSS can be used to apply styling to the substitution text by setting `"style"`; styles can be specialized for light and dark themes. If `"pretty"` is not specified, then`"style"` must be specified: the result being that all "ugly" matches will have the style applied to them instead of being substituted.
 
 * Supported styles: `"border", "backgroundColor", "color", "textDecoration"` (this list is limited by vscode).
-* Themes: e.g. `"dark": {"color": "white"}, "light": {"color": "black"}`
+* Themed: e.g. `"dark": {"color": "white"}, "light": {"color": "black"}`
 * Unsupported styles: e.g. `"hackCSS": "font-style: italic, font-size: 2em"` (this can easily break rendering)
 
 ### Regular expressions
@@ -92,7 +92,7 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
 
 ## Known issues:
 
-**[submit new issues on github](https://github.com/siegebell/vsc-prettify-symbols-mode/issues)**
+*Tip: [submit new issues on github](https://github.com/siegebell/vsc-prettify-symbols-mode/issues)*
 * You can write bad regular expressions that break substitutions and you will not get an error message.
 
 ## Examples
