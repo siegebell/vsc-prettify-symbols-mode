@@ -235,6 +235,7 @@ export class PrettyDocumentController implements vscode.Disposable {
       if(e.document == this.document)
         this.onChangeDocument(e);
     }));
+
   }
 
   public dispose() {
@@ -246,8 +247,12 @@ export class PrettyDocumentController implements vscode.Disposable {
   private getEditors() {
     return vscode.window.visibleTextEditors
       .filter((editor) => {
-        return editor.document == this.document;
+        return editor.document.uri === this.document.uri;
       });
+  }
+
+  public gotFocus(editor: vscode.TextEditor) {
+    this.applyDecorations(this.getEditors());
   }
 
   private unloadDecorations() {
@@ -391,7 +396,7 @@ export class PrettyDocumentController implements vscode.Disposable {
         try {
           for(const editor of editors) {
             if(editor !== vscode.window.activeTextEditor)
-              break; // handle ONLY the active editr here
+              continue; // handle ONLY the active editr here
             editor.setDecorations(this.uglyDecoration,this.uglyDecorationRanges.getRanges());
             for(const subst of this.prettyDecorations.unscoped)
               editor.setDecorations(subst.decorationType,subst.ranges.getRanges());
@@ -411,7 +416,7 @@ export class PrettyDocumentController implements vscode.Disposable {
         try {
           for(const editor of editors) {
             if(editor === vscode.window.activeTextEditor)
-              break; // handle this in another timer
+              continue; // handle this in another timer
             editor.setDecorations(this.uglyDecoration,this.uglyDecorationRanges.getRanges());
             for(const subst of this.prettyDecorations.unscoped)
               editor.setDecorations(subst.decorationType,subst.ranges.getRanges());
@@ -445,40 +450,6 @@ export class PrettyDocumentController implements vscode.Disposable {
 
     return {range: uglyRange, prettyIndex: matchIdx-1, lastIndex: end};
   }
-
-//   /**
-//    * Clears & shifts:
-//    *   this.prettyDecorations.scoped[x].ranges -- removes intersecting ranges for each prety x
-//    *   this.prettyDecorations.unscoped[x].ranges -- removes intersecting ranges for each pretty x
-//    *   this.uglyDecorationRanges -- removes intersecting ranges
-//    * @returns the range of affected text after the edit
-//  */
-//   private adjustByEditPretties(range: vscode.Range, delta: drangeset.RangeDelta) : vscode.Range {
-//     // editRange equivalent to range, but adjusted for the edited text
-//     const editRange = drangeset.rangeDeltaNewRange(delta);
-
-//     const reparseRanges = this.conditionalRanges.removeOverlapping(range,{includeTouchingStart:true,includeTouchingEnd:true});
-//     const reparseRange = reparseRanges.length > 0
-//       ? new vscode.Range(reparseRanges[0].start, reparseRanges[reparseRanges.length-1].end)
-//       : new vscode.Range(0,0,0,0);
-//     const adjustedReparseRange = drangeset.rangeTranslate(reparseRange, delta);
-
-//     const removed  = this.uglyDecorationRanges.removeOverlapping(reparseRange,{includeTouchingStart:true,includeTouchingEnd:true});
-//     const affected = this.uglyDecorationRanges.shiftRangeDelta(delta);
-//     if(removed.length > 0)
-//       this.changedUglies = true;
-
-//     for(const subst of this.prettyDecorations.unscoped) {
-//       subst.ranges.removeOverlapping(reparseRange,{includeTouchingStart:true,includeTouchingEnd:true});
-//       subst.ranges.shiftRangeDelta(delta);
-//     }
-//     for(const subst of this.prettyDecorations.scoped) {
-//       subst.ranges.removeOverlapping(reparseRange,{includeTouchingStart:true,includeTouchingEnd:true});
-
-//       subst.ranges.shiftRangeDelta(delta);
-//     }
-//     return affected.union(reparseRange);
-//   }
 
   private refreshTokensOnLine(line: vscode.TextLine) : {tokens: tm.IToken[], invalidated: boolean} {
     if(!this.grammar)
@@ -639,216 +610,6 @@ export class PrettyDocumentController implements vscode.Disposable {
     return hiddenOverlap.union(styledOverlap);
   }
 
-
-//   /**
-//    * Assumes that all decorations overlapping the range have been removed
-//    * However, parsing may continue to the end of the line of range.end,
-//    * so more pre-existing ranges may be removed from uglyDecorationRanges
-//    * returns the range of reparsed text
-//    */
-//   private parsePrettyUnscoped(range: vscode.Range) : {newStyledRanges: DisjointRangeSet, newUglyRanges: DisjointRangeSet, newPrettyRanges: DisjointRangeSet[], startCharacter: number} {
-//     if(this.prettyDecorations.unscoped.length == 0)
-//       return undefined;
-//     range = this.document.validateRange(range);
-
-//     const newUglyRanges = new DisjointRangeSet();
-//     const newStyledRanges = new DisjointRangeSet();
-//     const newPrettyRanges : DisjointRangeSet[] = [];
-//     this.prettyDecorations.unscoped.forEach(() => newPrettyRanges.push(new DisjointRangeSet()));
-
-//     // only start looking for ugly strings after the last preexisting ugly string or else at the beginning of the line
-//     this.uglyUnscoped.lastIndex = 0;
-//     const precedingRange = this.uglyDecorationRanges.findPreceding(range.start);
-//     if(precedingRange && precedingRange.end.line==range.start.line)
-//       this.uglyUnscoped.lastIndex = precedingRange.end.character;
-//     const startCharacter = this.uglyUnscoped.lastIndex;
-
-//     // parse all but the last line
-//     for(let idx = range.start.line; idx < range.end.line; ++idx) {
-//       const line = this.document.lineAt(idx);
-
-//       let match : RegExpExecArray;
-//       while(match = this.uglyUnscoped.exec(line.text)) {
-//         const ugly = this.getUglyFromMatch(match, idx);
-//         if(!ugly)
-//           continue;
-//         this.uglyUnscoped.lastIndex = ugly.lastIndex;
-//         if(this.prettyDecorations.unscoped[ugly.prettyIndex].pretty)
-//           newUglyRanges.insert(ugly.range);
-//         else
-//           newStyledRanges.insert(ugly.range);
-//         newPrettyRanges[ugly.prettyIndex].insert(ugly.range);        
-//       }
-//       // next search starts at the beginning of the line
-//       this.uglyUnscoped.lastIndex = 0;
-//     }
-
-//     // handle the last line with special care because it might require
-//     // re-parsing between range.end and the end of the line.
-//     const line = this.document.lineAt(range.end.line);
-//     const preexistingUgliesIter = this.uglyDecorationRanges.getRangesStartingAt(range.end);
-//     let preexistingUgly = preexistingUgliesIter.next();
-//     let match : RegExpExecArray;    
-
-//     // match up the the last character of the line
-//     while(match = this.uglyUnscoped.exec(line.text)) {
-//       try {
-//         const ugly = this.getUglyFromMatch(match, range.end.line);
-//         if(!ugly)
-//           continue;
-//         this.uglyUnscoped.lastIndex = ugly.lastIndex;
-//         // if we have just matched a preexisting ugly, then we are done
-//         if(!preexistingUgly.done && preexistingUgly.value.isEqual(ugly.range))
-//           break;
-//         else if(!preexistingUgly.done && preexistingUgly.value.start.isBefore(ugly.range.end))
-//           preexistingUgly = preexistingUgliesIter.next();
-
-//         if(this.prettyDecorations.unscoped[ugly.prettyIndex].pretty)
-//           newUglyRanges.insert(ugly.range);
-//         newStyledRanges.insert(ugly.range);
-//         newPrettyRanges[ugly.prettyIndex].insert(ugly.range);
-//       } catch(e) {}
-
-//     }
-
-//     return {newStyledRanges: newStyledRanges, newUglyRanges: newUglyRanges, newPrettyRanges: newPrettyRanges, startCharacter: startCharacter}
-//   }
-
-//   /**
-//    * Assumes that all decorations overlapping the range have been removed
-//    * However, parsing may continue to the end of the line of range.end,
-//    * so more pre-existing ranges may be removed from uglyDecorationRanges
-//    * returns the range of reparsed text
-//    */
-//   private parsePrettyScoped(range: vscode.Range) : {newStyledRanges: DisjointRangeSet, newUglyRanges: DisjointRangeSet, newPrettyRanges: DisjointRangeSet[], startCharacter: number} {
-//     if(this.prettyDecorations.scoped.length == 0 || !this.grammar)
-//       return undefined;
-//     range = this.document.validateRange(range);
-
-//     const newUglyRanges = new DisjointRangeSet();
-//     const newStyledRanges = new DisjointRangeSet();
-//     const newPrettyRanges = [];
-//     this.prettyDecorations.scoped.forEach(() => newPrettyRanges.push(new DisjointRangeSet()));
-
-//     // only start looking for ugly strings after the last preexisting ugly string or else at the beginning of the line
-//     let startOffset = 0;
-//     const precedingRange = this.uglyDecorationRanges.findPreceding(range.start);
-//     if(precedingRange && precedingRange.end.line==range.start.line)
-//       startOffset = precedingRange.end.character;
-//     const startCharacter = startOffset;
-
-//     let dirtyGrammarState = false;
-// const s = range.start.line;
-// let idx;
-//     for(idx = range.start.line; idx <= range.end.line || (idx < this.document.lineCount && dirtyGrammarState); ++idx) {
-//       if(idx > range.end.line)
-//         console.log('!');
-//       const line = this.document.lineAt(idx);
-
-//       const prevState = this.grammarState[line.lineNumber-1] || null;
-//       const lineTokens = this.grammar.tokenizeLine(line.text, prevState);
-//       dirtyGrammarState = !this.grammarState[line.lineNumber] || !lineTokens.ruleStack.equals(this.grammarState[line.lineNumber]);
-//       this.grammarState[line.lineNumber] = lineTokens.ruleStack;
-//       if(this.grammarState[line.lineNumber] && !lineTokens.ruleStack.equals(this.grammarState[line.lineNumber]))
-//         console.log('#');
-
-//       for(let token of lineTokens.tokens) {
-//         if(token.endIndex <= startOffset)
-//           continue;
-
-//         let match : RegExpExecArray;
-//         this.uglyScoped.lastIndex = Math.max(0,startOffset - token.startIndex);
-//         const tokenStr = line.text.substring(token.startIndex,token.endIndex);
-//         while(match = this.uglyScoped.exec(tokenStr)) {
-//           const ugly = this.getUglyFromMatch(match, idx);
-//           if(!ugly)
-//             continue;
-//           this.uglyScoped.lastIndex = ugly.lastIndex;
-//           const uglyScope = this.prettyDecorations.scoped[ugly.prettyIndex].scope;
-//           if(!tm.matchScope(uglyScope, token.scopes))
-//             continue;
-
-//           ugly.range = new vscode.Range(line.lineNumber,token.startIndex+ugly.range.start.character,line.lineNumber,token.startIndex+ugly.range.end.character);
-
-//           if(this.prettyDecorations.scoped[ugly.prettyIndex].pretty)
-//             newUglyRanges.insert(ugly.range);
-//           else
-//             newStyledRanges.insert(ugly.range);
-//           newPrettyRanges[ugly.prettyIndex].insert(ugly.range);
-//         }
-//       }
-
-//       startOffset = 0;
-//     }
-//     console.log(`Updated lines ${s} to ${idx}`)
-
-//     return {newStyledRanges: newStyledRanges, newUglyRanges: newUglyRanges, newPrettyRanges: newPrettyRanges, startCharacter: startCharacter}
-//   }
-
-//   /**
-//    * Assumes that all decorations overlapping the range have been removed
-//    * However, parsing may continue to the end of the line of range.end,
-//    * so more pre-existing ranges may be removed from uglyDecorationRanges
-//    * returns the range of reparsed text
-//    */
-//   private parsePretty(range: vscode.Range) : vscode.Range {
-//     const r1 = this.parsePrettyUnscoped(range);
-//     const r2 = this.parsePrettyScoped(range);
-//     // return r1.union(r2);
-
-//     if(!r1 && !r2)
-//       return range;
-
-//     const newStyledRanges = new DisjointRangeSet();
-//     const newUglyRanges = new DisjointRangeSet();
-//     if(r1) {
-//       newStyledRanges.insertRanges(r1.newStyledRanges);
-//       newUglyRanges.insertRanges(r1.newUglyRanges);
-//     } if(r2) {
-//       newStyledRanges.insertRanges(r2.newStyledRanges);
-//       newUglyRanges.insertRanges(r2.newUglyRanges);
-//     }
-
-//     // remove any freshly discarded uglies: from range.end to the last new ugly position
-//     if(range.end.isBefore(newUglyRanges.getEnd())) {
-//       const extraOverlap = new vscode.Range(range.end,newUglyRanges.getEnd());
-//       this.uglyDecorationRanges.removeOverlapping(extraOverlap);
-//       for(const subst of this.prettyDecorations.unscoped)
-//         subst.ranges.removeOverlapping(extraOverlap);
-//       for(const subst of this.prettyDecorations.scoped)
-//         subst.ranges.removeOverlapping(extraOverlap);
-//     }
-//     // remove any freshly discarded uglies: from range.end to the last new ugly position
-//     if(range.end.isBefore(newStyledRanges.getEnd())) {
-//       const extraOverlap = new vscode.Range(range.end,newStyledRanges.getEnd());
-//       for(const subst of this.prettyDecorations.unscoped)
-//         subst.ranges.removeOverlapping(extraOverlap);
-//       for(const subst of this.prettyDecorations.scoped)
-//         subst.ranges.removeOverlapping(extraOverlap);
-//     }
-
-//     // add the new pretties & ugly ducklings
-//     if(r1) {
-//       this.uglyDecorationRanges.insertRanges(r1.newUglyRanges);
-//       this.prettyDecorations.unscoped.forEach((pretty,idx) => pretty.ranges.insertRanges(r1.newPrettyRanges[idx]));
-//     }
-//     if(r2) {
-//       this.uglyDecorationRanges.insertRanges(r2.newUglyRanges);
-//       this.prettyDecorations.scoped.forEach((pretty,idx) => pretty.ranges.insertRanges(r2.newPrettyRanges[idx]));
-//     }
-
-//     const startCharacter = Math.min(r1 ? r1.startCharacter : range.start.character, r2 ? r2.startCharacter : range.start.character);
-
-//     if(!newStyledRanges.isEmpty() || !newUglyRanges.isEmpty()) {
-//       this.changedUglies = true;
-//       const end1 = newUglyRanges.getEnd()
-//       const end2 = newStyledRanges.getEnd()
-//       return new vscode.Range(range.start.with({character: startCharacter}),drangeset.maxPosition(range.end,drangeset.maxPosition(end1,end2)));
-//     } else
-//       return new vscode.Range(range.start.with({character: startCharacter}),range.end);
-//   }
-
-
   private debugDecorations : {dec:vscode.TextEditorDecorationType, ranges: vscode.Range[]}[] = 
     [ {dec: vscode.window.createTextEditorDecorationType({textDecoration: 'line-through'}), ranges: []} // affected uglies
   	, {dec: vscode.window.createTextEditorDecorationType({backgroundColor: 'yellow',}), ranges: []} // reparsed text
@@ -875,21 +636,6 @@ export class PrettyDocumentController implements vscode.Disposable {
           : change.range;
         // note: take the union to make sure that each edit location is reparsed, even if there were no preeexisting uglies (i.e. allow searching for new uglies)
         const adjustedReparseRange = textUtil.rangeTranslate(reparseRange, delta).union(editRange);
-
-        // const removed  = this.uglyDecorationRanges.removeOverlapping(change.range,{includeTouchingStart:true,includeTouchingEnd:true});
-        // const affected = this.uglyDecorationRanges.shiftRangeDelta(delta);
-        // if(removed.length > 0)
-        //   this.changedUglies = true;
-
-        // for(const subst of this.prettyDecorations.unscoped) {
-        //   subst.ranges.removeOverlapping(change.range,{includeTouchingStart:true,includeTouchingEnd:true});
-        //   subst.ranges.shiftRangeDelta(delta);
-        // }
-        // for(const subst of this.prettyDecorations.scoped) {
-        //   subst.ranges.removeOverlapping(change.range,{includeTouchingStart:true,includeTouchingEnd:true});
-        //   subst.ranges.shiftRangeDelta(delta);
-        // }
-        // const affected = this.adjustByEditPretties(change.range, delta);
 
         const removed  = this.uglyDecorationRanges.removeOverlapping(reparseRange,{includeTouchingStart:true,includeTouchingEnd:true});
         const affected = this.uglyDecorationRanges.shiftRangeDelta(delta);

@@ -12,11 +12,6 @@ import * as tm from './text-mate';
 /** globally enable or disable all substitutions */
 let prettySymbolsEnabled = true;
 
-/** Defaults loaded from the top-level settings; applied to language entries that do not specify each property */
-// let defaultAdjustCursorMovement : boolean = false;
-// let defaultRevelationStrategy : UglyRevelation = 'cursor';
-// let defaultPrettyCursor : PrettyCursor = 'boxed';
-
 /** Tracks all documents that substitutions are being applied to */
 let documents = new Map<vscode.Uri,PrettyDocumentController>();
 /** The current configuration */
@@ -25,8 +20,6 @@ let settings : Settings;
 const onEnabledChangeHandlers = new Set<(enabled: boolean)=>void>();
 export const additionalSubstitutions = new Set<api.LanguageEntry>();
 export let textMateRegistry : tm.Registry;
-// Map from scopeName to grammar
-//const grammarMap = new Map<string,tm.IGrammar>();
 
 interface ExtensionGrammar {
   language?: string, scopeName?: string, path?: string, embeddedLanguages?: {[scopeName:string]:string}, injectTo?: string[]
@@ -63,9 +56,6 @@ const grammarLocator : tm.IGrammarLocator = {
         .filter(x => x.packageJSON && x.packageJSON.contributes && x.packageJSON.contributes.grammars)
         .reduce((a: (ExtensionGrammar&{extensionPath: string})[],b) => [...a, ...(b.packageJSON as ExtensionPackage).contributes.grammars.map(x => Object.assign({extensionPath: b.extensionPath}, x))], []);
       const matchingLanguages = grammars.filter(g => g.scopeName === scopeName);
-      // let match : RegExpExecArray;
-      // if(matchingLanguages.length === 0 && (match = /^source[.](.*)/.exec(scopeName)))
-      //   matchingLanguages = grammars.filter(g => g.language === match[1]);
       
       if(matchingLanguages.length > 0) {
         const ext = matchingLanguages[0];
@@ -103,6 +93,8 @@ export function activate(context: vscode.ExtensionContext) : api.PrettifySymbols
   context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(closeDocument));
   context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onConfigurationChanged));
 
+  context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(changeActiveTextEditor));
+
   reloadConfiguration();
 
   const result : api.PrettifySymbolsMode = {
@@ -132,6 +124,17 @@ export function activate(context: vscode.ExtensionContext) : api.PrettifySymbols
   return result;
 }
 
+
+function changeActiveTextEditor(editor: vscode.TextEditor) {
+  try {
+    if(!editor)
+      return;
+    const prettyDoc = documents.get(editor.document.uri);
+    if(prettyDoc)
+      prettyDoc.gotFocus(editor);
+  } catch(e) {
+  }
+}
 
 
 /** A text editor selection changed; forward the event to the relevant document */
@@ -167,8 +170,6 @@ function reloadConfiguration() {
     prettyCursor: configuration.get<PrettyCursor>("prettyCursor","boxed"),
     hideTextMethod: configuration.get<HideTextMethod>("hideTextMethod","hack-letterSpacing"),
   };
-
-  // grammarMap.clear();
 
   // Set default values for language-properties that were not specified
   for(const language of settings.substitutions) {
@@ -227,26 +228,6 @@ function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
   return entry;
 }
 
-
-// function locateGrammar(languageId: string) : tm.IGrammar {
-//   for(let ext of vscode.extensions.all) {
-//     try {
-//       const pkg = ext.packageJSON as ExtensionPackage;
-//       if(!pkg || !pkg.contributes || !pkg.contributes.grammars)
-//         continue;
-
-//       const lang = pkg.contributes.grammars.find(x => x.language === languageId && x.path!==undefined);
-//       if(!lang)
-//         continue;
-
-//       const file = path.join(ext.extensionPath, lang.path);
-//       console.info(`found grammar for ${languageId} at ${file}`)
-//       return textMateRegistry.loadGrammarFromPathSync(file);
-//     } catch(err) {
-//     }
-//   }
-//   return undefined;
-// }
 async function loadGrammar(scopeName: string) : Promise<tm.IGrammar> {
   return new Promise<tm.IGrammar>((resolve,reject) => {
     try {
