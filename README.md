@@ -51,7 +51,8 @@ By default, cursor movement will traverse the characters of the "ugly" text -- t
 A tiny subset of CSS can be used to apply styling to the substitution text by setting `"style"`; styles can be specialized for light and dark themees. If `"pretty"` is not specified, then`"style"` must be specified: the result being that all "ugly" matches will have the style applied to them.
 
 * Supported styles: `"border", "backgroundColor", "color", "textDecoration"` (this list is limited by vscode).
-* Unsupported styles: `"hack": "place you CSS code year; maybe it will work"`
+* Themes: e.g. `"dark": {"color": "white"}, "light": {"color": "black"}`
+* Unsupported styles: e.g. `"hackCSS": "font-style: italic, font-size: 2em"` (this can easily break rendering)
 
 ### Regular expressions
 
