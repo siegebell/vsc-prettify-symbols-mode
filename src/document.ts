@@ -176,7 +176,7 @@ function *iterateMatchArray(str: string, res: RegExp[], start?: number) : Iterab
     } else
       res.forEach(re => re.lastIndex = end)
     matches = res.map(re => re.exec(str));
-    matchIdx = matches.findIndex(m => m!==undefined && matches.length > 1);
+    matchIdx = matches.findIndex(m => m && m.length > 1);
   }
 }
 

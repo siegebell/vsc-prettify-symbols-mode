@@ -1,24 +1,31 @@
 # Prettify Symbols Mode
 
-Prettify symbols mode makes *visual* substitutions to your source code, e.g. displaying `fun` as `λ`, while never touching your code itself.
+Prettify symbols mode makes *visual* substitutions to your source code, e.g. displaying `fun` as `λ`, while never touching your code.
 
 This feature is inspired by [prettify-symbols-mode for Emacs](https://www.emacswiki.org/emacs/PrettySymbol).
 
 
 ## Configuration
 
-Once you have installed this extension, modify  `settings.json` to add language-specific substitutions. For example, the following settings will target F# files, rendering `fun` as `λ` and `->` as `⟶`.
+Once you have installed this extension, modify  `settings.json` to add language-specific substitutions. For example, the following settings will target F# files, rendering `fun` as `λ`,  `->` as `⟶`, and place a border around function parameters.
 ```json
 "prettifySymbolsMode.substitutions": [{
     "language": "fsharp",
     "substitutions": [
-      { "ugly": "fun", "pretty": "λ", "pre": "\\b", "post": "\\b" },
-      { "ugly": "->", "pretty": "⟶" }
+      { "ugly": "fun", "pretty": "λ", "scope": "meta.function.anonymous" },
+      { "ugly": "->", "pre": "[^->]", "post": "[^->]", "pretty": "⟶" },
+      { "ugly": ".+", "scope": "variable.parameter.fsharp", "pre": "^", "post": "$", "style": { "border": "1pt solid green" } }
     ]
 }]
 ```
 
-Substitutions work by matching any string that satisfies the `"ugly"` pattern and visually replacing it with `"pretty"`; you can optionally specify the context by providing `"pre"` or `"post"` regular expressions that must be matched for the substitution to occur. You can also target multiple languages or glob patterns at once via `"languages": ["fsharp", {"pattern":  "**/*.txt"}]`.
+A substitution matches any string that satisfies the `"ugly"` pattern, visually replacing it with `"pretty"` and/or applying style via `"style"`. You can optionally specify the context by providing `"pre"` or `"post"` regular expressions that must be matched for the substitution to occur. Or you can specify a syntactic scope in which to perform the substitution. You can also target multiple languages or glob patterns at once via `"languages": ["fsharp", {"pattern":  "**/*.txt"}]`.
+
+### Scopes
+
+  By default, regular expressions match against a whole line of text. If `"scope"` is specified, then regular expression matches will only be performed on the parsed [TextMate] tokens that match the given scope. A small subset of TextMate scope expressions are supported. For example, a substitution with scope `"source.js comment"` will match a token with scope `"text.html.basic source.js comment.block.html"`. Multiple matches may be performed on the same token (e.g. a comment); to match the entire token, specify `"pre": "^", "post": "$"`.
+
+*Tip: use the [scope-info](https://marketplace.visualstudio.com/items?itemName=siegebell.scope-info) extension to see the scope assigned to each token in your source.*
 
 ### Revealing symbols
 
@@ -37,7 +44,14 @@ By default, any "pretty" symbol that comes into contact with the cursor will be 
 
 ### Adjust cursor movement
 
-By default, cursor movement will traverse the characters of the "ugly" text -- this will cause it to become invisible while inside the text if it is not revealed (see `"revealOn"`). Setting `"prettifySymbolsMode.adjustCursorMovement"` to `true` will tweak cursor movement so that "pretty" symbols behave as a single character. This can be overriden per-language be specifying `"adjustCursorMovement"` in a language entry. In particular, left or right movement will cause the cursor to jump over the symbol instead of going inside. However, this setting does not currently account for all kinds of cursor movement, e.g. up/down.
+By default, cursor movement will traverse the characters of the "ugly" text -- this will cause it to become invisible while inside the text if it is not revealed (see `"revealOn"`). Setting `"prettifySymbolsMode.adjustCursorMovement"` to `true` will tweak cursor movement so that "pretty" symbols behave as a single character. This can be overriden per-language by specifying `"adjustCursorMovement"` in a language entry. In particular, left or right movement will cause the cursor to jump over the symbol instead of going inside. However, this setting does not currently account for all kinds of cursor movement, e.g. up/down.
+
+### Styling
+
+A tiny subset of CSS can be used to apply styling to the substitution text by setting `"style"`; styles can be specialized for light and dark themees. If `"pretty"` is not specified, then`"style"` must be specified: the result being that all "ugly" matches will have the style applied to them.
+
+* Supported styles: `"border", "backgroundColor", "color", "textDecoration"` (this list is limited by vscode).
+* Unsupported styles: `"hack": "place you CSS code year; maybe it will work"`
 
 ### Regular expressions
 
@@ -58,11 +72,10 @@ The following commands are available for keybinding:
 "prettifySymbolsMode.renderOn": "cursor",
 "prettifySymbolsMode.adjustCursorMovement": false,
 ```
-* Suggested alternative: symbols are never unfolded, generally act like a single character w.r.t. cursor movement, and are rendered with a box outline when they have a cursor focus. 
+* Suggested alternative: symbols are never unfolded and generally act like a single character w.r.t. cursor movement. 
 ```json
 "prettifySymbolsMode.renderOn": "none",
 "prettifySymbolsMode.adjustCursorMovement": true,
-"prettifySymbolsMode.prettyCursor": "boxed",
 ```
 
 ## Variable-width symbols driving you crazy?
@@ -79,10 +92,7 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
 ## Known issues:
 
 **[submit new issues on github](https://github.com/siegebell/vsc-prettify-symbols-mode/issues)**
-* The cursor disappears when adjacent-to or inside of a "pretty" symbol. If this is distracting, try setting `"revealOn"` to e.g. `"cursor"` or `"prettyCursor"` to `"boxed"`.
 * You can write bad regular expressions that break substitutions and you will not get an error message.
-* Substitutions are only performed on *open* documents, so you may have to begin editing to activate substitutions.
-* Clicking on a symbol will lose editor focus.
 
 ## Examples
 [See the wiki for more examples &hyphen; and contribute your own!](https://github.com/siegebell/vsc-prettify-symbols-mode/wiki)
@@ -109,7 +119,7 @@ The following shows a brief subset of useful substitutions for Haskell, OCaml, a
   "adjustCursorMovement": true,
   "substitutions": [
     { "ugly": "fun",            "pretty": "λ", "pre": "\\b", "post": "\\b" },
-    { "ugly": "->",             "pretty": "→" },
+    { "ugly": "->",             "pretty": "→", "pre": "[^->]", "post": "[^->]" },
     { "ugly": "List[.]for_all", "pretty": "∀", "pre": "\\b", "post": "\\b" },
     { "ugly": "List[.]exists",  "pretty": "∃", "pre": "\\b", "post": "\\b" },
     { "ugly": "List[.]mem",     "pretty": "∈", "pre": "\\b", "post": "\\b" },
@@ -118,7 +128,7 @@ The following shows a brief subset of useful substitutions for Haskell, OCaml, a
   "language": "fsharp",
   "substitutions": [
     { "ugly": "fun",           "pretty": "λ", "pre": "\\b", "post": "\\b" },
-    { "ugly": "->",            "pretty": "→" },
+    { "ugly": "->",            "pretty": "→", "pre": "[^->]", "post": "[^->]" },
     { "ugly": "List[.]forall", "pretty": "∀", "pre": "\\b", "post": "\\b" },
     { "ugly": "List[.]exists", "pretty": "∃", "pre": "\\b", "post": "\\b" },
     { "ugly": ">>",            "pretty": "≫", "pre": "[^=<>]|^", "post": "[^=<>]|$" },
