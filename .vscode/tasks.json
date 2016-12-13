@@ -16,15 +16,34 @@
 	// the command is a shell script
 	"isShellCommand": true,
 
+  "suppressTaskName": true,
+
 	// show the output window only if unrecognized errors occur.
 	"showOutput": "silent",
 
-	// we run the custom script "compile" as defined in package.json
-	"args": ["run", "compile", "--loglevel", "silent"],
+	"tasks": [
+	{
+		"taskName": "watch",
+		"args": ["run", "watch"],
+		"isWatching": true,
+		"isBuildCommand": true,
+		"isTestCommand": false,
+		"problemMatcher": "$tsc-watch"
+	},
+	{
+		"taskName": "test",
+		"args": ["test"],
+		"isBuildCommand": false,
+		"isTestCommand": true,
+		"showOutput": "always"
+	},
+	{
+		"taskName": "test-debug",
+		"args": ["run", "test-debug"],
+		"isBuildCommand": false,
+		"isTestCommand": false,
+		"showOutput": "always"
+	}
+]
 
-	// The tsc compiler is started in watching mode
-	"isWatching": true,
-
-	// use the standard tsc in watch mode problem matcher to find compile problems in the output.
-	"problemMatcher": "$tsc-watch"
 }
