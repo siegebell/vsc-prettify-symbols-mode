@@ -226,21 +226,6 @@ export class PrettyDocumentController implements vscode.Disposable {
     this.grammar = options.textMateGrammar || null; 
     this.loadDecorations(settings.substitutions);
 
-    this.subscriptions.push(vscode.languages.registerHoverProvider(doc.languageId, {provideHover: (d,pos,tok) : vscode.Hover => {
-      if(d.uri.toString() !== doc.uri.toString())
-        return undefined;
-      const state = this.grammarState[pos.line-1];
-      if(!state)
-        return;
-      const line = doc.lineAt(pos.line);
-      const tokens = this.grammar.tokenizeLine(line.text, state);
-      for(let t of tokens.tokens) {
-        if(t.startIndex <= pos.character && pos.character < t.endIndex)
-          return {contents: [t.scopes.join(' ')], range: new vscode.Range(pos.line,t.startIndex,pos.line,t.endIndex)}
-      }
-      return undefined;
-    }}));
-    
     // Parse whole document
     const docRange = new vscode.Range(0,0,this.document.lineCount,0);
     this.reparsePretties(docRange);
