@@ -342,7 +342,9 @@ export class PrettyDocumentController implements vscode.Disposable {
     this.prettyDecorations.unscoped = [];
     const uglyAllUnscopedStrings = [];
     for(const prettySubst of prettySubstitutions) {
-      const uglyStr = this.regexpOptionalGroup(prettySubst.pre) + "(" + prettySubst.ugly + ")" + this.regexpOptionalGroup(prettySubst.post);
+      const pre = (prettySubst.scope && prettySubst.pre===undefined) ? "^" : this.regexpOptionalGroup(prettySubst.pre);
+      const post = (prettySubst.scope && prettySubst.post===undefined) ? "$" : this.regexpOptionalGroup(prettySubst.post);
+      const uglyStr = pre + "(" + prettySubst.ugly + ")" + post;
       try {
         const re = new RegExp(uglyStr, "g");
         if(re.test("")) {
