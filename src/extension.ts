@@ -47,11 +47,11 @@ function getLanguageScopeName(languageId: string) : string {
     const matchingLanguages = languages.filter(g => g.language === languageId);
     
     if(matchingLanguages.length > 0) {
-      console.log(`Mapping language ${languageId} to initial scope ${matchingLanguages[0].scopeName}`);
+      console.info(`Mapping language ${languageId} to initial scope ${matchingLanguages[0].scopeName}`);
       return matchingLanguages[0].scopeName;
     }
   } catch(err) { }
-  console.log(`Cannot find a mapping for language ${languageId}; assigning default scope source.${languageId}`);
+  console.info(`Cannot find a mapping for language ${languageId}; assigning default scope source.${languageId}`);
   return 'source.' + languageId;
 }
 
@@ -70,15 +70,13 @@ const grammarLocator : tm.IGrammarLocator = {
       if(matchingLanguages.length > 0) {
         const ext = matchingLanguages[0];
         const file = path.join(ext.extensionPath, ext.path);
-        console.log(`Found grammar for ${scopeName} at ${file}`)
+        console.info(`Found grammar for ${scopeName} at ${file}`)
         return file;
       }
     } catch(err) { }
     return undefined;
   }
 }
-
-
 
 /** initialize everything; main entry point */
 export function activate(context: vscode.ExtensionContext) : api.PrettifySymbolsMode {
@@ -242,7 +240,7 @@ function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
 //         continue;
 
 //       const file = path.join(ext.extensionPath, lang.path);
-//       console.log(`found grammar for ${languageId} at ${file}`)
+//       console.info(`found grammar for ${languageId} at ${file}`)
 //       return textMateRegistry.loadGrammarFromPathSync(file);
 //     } catch(err) {
 //     }

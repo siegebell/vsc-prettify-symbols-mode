@@ -418,7 +418,6 @@ export class PrettyDocumentController implements vscode.Disposable {
           this.applyDecorationsTimeoutActive = undefined;
         } catch(err) {
           console.error(err)
-          console.error('\n')
         }
       }, activeEditorDecorationTimeout);
     }
@@ -439,7 +438,6 @@ export class PrettyDocumentController implements vscode.Disposable {
           this.applyDecorationsTimeout = undefined;
         } catch(err) {
           console.error(err)
-          console.error('\n')
         }
       }, inactiveEditorDecorationTimeout);
     }
@@ -621,7 +619,7 @@ export class PrettyDocumentController implements vscode.Disposable {
       }
     }
     if(lineIdx-1 > range.end.line) {
-      console.log('aditional tokens reparsed: ' + (lineIdx-range.end.line) + ' lines');
+      // console.info('Aditional tokens reparsed: ' + (lineIdx-range.end.line) + ' lines');
       range = range.with({end: range.end.with({line: lineIdx, character: 0})});
     }
 
