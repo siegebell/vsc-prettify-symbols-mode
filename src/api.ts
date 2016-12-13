@@ -7,6 +7,7 @@ export interface PrettyStyleProperties {
 	textDecoration?: string,
 	color?: string,
 	backgroundColor?: string,
+  hackCSS?: string,
 }
 export interface PrettyStyle extends PrettyStyleProperties {
 	dark?: PrettyStyleProperties,
@@ -20,6 +21,7 @@ export interface Substitution {
 	pre?: string;        // regular expression guard on text before "ugly"
 	post?: string;       // regular expression guard on text after "ugly"
 	style?: PrettyStyle; // stylings to apply to the "pretty" text, if specified, or else the ugly text
+	scope?: string,      // TextMate scope; if specified, the ugly portion's range must be exactly within the given scope
 }
 
 export interface LanguageEntry {
@@ -27,6 +29,10 @@ export interface LanguageEntry {
 	language:  vscode.DocumentSelector;
 	/** substitution rules */
 	substitutions: Substitution[];
+	/** The filename of the language's grammar. If specified, substitutions' scope entries refer to scope names in the given grammar. If undefined, then search for a grammar.*/
+	textMateGrammar?: string;
+	/** Override the TextMate scope for the language */
+	textMateInitialScope?: string;
 }
 
 
