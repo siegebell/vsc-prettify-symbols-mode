@@ -265,23 +265,23 @@ async function loadGrammar(scopeName: string) : Promise<tm.IGrammar> {
 async function openDocument(doc: vscode.TextDocument) {
   if(!prettySymbolsEnabled)
     return;
-  const prettyDoc = documents.get(doc.uri);
-  if(prettyDoc) {
-    prettyDoc.refresh();
-  } else {
-    const language = getLanguageEntry(doc);
-    if(language && language.substitutions.length > 0) {
-      const usesScopes = language.substitutions.some(s => s.scope !== undefined);
-      let grammar : tm.IGrammar = undefined;
-      if(textMateRegistry && usesScopes) {
-        const scopeName = language.textMateInitialScope || getLanguageScopeName(doc.languageId);
-        try {
-          grammar = await loadGrammar(scopeName);
-        } catch(err) {}
+  try {
+    const prettyDoc = documents.get(doc.uri);
+    if(prettyDoc) {
+      prettyDoc.refresh();
+    } else {
+      const language = getLanguageEntry(doc);
+      if(language && language.substitutions.length > 0) {
+        const usesScopes = language.substitutions.some(s => s.scope !== undefined);
+        let grammar : tm.IGrammar = undefined;
+        if(textMateRegistry && usesScopes) {
+          const scopeName = language.textMateInitialScope || getLanguageScopeName(doc.languageId);
+            grammar = await loadGrammar(scopeName);
+        }
+        documents.set(doc.uri, new PrettyDocumentController(doc, language, {hideTextMethod: settings.hideTextMethod, textMateGrammar: grammar}));
       }
-      documents.set(doc.uri, new PrettyDocumentController(doc, language, {hideTextMethod: settings.hideTextMethod, textMateGrammar: grammar}));
     }
-  }
+  } catch(err) {}
 }
 
 function closeDocument(doc: vscode.TextDocument) {
