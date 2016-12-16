@@ -129,7 +129,7 @@ export class DisjointRangeSet {
 
   /** returns the index of the range that starts at or after the given position
    * if pos is after all range-starts, then this returns this.ranges.length
-   */ 
+   */
   private findIndex(pos: vscode.Position, options: {excludeStart?: boolean, includeEnd?: boolean} = {excludeStart: false, includeEnd: false}) {
     const exclStart = options.excludeStart || false;
     const inclEnd = options.includeEnd || false;

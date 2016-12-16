@@ -217,13 +217,13 @@ export class PrettyDocumentController implements vscode.Disposable {
 
   public constructor(doc: vscode.TextDocument, settings: LanguageEntry, options: {hideTextMethod: HideTextMethod, textMateGrammar?: tm.IGrammar|null},
     private document = doc,
-    // private prettySubstitutions = settings.substitutions,  
+    // private prettySubstitutions = settings.substitutions,
     private revealStrategy = settings.revealOn,
     private adjustCursorMovement = settings.adjustCursorMovement,
     private prettyCursor = settings.prettyCursor,
     private hideTextMethod = options.hideTextMethod
   ) {
-    this.grammar = options.textMateGrammar || null; 
+    this.grammar = options.textMateGrammar || null;
     this.loadDecorations(settings.substitutions);
 
     // Parse whole document
