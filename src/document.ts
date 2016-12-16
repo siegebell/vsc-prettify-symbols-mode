@@ -6,6 +6,8 @@ import {DisjointRangeSet} from './DisjointRangeSet';
 import * as drangeset from './DisjointRangeSet';
 import * as textUtil from './text-util';
 import * as tm from './text-mate';
+import {MatchResult, iterateMatches, iterateMatchArray, mapIterator} from './regexp-iteration';
+import * as decorations from './decorations';
 
 const debugging = false;
 const activeEditorDecorationTimeout = 20;
@@ -21,7 +23,7 @@ interface PrettySubstitution {
 }
 
 
-function arrayEqual<T>(a1: T[], a2: T[], isEqual: (x:T,y:T)=>boolean = ((x,y) => x==y)) : boolean {
+function arrayEqual<T>(a1: T[], a2: T[], isEqual: (x:T,y:T)=>boolean = ((x,y) => x===y)) : boolean {
   if(a1.length!=a2.length)
     return false;
   for(let idx = 0; idx < a1.length; ++idx) {
@@ -30,165 +32,6 @@ function arrayEqual<T>(a1: T[], a2: T[], isEqual: (x:T,y:T)=>boolean = ((x,y) =>
   }
   return true;
 }
-
-function makePrettyDecoration_fontSize_hack(prettySubst: Substitution) {
-  const showAttachmentStyling = '; font-size: 1000em';
-
-  let styling : vscode.DecorationRenderOptions = { before: {}, dark: {before: {}}, light: {before: {}} };
-  if(prettySubst.style) {
-    assignStyleProperties(styling.before, prettySubst.style);
-    if(prettySubst.style.dark)
-      assignStyleProperties(styling.dark.before, prettySubst.style.dark);
-    if(prettySubst.style.light)
-      assignStyleProperties(styling.light.before, prettySubst.style.light);
-  }
-  styling.before.contentText = prettySubst.pretty;
-
-  // Use a dirty hack to change the font size (code injection)
-  styling.before.textDecoration = (styling.before.textDecoration || 'none') + showAttachmentStyling;
-  // and make sure the user's textDecoration does not break our hack
-  if(styling.light.before.textDecoration)
-    styling.light.before.textDecoration = styling.light.before.textDecoration + showAttachmentStyling;
-  if(styling.dark.before.textDecoration)
-    styling.dark.before.textDecoration = styling.dark.before.textDecoration + showAttachmentStyling;
-
-  return vscode.window.createTextEditorDecorationType(styling);
-}
-
-function makePrettyDecoration_letterSpacing_hack(prettySubst: Substitution) {
-  const showAttachmentStyling = '; font-size: 10em; letter-spacing: normal; visibility: visible';
-
-  let styling : vscode.DecorationRenderOptions = { after: {}, dark: {after: {}}, light: {after: {}} };
-  if(prettySubst.style) {
-    assignStyleProperties(styling.after, prettySubst.style);
-    if(prettySubst.style.dark)
-      assignStyleProperties(styling.dark.after, prettySubst.style.dark);
-    if(prettySubst.style.light)
-      assignStyleProperties(styling.light.after, prettySubst.style.light);
-  }
-  styling.after.contentText = prettySubst.pretty;
-
-  // Use a dirty hack to change the font size (code injection)
-  styling.after.textDecoration = (styling.after.textDecoration || 'none') + showAttachmentStyling;
-  // and make sure the user's textDecoration does not break our hack
-  if(styling.light.after.textDecoration)
-    styling.light.after.textDecoration = styling.light.after.textDecoration + showAttachmentStyling;
-  if(styling.dark.after.textDecoration)
-    styling.dark.after.textDecoration = styling.dark.after.textDecoration + showAttachmentStyling;
-
-  return vscode.window.createTextEditorDecorationType(styling);
-}
-
-function makePrettyDecoration_noPretty(prettySubst: Substitution) {
-  const showAttachmentStyling = '';
-
-  let styling : vscode.DecorationRenderOptions = { dark: {}, light: {} };
-  if(prettySubst.style) {
-    assignStyleProperties(styling, prettySubst.style);
-    if(prettySubst.style.dark)
-      assignStyleProperties(styling.dark, prettySubst.style.dark);
-    if(prettySubst.style.light)
-      assignStyleProperties(styling.light, prettySubst.style.light);
-  }
-
-  return vscode.window.createTextEditorDecorationType(styling);
-}
-
-function makePrettyDecoration_noHide(prettySubst: Substitution) {
-  const showAttachmentStyling = '';
-
-  let styling : vscode.DecorationRenderOptions = { after: {}, dark: {after: {}}, light: {after: {}} };
-  if(prettySubst.style) {
-    assignStyleProperties(styling.after, prettySubst.style);
-    if(prettySubst.style.dark)
-      assignStyleProperties(styling.dark.after, prettySubst.style.dark);
-    if(prettySubst.style.light)
-      assignStyleProperties(styling.light.after, prettySubst.style.light);
-  }
-  styling.after.contentText = prettySubst.pretty;
-
-  // Use a dirty hack to change the font size (code injection)
-  styling.after.textDecoration = (styling.after.textDecoration || 'none') + showAttachmentStyling;
-  // and make sure the user's textDecoration does not break our hack
-  if(styling.light.after.textDecoration)
-    styling.light.after.textDecoration = styling.light.after.textDecoration + showAttachmentStyling;
-  if(styling.dark.after.textDecoration)
-    styling.dark.after.textDecoration = styling.dark.after.textDecoration + showAttachmentStyling;
-
-  return vscode.window.createTextEditorDecorationType(styling);
-}
-
-interface MatchResult {
-  start: number,
-  end: number,
-  matchStart: number,
-  matchEnd: number,
-  id: number,
-}
-
-/**
- * Iterates through each match-group that occurs in the `str`; note that the offset within the given string increments according with the length of the matched group, effectively treating any other portion of the matched expression as a "pre" or "post" match that do not contribute toward advancing through the string.
- * The iterator's `next' method accepts a new offset to jump to within the string.
- */
-function *iterateMatches(str: string, re: RegExp, start?: number) : IterableIterator<MatchResult> {
-  re.lastIndex = start===undefined ? 0 : start;
-  let match : RegExpExecArray;
-  while(match = re.exec(str)) {
-    if(match.length <= 1)
-      return;
-    const validMatches = match
-      .map((value,idx) => ({index:idx,match:value}))
-      .filter((value) => value.match !== undefined);
-    if(validMatches.length > 1) {
-      const matchIdx = validMatches[validMatches.length-1].index;
-      const matchStr = match[matchIdx];
-      const matchStart = match.index;
-      const matchEnd = matchStart + match[0].length;
-      const start = matchStart + match[0].indexOf(matchStr);
-      const end = start + matchStr.length;
-
-      const newOffset = yield {start: start, end: end, matchStart: matchStart, matchEnd: matchEnd, id: matchIdx-1};
-      if(typeof newOffset === 'number')
-        re.lastIndex = Math.max(0,Math.min(str.length,newOffset));
-      else
-        re.lastIndex = end;
-    }
-  }
-}
-
-function *iterateMatchArray(str: string, res: RegExp[], start?: number) : IterableIterator<MatchResult> {
-  start = start===undefined ? 0 : start;
-  res.forEach(re => re.lastIndex = start);
-  let matches = res.map(re => re.exec(str));
-  let matchIdx = matches.findIndex(m => m && m.length > 1);
-  while(matchIdx >= 0) {
-    const match = matches[matchIdx];
-    const matchStr = match[1];
-    const matchStart = match.index;
-    const matchEnd = matchStart + match[0].length;
-    const start = matchStart + match[0].indexOf(matchStr);
-    const end = start + matchStr.length;
-
-    const newOffset = yield {start: start, end: end, matchStart: matchStart, matchEnd: matchEnd, id: matchIdx};
-    if(typeof newOffset === 'number') {
-      const next =  Math.max(0,Math.min(str.length,newOffset));
-      res.forEach(re => re.lastIndex = next)
-    } else
-      res.forEach(re => re.lastIndex = end)
-    matches = res.map(re => re.exec(str));
-    matchIdx = matches.findIndex(m => m && m.length > 1);
-  }
-}
-
-function *mapIterator<T1,T2>(iter: IterableIterator<T1>, f: (x:T1)=>T2, current?: IteratorResult<T1>) : IterableIterator<T2> {
-  if(!current)
-    current = iter.next();
-  while(!current.done) {
-    current = iter.next(yield f(current.value));
-  }
-}
-
-
 
 export class PrettyDocumentController implements vscode.Disposable {
   private prettyDecorations : {scoped: PrettySubstitution[], unscoped: PrettySubstitution[]} = {scoped: [], unscoped: []};
@@ -221,7 +64,8 @@ export class PrettyDocumentController implements vscode.Disposable {
     private revealStrategy = settings.revealOn,
     private adjustCursorMovement = settings.adjustCursorMovement,
     private prettyCursor = settings.prettyCursor,
-    private hideTextMethod = options.hideTextMethod
+    private hideTextMethod = options.hideTextMethod,
+    private combineIdenticalScopes = settings.combineIdenticalScopes,
   ) {
     this.grammar = options.textMateGrammar || null;
     this.loadDecorations(settings.substitutions);
@@ -290,53 +134,17 @@ export class PrettyDocumentController implements vscode.Disposable {
   private loadDecorations(prettySubstitutions: Substitution[]) {
     this.unloadDecorations();
 
-    if(this.hideTextMethod === "hack-fontSize") {
-      this.uglyDecoration = vscode.window.createTextEditorDecorationType({
-        textDecoration: 'none; font-size: 0.001em',
-      });
-      this.revealedUglyDecoration = vscode.window.createTextEditorDecorationType({
-        textDecoration: 'none; font-size: inherit !important',
-        before: {
-          textDecoration: 'none; font-size: 0pt',
-        }
-      });
-      this.boxedSymbolDecoration = vscode.window.createTextEditorDecorationType({
-        before: {
-          border: '0.1em solid',
-          margin: '-0em -0.05em -0em -0.1em',
-        }
-      });
-    } else if(this.hideTextMethod === "hack-letterSpacing") {
-      this.uglyDecoration = vscode.window.createTextEditorDecorationType({
-        letterSpacing: "-0.55em; font-size: 0.1em; visibility: hidden",
-      });
-      this.revealedUglyDecoration = vscode.window.createTextEditorDecorationType({
-        letterSpacing: "normal !important; font-size: inherit !important; visibility: visible !important",
-        after: {
-          textDecoration: 'none; font-size: 0pt; display: none',
-        }
-      });
-      this.boxedSymbolDecoration = vscode.window.createTextEditorDecorationType({
-        after: {
-          border: '0.1em solid',
-          margin: '-0em -0.05em -0em -0.1em',
-        }
-      });
-    } else {
-      this.uglyDecoration = vscode.window.createTextEditorDecorationType({ });
-      this.revealedUglyDecoration = vscode.window.createTextEditorDecorationType({
-        textDecoration: 'none; font-size: inherit !important',
-        after: {
-          textDecoration: 'none; font-size: 0pt',
-        }
-      });
-      this.boxedSymbolDecoration = vscode.window.createTextEditorDecorationType({
-        after: {
-          border: '0.1em solid',
-          margin: '-0em -0.05em -0em -0.1em',
-        }
-      });
-    }
+
+    let dec : {uglyDecoration: vscode.TextEditorDecorationType, revealedUglyDecoration: vscode.TextEditorDecorationType, boxedSymbolDecoration: vscode.TextEditorDecorationType}
+    if(this.hideTextMethod === "hack-fontSize")
+      dec = decorations.makeDecorations_fontSize_hack();
+    else if(this.hideTextMethod === "hack-letterSpacing")
+      dec = decorations.makeDecorations_letterSpacing_hack();
+    else
+      dec = decorations.makeDecorations_none();
+    this.uglyDecoration = dec.uglyDecoration;
+    this.revealedUglyDecoration = dec.revealedUglyDecoration;
+    this.boxedSymbolDecoration = dec.boxedSymbolDecoration;
 
     this.prettyDecorations.scoped = [];
     this.prettyDecorations.unscoped = [];
@@ -354,13 +162,13 @@ export class PrettyDocumentController implements vscode.Disposable {
 
         let decoration = undefined;
         if(!prettySubst.pretty)
-          decoration = makePrettyDecoration_noPretty(prettySubst);
+          decoration = decorations.makePrettyDecoration_noPretty(prettySubst);
         else if(this.hideTextMethod === "hack-fontSize")
-          decoration = makePrettyDecoration_fontSize_hack(prettySubst);
+          decoration = decorations.makePrettyDecoration_fontSize_hack(prettySubst);
         else if(this.hideTextMethod === "hack-letterSpacing")
-          decoration = makePrettyDecoration_letterSpacing_hack(prettySubst);
+          decoration = decorations.makePrettyDecoration_letterSpacing_hack(prettySubst);
         else
-          decoration = makePrettyDecoration_noHide(prettySubst);
+          decoration = decorations.makePrettyDecoration_noHide(prettySubst);
 
         if(prettySubst.scope) {
           this.prettyDecorations.scoped.push({
@@ -499,9 +307,14 @@ export class PrettyDocumentController implements vscode.Disposable {
     // yield *mapIterator(iterateMatches(line, this.uglyUnscoped), x => ({start: x.start, end: x.end, unscopedId: x.id}));
   }
 
+
+
   private *iterateLineUglies(line: vscode.TextLine, tokens: tm.IToken[]) : IterableIterator<MatchResult & {type: "scoped"|"unscoped"}> {
     type T = "scoped" | "unscoped";
     let offset = 0;
+    const tokensOld = tokens;
+    if(this.combineIdenticalScopes)
+      tokens = tm.combineIdenticalTokenScopes(tokens);
     const scopedUgliesIter = this.iterateScopedUglies(line.text, tokens);
     const unscopedUgliesIter = this.iterateUnscopedUglies(line.text);
     let matchScoped = scopedUgliesIter.next();

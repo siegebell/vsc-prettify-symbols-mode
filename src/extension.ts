@@ -179,6 +179,8 @@ function reloadConfiguration() {
       language.adjustCursorMovement = settings.adjustCursorMovement;
     if(language.prettyCursor === undefined)
       language.prettyCursor = settings.prettyCursor;
+    if(language.combineIdenticalScopes === undefined)
+      language.combineIdenticalScopes = false;
   }
 
   // Recreate the documents
@@ -217,6 +219,7 @@ function getLanguageEntry(doc: vscode.TextDocument) : LanguageEntry {
       adjustCursorMovement: settings.adjustCursorMovement,
       revealOn: settings.revealOn,
       prettyCursor: settings.prettyCursor,
+      combineIdenticalScopes: true,
     };
 
   for(const language of additionalSubstitutions) {

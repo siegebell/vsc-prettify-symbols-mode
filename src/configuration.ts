@@ -59,6 +59,8 @@ export interface LanguageEntry {
 	language:  vscode.DocumentSelector;
 	/** substitution rules */
 	substitutions: Substitution[];
+	/** If `true`, combine adjacent tokens if they have the same scope name */
+	combineIdenticalScopes: boolean;
 	/** try to make pretty-symbol act like a single character */
 	adjustCursorMovement?: boolean;
 	/** when to unfold a symbol to reveal its underlying text; in response to cursors or selections */

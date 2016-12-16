@@ -101,3 +101,24 @@ export interface StackElement {
   readonly _parent: StackElement;
   equals(other: StackElement): boolean;
 }
+
+
+export function combineIdenticalTokenScopes(tokens: IToken[]) : IToken[] {
+  if(!tokens || tokens.length === 0)
+    return [];
+  const result = [tokens[0]];
+  let prevToken = tokens[0];
+  for(let idx = 1; idx < tokens.length; ++idx) {
+    const token = tokens[idx];
+    if(prevToken.endIndex===token.startIndex && token.scopes.every((t,idx) => t === prevToken.scopes[idx])) {
+      // Note: create a copy of the object so the source tokens are unmodified
+      result[result.length-1] = {startIndex: prevToken.startIndex, endIndex: token.endIndex, scopes: prevToken.scopes}
+      prevToken = result[result.length-1];
+    } else {
+      result.push(token);
+      prevToken = token;
+    }
+  }
+  return result;
+}
+

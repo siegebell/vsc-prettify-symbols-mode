@@ -159,6 +159,11 @@
                                 "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change",
                                 "default": "none"
                             },
+                            "combineIdenticalScopes": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "If `true`, combine adjacent tokens if they have the same scope"
+                            },
                             "textMateGrammar": {
                                 "type": "string",
                                 "description": "Specify the TextMate grammar file used to generate scope information for matching substitutions. If not specified, PSM will attempt to automatically find the grammar file that vscode uses."
