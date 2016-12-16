@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor, PrettyStyleProperties, PrettyStyle, assignStyleProperties, HideTextMethod} from './configuration';
 import * as pos from './position';
 import {RangeSet} from './RangeSet';
-import {DisjointRangeSet} from './DisjointRangeSet';
-import * as drangeset from './DisjointRangeSet';
+import {DisjointRangeSet} from './disjointrangeset';
+import * as drangeset from './disjointrangeset';
 import * as textUtil from './text-util';
 import * as tm from './text-mate';
 
@@ -217,13 +217,13 @@ export class PrettyDocumentController implements vscode.Disposable {
 
   public constructor(doc: vscode.TextDocument, settings: LanguageEntry, options: {hideTextMethod: HideTextMethod, textMateGrammar?: tm.IGrammar|null},
     private document = doc,
-    // private prettySubstitutions = settings.substitutions,  
+    // private prettySubstitutions = settings.substitutions,
     private revealStrategy = settings.revealOn,
     private adjustCursorMovement = settings.adjustCursorMovement,
     private prettyCursor = settings.prettyCursor,
     private hideTextMethod = options.hideTextMethod
   ) {
-    this.grammar = options.textMateGrammar || null; 
+    this.grammar = options.textMateGrammar || null;
     this.loadDecorations(settings.substitutions);
 
     // Parse whole document
@@ -406,7 +406,7 @@ export class PrettyDocumentController implements vscode.Disposable {
               editor.setDecorations(subst.decorationType,subst.ranges.getRanges());
             if(debugging)
               this.debugDecorations.forEach((val) => editor.setDecorations(val.dec,val.ranges));
-          }	
+          }
           this.applyDecorationsTimeoutActive = undefined;
         } catch(err) {
           console.error(err)
@@ -426,7 +426,7 @@ export class PrettyDocumentController implements vscode.Disposable {
               editor.setDecorations(subst.decorationType,subst.ranges.getRanges());
             if(debugging)
               this.debugDecorations.forEach((val) => editor.setDecorations(val.dec,val.ranges));
-          }	
+          }
           this.applyDecorationsTimeout = undefined;
         } catch(err) {
           console.error(err)
@@ -531,10 +531,10 @@ export class PrettyDocumentController implements vscode.Disposable {
    * Updates:
    *   this.prettyDecorations.scoped[x].ranges -- adds new ranges for each pretty x encountered
    *   this.prettyDecorations.unscoped[x].ranges -- adds new ranges for each pretty x encountered
-   *   this.uglyDecorationRanges -- all new uglies [to be hidden] are added 
+   *   this.uglyDecorationRanges -- all new uglies [to be hidden] are added
    * @returns the range that was acutally reparsed
    */
-  private reparsePretties(range: vscode.Range) : vscode.Range {  
+  private reparsePretties(range: vscode.Range) : vscode.Range {
     range = this.document.validateRange(range);
 
     const startCharacter = 0;
@@ -566,13 +566,13 @@ export class PrettyDocumentController implements vscode.Disposable {
             newUglyRanges.insert(uglyRange);
           else
             newStyledRanges.insert(uglyRange);
-          newScopedRanges[ugly.id].insert(uglyRange);        
+          newScopedRanges[ugly.id].insert(uglyRange);
         } else if(ugly.type === "unscoped") {
           if(this.prettyDecorations.unscoped[ugly.id].pretty)
             newUglyRanges.insert(uglyRange);
           else
             newStyledRanges.insert(uglyRange);
-          newUnscopedRanges[ugly.id].insert(uglyRange);        
+          newUnscopedRanges[ugly.id].insert(uglyRange);
         }
       }
     }
@@ -612,7 +612,7 @@ export class PrettyDocumentController implements vscode.Disposable {
     return hiddenOverlap.union(styledOverlap);
   }
 
-  private debugDecorations : {dec:vscode.TextEditorDecorationType, ranges: vscode.Range[]}[] = 
+  private debugDecorations : {dec:vscode.TextEditorDecorationType, ranges: vscode.Range[]}[] =
     [ {dec: vscode.window.createTextEditorDecorationType({textDecoration: 'line-through'}), ranges: []} // affected uglies
   	, {dec: vscode.window.createTextEditorDecorationType({backgroundColor: 'yellow',}), ranges: []} // reparsed text
     , {dec: vscode.window.createTextEditorDecorationType({outlineColor: 'black', outlineStyle: 'solid', outlineWidth: '1pt'}), ranges: []} // editRange
@@ -668,8 +668,8 @@ export class PrettyDocumentController implements vscode.Disposable {
     if(this.changedUglies || true)
       this.applyDecorations(this.getEditors());
     // else if(debugging)
-    //   this.debugDecorations.forEach((val) => this.getEditors().forEach((e) => e.setDecorations(val.dec,val.ranges))); 
-    
+    //   this.debugDecorations.forEach((val) => this.getEditors().forEach((e) => e.setDecorations(val.dec,val.ranges)));
+
     // this.refresh();
     // const endTime = new Date().getTime();
     // console.log(endTime - startTime + "ms")
@@ -679,7 +679,7 @@ export class PrettyDocumentController implements vscode.Disposable {
     this.applyChanges(event.contentChanges);
   }
 
-  /** reparses the document and recreates the highlights for all editors */  
+  /** reparses the document and recreates the highlights for all editors */
   public refresh() {
     this.uglyDecorationRanges = new DisjointRangeSet();
     this.grammarState = [];
@@ -693,7 +693,7 @@ export class PrettyDocumentController implements vscode.Disposable {
     const docRange = new vscode.Range(0,0,this.document.lineCount,0);
     this.reparsePretties(docRange);
 
-    this.applyDecorations(this.getEditors()); 
+    this.applyDecorations(this.getEditors());
   }
 
   private findSymbolAt(pos: vscode.Position, options: {excludeStart?: boolean, includeEnd?: boolean} = {excludeStart: false, includeEnd: false}) {
@@ -777,7 +777,7 @@ export class PrettyDocumentController implements vscode.Disposable {
     this.lastSelections.set(editor,adjustedSelections);
 
     // could cause this method to be called again, but since we've set the
-    // last-selection to adjustedSelections, we will immediately return. 
+    // last-selection to adjustedSelections, we will immediately return.
     if(updated)
       editor.selections = adjustedSelections;
   }
