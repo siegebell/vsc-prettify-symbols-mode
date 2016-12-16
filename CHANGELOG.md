@@ -1,6 +1,6 @@
 ## 0.3.1
 * new language entry settings
-    * `combineIdenticalScopes` - if `true`, combine adjacent tokens with identical scopes
+    * `combineIdenticalScopes` - if `true`, combine adjacent tokens with identical scopes (resolve #18)
 * fix #16
 
 ## 0.3.0
