@@ -1,7 +1,7 @@
 ## 0.3.1
 * new language entry settings
     * `combineIdenticalScopes` - if `true`, combine adjacent tokens with identical scopes (resolve #18)
-* fix #16
+* fix #16: Error at extension loading
 
 ## 0.3.0
 * Better method to hide substituted text, fixing #4 #5
