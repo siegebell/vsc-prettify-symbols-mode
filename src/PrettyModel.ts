@@ -117,8 +117,6 @@ export class PrettyModel implements vscode.Disposable {
       subst.ranges = new DisjointRangeSet();
     this.debugDecorations.forEach((val) => val.ranges = []);
 
-    // const updateDecs = this.makeDecorationsList();
-
     for(const oldDecoration of this.prettyDecorations.unscoped)
       oldDecoration.decorationType.dispose();
     for(const oldDecoration of this.prettyDecorations.scoped)
