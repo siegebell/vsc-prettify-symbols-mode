@@ -394,10 +394,13 @@ export class PrettyModel implements vscode.Disposable {
     this.changedUglies = false; // assume no changes need to be made for now
     const sortedChanges =
       changes.sort((change1,change2) => change1.range.start.isAfter(change2.range.start) ? -1 : 1)
+    const adjustedReparseRanges = new RangeSet();
     for(const change of sortedChanges) {
       try {
         const delta = textUtil.toRangeDelta(change.range, change.text);
         const editRange = textUtil.rangeDeltaNewRange(delta);
+
+        adjustedReparseRanges.shiftDelta(delta);
 
         const reparseRanges = this.conditionalRanges.removeOverlapping(change.range,{includeTouchingStart:true,includeTouchingEnd:true});
         this.conditionalRanges.shiftDelta(delta);
@@ -405,7 +408,7 @@ export class PrettyModel implements vscode.Disposable {
           ? new vscode.Range(reparseRanges[0].start, reparseRanges[reparseRanges.length-1].end)
           : change.range;
         // note: take the union to make sure that each edit location is reparsed, even if there were no preeexisting uglies (i.e. allow searching for new uglies)
-        const adjustedReparseRange = textUtil.rangeTranslate(reparseRange, delta).union(editRange);
+        adjustedReparseRanges.add(textUtil.rangeTranslate(reparseRange, delta).union(editRange));
 
         const removed  = this.uglyDecorationRanges.removeOverlapping(reparseRange,{includeTouchingStart:true,includeTouchingEnd:true});
         const affected = this.uglyDecorationRanges.shiftRangeDelta(delta);
@@ -421,11 +424,8 @@ export class PrettyModel implements vscode.Disposable {
           subst.ranges.shiftRangeDelta(delta);
         }
 
-        const reparsed = this.reparsePretties(adjustedReparseRange);
-
         if(debugging) {
           this.debugDecorations[0].ranges.push(affected);
-          this.debugDecorations[1].ranges.push(reparsed);
           this.debugDecorations[2].ranges.push(reparseRange);
         }
       } catch(e) {
@@ -433,13 +433,20 @@ export class PrettyModel implements vscode.Disposable {
       }
     }
 
-    return this.changedUglies || true;
+    for(let range of adjustedReparseRanges.getRanges()) {
+      const reparsed = this.reparsePretties(range);
+      this.debugDecorations[1].ranges.push(reparsed);
+    }
+    
+
     // else if(debugging)
     //   this.debugDecorations.forEach((val) => this.getEditors().forEach((e) => e.setDecorations(val.dec,val.ranges))); 
     
     // this.refresh();
     // const endTime = new Date().getTime();
     // console.log(endTime - startTime + "ms")
+
+    return this.changedUglies;
   }
 
   /** reparses the document and recreates the highlights for all editors */  
