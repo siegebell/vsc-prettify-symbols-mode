@@ -33,5 +33,7 @@ suite("text-mate", () => {
     test([mt(0,2,"a b"), mt(2,4,"a b"), mt(4,6,"a b")], [mt(0,6,"a b")]);
     test([mt(0,2,"a b"), mt(2,4,"a b"), mt(4,6,"c a b")], [mt(0,4,"a b"),mt(4,6,"c a b")]);
     test([mt(0,2,"a b"), mt(2,4,"c a b"), mt(4,6,"c a b")], [mt(0,2,"a b"),mt(2,6,"c a b")]);
+    test([mt(0, 4, "source.fsharp"),mt(4, 5, "source.fsharp constant.numeric.integer.nativeint.fsharp"),mt(5, 6, "source.fsharp"),mt(6, 45, "source.fsharp comment.line.double-slash.fsharp")],
+      [mt(0, 4, "source.fsharp"),mt(4, 5, "source.fsharp constant.numeric.integer.nativeint.fsharp"),mt(5, 6, "source.fsharp"),mt(6, 45, "source.fsharp comment.line.double-slash.fsharp")]);
 	});
 });
