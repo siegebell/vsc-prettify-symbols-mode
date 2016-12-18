@@ -16,16 +16,27 @@
 			"preLaunchTask": "watch"
 		},
 		{
-			"name": "Debug Mocha Tests",
-			"type": "node",
+			"name": "Launch Tests",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${execPath}",
+			"args": ["--extensionDevelopmentPath=${workspaceRoot}", "--extensionTestsPath=${workspaceRoot}/out/test" ],
+			"stopOnEntry": false,
 			"sourceMaps": true,
-			"request": "attach",
-			"port": 5858,
-			"outFiles": [
-				"${workspaceRoot}/out/**/*.js"
-			],
-			"preLaunchTask": "test-debug"
-		}  
+			"outFiles": ["${workspaceRoot}/out/test/**/*.js"],
+			"preLaunchTask": "watch"
+		}
+		// {
+		// 	"name": "Debug Mocha Tests",
+		// 	"type": "node",
+		// 	"sourceMaps": true,
+		// 	"request": "attach",
+		// 	"port": 5858,
+		// 	"outFiles": [
+		// 		"${workspaceRoot}/out/**/*.js"
+		// 	],
+		// 	"preLaunchTask": "test-debug"
+		// }  
 		// {
 		// 	"name": "Launch Tests",
 		// 	"type": "extensionHost",
