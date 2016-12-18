@@ -6,15 +6,18 @@
 // The module 'assert' provides assertion methods from node
 import * as assert from 'assert';
 const proxyquire =  require('proxyquire').noCallThru();
-import * as vscode from './vscode-shunt';
 
-const drs = proxyquire('../src/DisjointRangeSet', {'vscode': {extname: function(file){return './vscode-shunt'}, '@global': true}});
+// import * as vscode from './vscode-shunt';
+// const drs = proxyquire('../src/DisjointRangeSet', {'vscode': {extname: function(file){return './vscode-shunt'}, '@global': true}});
+import * as vscode from 'vscode';
+import * as drs from '../src/DisjointRangeSet';
+
 
 // Defines a Mocha test suite to group tests of similar kind together
-describe("DisjointRangeSet", () => {
+suite("DisjointRangeSet", () => {
 
 	// Defines a Mocha unit test
-	it("insert", () => {
+	test("insert", () => {
 		const x1 = new drs.DisjointRangeSet();
 		const r1 = new vscode.Range(1,9,1,14);
 		const r2 = new vscode.Range(1,14,1,16);

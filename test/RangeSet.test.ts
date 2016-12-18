@@ -5,15 +5,17 @@
 
 // The module 'assert' provides assertion methods from node
 import * as assert from 'assert';
-const proxyquire =  require('proxyquire').noCallThru();
-import * as vscode from './vscode-shunt';
 
-const rs = proxyquire('../src/RangeSet', {'vscode': {extname: function(file){return './vscode-shunt'}, '@global': true}});
+// const proxyquire =  require('proxyquire').noCallThru();
+// import * as vscode from './vscode-shunt';
+// const rs = proxyquire('../src/RangeSet', {'vscode': {extname: function(file){return './vscode-shunt'}, '@global': true}});
+import * as vscode from 'vscode';
+import * as rs from '../src/RangeSet';
 
 // Defines a Mocha test suite to group tests of similar kind together
-describe("RangeSet", () => {
+suite("RangeSet", () => {
 
-  it("add", function() {
+  test("add", function() {
 		const x1 = new rs.RangeSet();
 		x1.add(new vscode.Range(1,9,1,14));
 		x1.add(new vscode.Range(1,20,1,22));
@@ -22,23 +24,23 @@ describe("RangeSet", () => {
 		assert.deepStrictEqual(x1.getRanges(), [new vscode.Range(0,10,1,1), new vscode.Range(1,9,1,18), new vscode.Range(1,20,1,22)]);
 	})
 
-  it("indexAt", function() {
+  test("indexAt", function() {
 		const x1 = new rs.RangeSet();
 		x1.add(new vscode.Range(1,9,1,14)); // 1
 		x1.add(new vscode.Range(1,16,1,18)); // 2
 		x1.add(new vscode.Range(0,10,1,1)); // 0
-		assert.equal(x1.indexAt(new vscode.Position(0,0)), 0);
-		assert.equal(x1.indexAt(new vscode.Position(1,8)), 0);
-		assert.equal(x1.indexAt(new vscode.Position(1,5)), 0);
-		assert.equal(x1.indexAt(new vscode.Position(1,9)), 1);
-		assert.equal(x1.indexAt(new vscode.Position(1,14)), 1);
-		assert.equal(x1.indexAt(new vscode.Position(1,15)), 1);
-		assert.equal(x1.indexAt(new vscode.Position(1,16)), 2);
-		assert.equal(x1.indexAt(new vscode.Position(1,18)), 2);
-		assert.equal(x1.indexAt(new vscode.Position(1,19)), 2);
+		assert.equal(x1['indexAt'](new vscode.Position(0,0)), 0);
+		assert.equal(x1['indexAt'](new vscode.Position(1,8)), 0);
+		assert.equal(x1['indexAt'](new vscode.Position(1,5)), 0);
+		assert.equal(x1['indexAt'](new vscode.Position(1,9)), 1);
+		assert.equal(x1['indexAt'](new vscode.Position(1,14)), 1);
+		assert.equal(x1['indexAt'](new vscode.Position(1,15)), 1);
+		assert.equal(x1['indexAt'](new vscode.Position(1,16)), 2);
+		assert.equal(x1['indexAt'](new vscode.Position(1,18)), 2);
+		assert.equal(x1['indexAt'](new vscode.Position(1,19)), 2);
 	})
 
-	it("getOverlapping - singleton", () => {
+	test("getOverlapping - singleton", () => {
 		const x1 = new rs.RangeSet();
 		const r1 = new vscode.Range(1,9,1,14);
 		x1.add(r1);
@@ -53,7 +55,7 @@ describe("RangeSet", () => {
 		assert.deepStrictEqual(x1.getOverlapping(new vscode.Range(0,1,1,9), {includeTouchingStart: false, includeTouchingEnd: false}), []);
 	});
 
-	it("getOverlapping", () => {
+	test("getOverlapping", () => {
 		const x1 = new rs.RangeSet();
 		const r1 = new vscode.Range(1,9,1,14);
 		const r2 = new vscode.Range(1,17,1,20);
@@ -81,7 +83,7 @@ describe("RangeSet", () => {
 		assert.deepStrictEqual(x1.getOverlapping(new vscode.Range(1,10,1,21), {includeTouchingStart: true, includeTouchingEnd: true}), [r1,r2]);
 	});
 
-	it("removeOverlapping", () => {
+	test("removeOverlapping", () => {
 		const r1 = new vscode.Range(1,9,1,14);
 		const r2 = new vscode.Range(1,17,1,20);
 		function tryRemove(a,b,c,d, options: {includeTouchingStart: boolean, includeTouchingEnd: boolean}, expected, remaining) {
