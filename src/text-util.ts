@@ -11,10 +11,74 @@ export interface RangeDelta {
   endCharactersDelta: number; // delta for positions on the same line as the end position
 }
 
+export function offsetAt(text: string, pos: vscode.Position) : number {
+  let line = pos.line;
+  let lastIndex = 0;
+  while (line > 0) {
+    const match = lineEndingRE.exec(text.substring(lastIndex));
+    if(match[2] === '' || match[2] === undefined) // no line-ending found
+      return -1; // the position is beyond the length of text
+    else {
+      lastIndex+= match[0].length;
+      --line;
+    }
+  }
+  return lastIndex + pos.character;
+}
+
+/** Calculates the offset into text of pos, where textStart is the position where text starts and both pos and textStart are absolute positions 
+ * @return the offset into text indicated by pos, or -1 if pos is out of range
+ * 
+ * 'abc\ndef'
+ * 'acbX\ndef'
+ * +++*** --> +++_***
+ * */
+export function relativeOffsetAtAbsolutePosition(text: string, textStart: vscode.Position, pos: vscode.Position) : number {
+  let line = textStart.line;
+  let currentOffset = 0;
+  // count the relative lines and offset w.r.t text
+  while(line < pos.line) {
+    const match = lineEndingRE.exec(text.substring(currentOffset));
+    ++line;   // there was a new line
+    currentOffset += match[0].length;
+  }
+
+  if(line > pos.line)
+    return -1
+  else if(textStart.line === pos.line)
+    return Math.max(-1, pos.character - textStart.character);
+  else // if(line === pos.line)
+    return Math.max(-1, pos.character + currentOffset);
+}
+
+/**
+ * @returns the Position (line, column) for the location (character position), assuming that text begins at start
+ */
+export function positionAtRelative(start: vscode.Position, text: string, offset: number) : vscode.Position {
+  if(offset > text.length)
+    offset = text.length;
+  let line = start.line;
+  let currentOffset = 0;  // offset into text we are current at; <= `offset`
+  let lineOffset = start.character;
+  let lastIndex = start.character;
+  while(true) {
+    const match = lineEndingRE.exec(text.substring(currentOffset));
+    // match[0] -- characters plus newline
+    // match[1] -- characters up to newline
+    // match[2] -- newline (\n, \r, or \r\n)
+    if(!match || match[0].length === 0 || currentOffset + match[1].length >= offset)
+      return new vscode.Position(line, lineOffset + Math.max(offset - currentOffset, 0))
+    currentOffset+= match[0].length;
+    lineOffset = 0;
+    ++line;
+  }
+}
+
+
 /**
  * @returns the Position (line, column) for the location (character position)
  */
-function positionAt(text: string, offset: number) : vscode.Position {
+export function positionAt(text: string, offset: number) : vscode.Position {
   if(offset > text.length)
     offset = text.length;
   let line = 0;
@@ -22,7 +86,7 @@ function positionAt(text: string, offset: number) : vscode.Position {
   while(true) {
     const match = lineEndingRE.exec(text.substring(lastIndex));
     if(lastIndex + match[1].length >= offset)
-      return new vscode.Position(line, offset - lastIndex)
+      return new vscode.Position(line, Math.max(0, offset - lastIndex))
     lastIndex+= match[0].length;
     ++line;
   }

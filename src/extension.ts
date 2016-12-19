@@ -77,6 +77,7 @@ export function activate(context: vscode.ExtensionContext) : api.PrettifySymbols
     context.subscriptions.push(vscode.commands.registerCommand(commandId, run));
   }
 
+  registerTextEditorCommand('extension.copyWithSubstitutions', copyWithSubstitutions);
   registerCommand('extension.disablePrettySymbols', disablePrettySymbols);
   registerCommand('extension.enablePrettySymbols', enablePrettySymbols);
   registerCommand('extension.togglePrettySymbols', (editor: vscode.TextEditor) => {
@@ -124,6 +125,16 @@ export function activate(context: vscode.ExtensionContext) : api.PrettifySymbols
   return result;
 }
 
+function copyWithSubstitutions(editor: vscode.TextEditor) {
+  try {
+    if(!editor)
+      return;
+    const prettyDoc = documents.get(editor.document.uri);
+    if(prettyDoc)
+      prettyDoc.copyDecorated(editor);
+  } catch(e) {
+  }
+}
 
 function changeActiveTextEditor(editor: vscode.TextEditor) {
   try {

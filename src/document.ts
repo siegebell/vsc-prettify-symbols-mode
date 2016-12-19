@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as copyPaste from 'copy-paste';
+
 import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor, PrettyStyleProperties, PrettyStyle, assignStyleProperties, HideTextMethod} from './configuration';
 import * as pos from './position';
 import {RangeSet} from './RangeSet';
@@ -35,6 +37,7 @@ export class PrettyDocumentController implements vscode.Disposable {
     private adjustCursorMovement = settings.adjustCursorMovement,
   ) {
     const docModel = {
+      getText: (r?:vscode.Range) => this.document.getText(r),
       getLine: (n:number) => this.document.lineAt(n).text,
       getLineRange: (n:number) => this.document.lineAt(n).range,
       getLineCount: () => this.document.lineCount,
@@ -64,6 +67,17 @@ export class PrettyDocumentController implements vscode.Disposable {
 
   public gotFocus(editor: vscode.TextEditor) {
     this.applyDecorations(this.getEditors(), this.currentDecorations);
+  }
+
+  public copyDecorated(editor: vscode.TextEditor) : Promise<void> {
+    function doCopy(x: any) {
+      return new Promise<void>((resolve, reject) => copyPaste.copy(x, (err) => err ? reject(err) : resolve()));
+    }
+    const copy = editor.selections.map(sel => this.model.getDecoratedText(sel));
+    if(copy.length === 0)
+      return Promise.resolve();
+    else
+      return doCopy(copy.join('\n'))
   }
 
   private applyDecorationsTimeout = undefined;

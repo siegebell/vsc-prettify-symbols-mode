@@ -29,6 +29,7 @@ interface PrettySubstitution {
 }
 
 export interface DocumentModel {
+  getText: (r: vscode.Range) => string;
   getLine: (line: number) => string;
   getLineRange: (line: number) => vscode.Range;
   getLineCount: () => number;
@@ -471,6 +472,47 @@ export class PrettyModel implements vscode.Disposable {
 
   public getPrettySubstitutionsRanges() : vscode.Range[] {
     return this.uglyDecorationRanges.getRanges();
+  }
+
+  /**
+   * Returns what the contents of the document would appear to be after decorations (i.e. with substitutions applied to the text)
+   */
+  public getDecoratedText(range : vscode.Range) : string {
+    range = this.document.validateRange(range);
+
+    const text = this.document.getText(range);
+    const substitutions : {start: number, end: number, subst: string}[] = []
+
+    for(let subst of this.prettyDecorations.unscoped) {
+      if(!subst.pretty)
+        continue;
+      const substRanges = subst.ranges.getOverlapRanges(range);
+      for(let sr of substRanges) {
+        const start = textUtil.relativeOffsetAtAbsolutePosition(text, range.start, sr.start);
+        const end = textUtil.relativeOffsetAtAbsolutePosition(text, range.start, sr.end);
+        substitutions.push({start: start, end: end, subst: subst.pretty})
+      }
+    }
+    for(let subst of this.prettyDecorations.scoped) {
+      if(!subst.pretty)
+        continue;
+      const substRanges = subst.ranges.getOverlapRanges(range);
+      for(let sr of substRanges) {
+        const start = textUtil.relativeOffsetAtAbsolutePosition(text, range.start, sr.start);
+        const end = textUtil.relativeOffsetAtAbsolutePosition(text, range.start, sr.end);
+        substitutions.push({start: start, end: end, subst: subst.pretty})
+      }
+    }
+
+    // reverse order: later substs first
+    const sortedSubst = substitutions.sort((a,b) => a.start < b.start ? 1 : a.start === b.start ? 0 : -1);
+
+    let result = text;
+    for(let subst of sortedSubst) {
+      result = result.slice(0,subst.start) + subst.subst + result.slice(subst.end);
+    }
+
+    return result
   }
 
   public revealSelections(selections: vscode.Selection[]) : UpdateDecorationEntry|null {
