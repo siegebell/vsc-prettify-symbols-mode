@@ -11,13 +11,9 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as pdoc from '../src/document';
 
-interface PUBLIC {
-  applyChanges(changes: vscode.TextDocumentContentChangeEvent[]);
-}
-
 
 // Defines a Mocha test suite to group tests of similar kind together
-describe("PrettyDocumentController", () => {
+suite("PrettyDocumentController", () => {
 	let doc : pdoc.PrettyDocumentController;
 	// beforeEach(function() {
 	// 	const textDoc = vscode.TextDocument();
@@ -26,7 +22,4 @@ describe("PrettyDocumentController", () => {
 	// })
 
 	// Defines a Mocha unit test
-	it("applyChanges", () => {
-
-	});
 });

@@ -91,6 +91,12 @@ suite("PrettyModel", () => {
     assertDecs(m.getDecorationsList(), [[range(0,1,0,4)], [range(0,1,0,4)]])
 	});
 
+	test("getDecoratedText0", () => {
+    const doc = new MockDocumentModel(["fun\r\n"]);
+    const m = new pm.PrettyModel(doc, langFun, {hideTextMethod: "hack-fontSize"})
+    assert.equal(m.getDecoratedText(range(0,0,0,3)), "λ")
+	});
+
 	test("getDecoratedText1", () => {
     const doc = new MockDocumentModel(["aa\r\n", "_fun\r\n"]);
     const m = new pm.PrettyModel(doc, langFun, {hideTextMethod: "hack-fontSize"})
