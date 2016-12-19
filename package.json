@@ -18,19 +18,19 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.copyWithSubstitutions",
+                "command": "prettifySymbolsMode.copyWithSubstitutions",
                 "title": "Prettify symbols mode: Copy with Substitutions"
             },
             {
-                "command": "extension.enablePrettySymbols",
+                "command": "prettifySymbolsMode.enablePrettySymbols",
                 "title": "Prettify symbols mode: Enable"
             },
             {
-                "command": "extension.disablePrettySymbols",
+                "command": "prettifySymbolsMode.disablePrettySymbols",
                 "title": "Prettify symbols mode: Disable"
             },
             {
-                "command": "extension.togglePrettySymbols",
+                "command": "prettifySymbolsMode.togglePrettySymbols",
                 "title": "Prettify symbols mode: Toggle"
             }
         ],

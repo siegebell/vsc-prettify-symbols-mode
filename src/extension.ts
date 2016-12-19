@@ -77,10 +77,10 @@ export function activate(context: vscode.ExtensionContext) : api.PrettifySymbols
     context.subscriptions.push(vscode.commands.registerCommand(commandId, run));
   }
 
-  registerTextEditorCommand('extension.copyWithSubstitutions', copyWithSubstitutions);
-  registerCommand('extension.disablePrettySymbols', disablePrettySymbols);
-  registerCommand('extension.enablePrettySymbols', enablePrettySymbols);
-  registerCommand('extension.togglePrettySymbols', (editor: vscode.TextEditor) => {
+  registerTextEditorCommand('prettifySymbolsMode.copyWithSubstitutions', copyWithSubstitutions);
+  registerCommand('prettifySymbolsMode.disablePrettySymbols', disablePrettySymbols);
+  registerCommand('prettifySymbolsMode.enablePrettySymbols', enablePrettySymbols);
+  registerCommand('prettifySymbolsMode.togglePrettySymbols', (editor: vscode.TextEditor) => {
     if(prettySymbolsEnabled) {
       disablePrettySymbols();
     } else {
