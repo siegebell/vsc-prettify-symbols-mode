@@ -1,4 +1,4 @@
-## 0.3.2
+## 0.4.0
 * feature: copy "pretty" text - copy with substitutions (#22)
 * fix #21: combining tokens is too eager
 * fix #20: swap-line (and other big edits) breaks symbols
