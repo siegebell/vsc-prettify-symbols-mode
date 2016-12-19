@@ -88,6 +88,10 @@ export function activate(context: vscode.ExtensionContext) : api.PrettifySymbols
     }
   });
 
+  registerCommand('extension.disablePrettySymbols', () => { vscode.window.showErrorMessage('Command "extension.disablePrettySymbols" is deprecated; use "prettifySymbolsMode.disablePrettySymbols" instead.') });
+  registerCommand('extension.enablePrettySymbols', () => { vscode.window.showErrorMessage('Command "extension.enablePrettySymbols" is deprecated; use "prettifySymbolsMode.enablePrettySymbols" instead.') });
+  registerCommand('extension.togglePrettySymbols', () => { vscode.window.showErrorMessage('Command "extension.togglePrettySymbols" is deprecated; use "prettifySymbolsMode.togglePrettySymbols" instead.') });
+
   context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(selectionChanged));
 
   context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(openDocument));
