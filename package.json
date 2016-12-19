@@ -2,7 +2,7 @@
     "name": "prettify-symbols-mode",
     "displayName": "Prettify Symbols Mode",
     "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "publisher": "siegebell",
     "license": "MIT license (MIT)",
     "engines": {
@@ -19,19 +19,23 @@
         "commands": [
             {
                 "command": "prettifySymbolsMode.copyWithSubstitutions",
-                "title": "Prettify symbols mode: Copy with Substitutions"
+                "title": "Copy with Substitutions",
+                "category": "Prettify Symbols Mode"
             },
             {
                 "command": "prettifySymbolsMode.enablePrettySymbols",
-                "title": "Prettify symbols mode: Enable"
+                "title": "Enable",
+                "category": "Prettify Symbols Mode"
             },
             {
                 "command": "prettifySymbolsMode.disablePrettySymbols",
-                "title": "Prettify symbols mode: Disable"
+                "title": "Disable",
+                "category": "Prettify Symbols Mode"
             },
             {
                 "command": "prettifySymbolsMode.togglePrettySymbols",
-                "title": "Prettify symbols mode: Toggle"
+                "title": "Toggle",
+                "category": "Prettify Symbols Mode"
             }
         ],
         "configuration": {

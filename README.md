@@ -61,9 +61,10 @@ This extension uses [Javascript's regular expression](https://developer.mozilla.
 ### Commands
 
 The following commands are available for keybinding:
-* `extension.enablePrettySymbols`: globally *enable* prettify symbols mode
-* `extension.disablePrettySymbols`: globally *disable* prettify symbols mode
-* `extension.togglePrettySymbols`: globally *toggle* prettify symbols mode
+* `prettifySymbolsMode.copyWithSubstitutions`: copy selected text with "pretty" substitutions applied
+* `prettifySymbolsMode.enablePrettySymbols`: globally *enable* prettify symbols mode
+* `prettifySymbolsMode.disablePrettySymbols`: globally *disable* prettify symbols mode
+* `prettifySymbolsMode.togglePrettySymbols`: globally *toggle* prettify symbols mode
 
 
 ### Common settings for `settings.json`

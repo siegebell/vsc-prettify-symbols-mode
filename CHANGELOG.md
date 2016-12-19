@@ -1,3 +1,9 @@
+## 0.3.2
+* feature: copy "pretty" text - copy with substitutions (#22)
+* fix #21: combining tokens is too eager
+* fix #20: swap-line (and other big edits) breaks symbols
+* fix #23: commands should be prefixed with "prettifySymbolsMode"; not "extension"
+
 ## 0.3.1
 * new language entry settings
     * `combineIdenticalScopes` - if `true`, combine adjacent tokens with identical scopes (resolve #18)
