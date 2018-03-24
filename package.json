@@ -321,6 +321,72 @@
                                     "pretty": "∎"
                                 },
                                 {
+                                    "pre": "\\b",
+                                    "ugly": "nat",
+                                    "post": "\\b",
+                                    "pretty": "ℕ"
+                                },
+                                {
+                                    "pre": "[a-zA-Z]",
+                                    "ugly": "_1",
+                                    "post": "\\b",
+                                    "pretty": "₁"
+                                },
+                                {
+                                    "pre": "[a-zA-Z]",
+                                    "ugly": "_2",
+                                    "post": "\\b",
+                                    "pretty": "₂"
+                                },
+                                {
+                                    "pre": "[a-zA-Z]",
+                                    "ugly": "_3",
+                                    "post": "\\b",
+                                    "pretty": "₃"
+                                },
+                                {
+                                    "pre": "[a-zA-Z]",
+                                    "ugly": "_4",
+                                    "post": "\\b",
+                                    "pretty": "₄"
+                                },
+                                {
+                                    "pre": "[a-zA-Z]",
+                                    "ugly": "_5",
+                                    "post": "\\b",
+                                    "pretty": "₅"
+                                },
+                                {
+                                    "pre": "[a-zA-Z]",
+                                    "ugly": "_6",
+                                    "post": "\\b",
+                                    "pretty": "₆"
+                                },
+                                {
+                                    "pre": "[a-zA-Z]",
+                                    "ugly": "_7",
+                                    "post": "\\b",
+                                    "pretty": "₇"
+                                },
+                                {
+                                    "pre": "[a-zA-Z]",
+                                    "ugly": "_8",
+                                    "post": "\\b",
+                                    "pretty": "₈"
+                                },
+                                {
+                                    "pre": "[a-zA-Z]",
+                                    "ugly": "_9",
+                                    "post": "\\b",
+                                    "pretty": "₉"
+                                },
+                                {
+                                    "pre": "[a-zA-Z]",
+                                    "ugly": "_0",
+                                    "post": "\\b",
+                                    "pretty": "₀"
+                                },
+                                {
                                     "ugly": "/\\\\",
                                     "pretty": "∧"
                                 },
@@ -343,6 +409,14 @@
                                 {
                                     "ugly": "->",
                                     "pretty": "⟶"
+                                },
+                                {
+                                    "ugly": "<-",
+                                    "pretty": "←"
+                                },
+                                {
+                                    "ugly": "<>",
+                                    "pretty": "≠"
                                 }
                             ]
                         },
@@ -457,6 +531,144 @@
                                 {
                                     "ugly": "\\.\\.",
                                     "pretty": "…"
+                                },
+                                {
+                                    "ugly": "undefined",
+                                    "pretty": "⊥"
+                                },
+                                {
+                                    "ugly": "`elem`",
+                                    "pretty": "∈"
+                                },
+                                {
+                                    "ugly": "`notElem`",
+                                    "pretty": "∉"
+                                },
+                                {
+                                    "ugly": "`isSubsetOf`",
+                                    "pretty": "⊆"
+                                },
+                                {
+                                    "ugly": "`union`",
+                                    "pretty": "⋃"
+                                },
+                                {
+                                    "ugly": "`intersect`",
+                                    "pretty": "⋂"
+                                }
+                            ]
+                        },
+                        {
+                            "language": "idris",
+                            "substitutions": [
+                                {
+                                    "ugly": "\\\\",
+                                    "pretty": "λ",
+                                    "post": "\\s*(?:\\w|_).*?\\s*=>"
+                                },
+                                {
+                                    "ugly": "<-",
+                                    "pretty": "←"
+                                },
+                                {
+                                    "ugly": "->",
+                                    "pretty": "→"
+                                },
+                                {
+                                    "ugly": "==",
+                                    "pretty": "≡"
+                                },
+                                {
+                                    "ugly": "/=",
+                                    "pretty": "≢"
+                                },
+                                {
+                                    "ugly": "\\(\\)",
+                                    "pretty": "∅"
+                                },
+                                {
+                                    "ugly": "sqrt\\s?",
+                                    "pretty": "√",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "&&",
+                                    "pretty": "∧"
+                                },
+                                {
+                                    "ugly": "\\|\\|",
+                                    "pretty": "∨"
+                                },
+                                {
+                                    "ugly": "not\\s?",
+                                    "pretty": "¬",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": ">",
+                                    "pretty": ">",
+                                    "pre": "[^=\\-<>]|^",
+                                    "post": "[^=\\-<>]|$"
+                                },
+                                {
+                                    "ugly": "<",
+                                    "pretty": "<",
+                                    "pre": "[^=\\-<>]|^",
+                                    "post": "[^=\\-<>]|$"
+                                },
+                                {
+                                    "ugly": ">=",
+                                    "pretty": "≥",
+                                    "pre": "[^=\\-<>]|^",
+                                    "post": "[^=\\-<>]|$"
+                                },
+                                {
+                                    "ugly": "<=",
+                                    "pretty": "≤",
+                                    "pre": "[^=\\-<>]|^",
+                                    "post": "[^=\\-<>]|$"
+                                },
+                                {
+                                    "ugly": "alpha",
+                                    "pretty": "α",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "beta",
+                                    "pretty": "β",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "gamma",
+                                    "pretty": "γ",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "delta",
+                                    "pretty": "δ",
+                                    "pre": "\\b",
+                                    "post": "\\b"
+                                },
+                                {
+                                    "ugly": "''",
+                                    "pretty": "″"
+                                },
+                                {
+                                    "ugly": "'",
+                                    "pretty": "′"
+                                },
+                                {
+                                    "ugly": "=>",
+                                    "pretty": "⇒"
+                                },
+                                {
+                                    "ugly": "\\\\\\\\",
+                                    "pretty": "∖"
                                 }
                             ]
                         },
