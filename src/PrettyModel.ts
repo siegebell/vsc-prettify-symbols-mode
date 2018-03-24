@@ -41,6 +41,11 @@ export interface UpdateDecorationEntry {
   ranges: vscode.Range[],
 }
 
+export interface UpdateDecorationInstanceEntry {
+  decoration: vscode.DecorationInstanceRenderOptions,
+  ranges: DisjointRangeSet,
+}
+
 export class PrettyModel implements vscode.Disposable {
   private prettyDecorations : {scoped: PrettySubstitution[], unscoped: PrettySubstitution[]} = {scoped: [], unscoped: []};
   /** matches all of the target substitutions that ignore grammar scopes */
@@ -60,7 +65,7 @@ export class PrettyModel implements vscode.Disposable {
   // reveals the "ugly" decorations; is applied on top of uglyDecoration and should take priority
   private revealedUglyDecoration: vscode.TextEditorDecorationType = null;
   // draws a box around a pretty symbol
-  private boxedSymbolDecoration: vscode.TextEditorDecorationType = null;
+  private boxedSymbolDecoration: vscode.DecorationInstanceRenderOptions = null;
 
   // Stores the state for each line
   private grammarState : tm.StackElement[] = [];
@@ -106,8 +111,6 @@ export class PrettyModel implements vscode.Disposable {
       this.uglyDecoration.dispose();
     if(this.revealedUglyDecoration)
       this.revealedUglyDecoration.dispose();
-    if(this.boxedSymbolDecoration)
-      this.boxedSymbolDecoration.dispose();
 
     this.conditionalRanges = new RangeSet();
     this.uglyDecorationRanges = new DisjointRangeSet();
@@ -134,7 +137,7 @@ export class PrettyModel implements vscode.Disposable {
   private loadDecorations(prettySubstitutions: Substitution[]) {
     this.unloadDecorations();
 
-    let dec : {uglyDecoration: vscode.TextEditorDecorationType, revealedUglyDecoration: vscode.TextEditorDecorationType, boxedSymbolDecoration: vscode.TextEditorDecorationType}
+    let dec : {uglyDecoration: vscode.TextEditorDecorationType, revealedUglyDecoration: vscode.TextEditorDecorationType, boxedSymbolDecoration: vscode.DecorationInstanceRenderOptions}
     if(this.hideTextMethod === "hack-fontSize")
       dec = decorations.makeDecorations_fontSize_hack();
     else if(this.hideTextMethod === "hack-letterSpacing")
@@ -515,7 +518,7 @@ export class PrettyModel implements vscode.Disposable {
     return result
   }
 
-  public revealSelections(selections: vscode.Selection[]) : UpdateDecorationEntry|null {
+  public revealSelections(selections: vscode.Selection[]) : UpdateDecorationEntry {
     const revealUgly = (getRange: (sel:vscode.Selection) => vscode.Range) : UpdateDecorationEntry => {
       const cursorRevealedRanges = new DisjointRangeSet();
       for(const selection of selections) {
@@ -548,14 +551,14 @@ export class PrettyModel implements vscode.Disposable {
       case 'selection':
         return revealUglies((sel) => this.findSymbolsIn(new vscode.Range(sel.start, sel.end)));
       default:
-        return null;
+        return {decoration: this.revealedUglyDecoration, ranges: []};
     }
  }
 
-  public renderPrettyCursor(selections: vscode.Selection[]) : UpdateDecorationEntry|null {
+  public renderPrettyCursor(selections: vscode.Selection[]) : UpdateDecorationInstanceEntry|null {
     switch(this.prettyCursor) {
       case 'boxed': {
-        const boxPretty = (getRange: (sel:vscode.Selection) => vscode.Range) : UpdateDecorationEntry|null => {
+        const boxPretty = (getRange: (sel:vscode.Selection) => vscode.Range) : UpdateDecorationInstanceEntry|null => {
           try {
             const cursorBoxRanges = new DisjointRangeSet();
             for(const selection of selections) {
@@ -564,7 +567,7 @@ export class PrettyModel implements vscode.Disposable {
                 cursorBoxRanges.insert(pretty);
             }
             // reveal the uglies and hide the pretties
-            return {decoration: this.boxedSymbolDecoration, ranges: cursorBoxRanges.getRanges()};
+            return {decoration: this.boxedSymbolDecoration, ranges: cursorBoxRanges};
           } catch(err) {
             console.error(err);
             console.error('\n');

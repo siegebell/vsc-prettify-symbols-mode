@@ -2,11 +2,11 @@
     "name": "prettify-symbols-mode",
     "displayName": "Prettify Symbols Mode",
     "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "publisher": "siegebell",
     "license": "MIT license (MIT)",
     "engines": {
-        "vscode": "^1.7.0"
+        "vscode": "^1.20.0"
     },
     "categories": [
         "Other"

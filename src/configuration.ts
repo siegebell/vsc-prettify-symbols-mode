@@ -18,8 +18,8 @@ export type PrettyCursor =
 export interface PrettyStyleProperties {
   border?: string,
 	textDecoration?: string,
-	color?: string,
-	backgroundColor?: string,
+	color?: string | vscode.ThemeColor,
+	backgroundColor?: string | vscode.ThemeColor,
 	hackCSS?: string,
 }
 export interface PrettyStyle extends PrettyStyleProperties {

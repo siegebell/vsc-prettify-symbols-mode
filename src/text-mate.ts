@@ -1,5 +1,13 @@
 import * as path from 'path';
-const tm = require(path.join(require.main.filename, '../../node_modules/vscode-textmate/release/main.js'));
+const tm = loadTextMate();
+
+function loadTextMate(): any {
+  try {
+    require(path.join(require.main.filename, '../../node_modules/vscode-textmate/release/main.js'));
+  } catch(error) {
+    return null;
+  }
+}
 
 // namespace N {
 //   /**
@@ -39,9 +47,6 @@ export function matchScope(scope: string, scopes: string[]) : boolean {
   return true;
 }
 
-
-// export type Registry = N.Registry;
-export const Registry : Registry = tm.Registry;
 export interface Registry {
   new (locator?: IGrammarLocator);
   /**
@@ -57,6 +62,19 @@ export interface Registry {
    */
   grammarForScopeName(scopeName: string): IGrammar;
 }  
+
+class DummyRegistry {
+  public constructor(locator?: IGrammarLocator) {}
+  loadGrammar(initialScopeName: string, callback: (err: any, grammar: IGrammar) => void) {}
+  loadGrammarFromPathSync(path: string): IGrammar {
+    throw "TextMate is not available"
+  }
+  grammarForScopeName(scopeName: string): IGrammar {
+    throw "TextMate is not available";
+  }
+}
+
+export const Registry : Registry = tm == null ? (DummyRegistry as any) : tm.Registry;
 
 /**
  * A registry helper that can locate grammar file paths given scope names.

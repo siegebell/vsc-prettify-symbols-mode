@@ -23,6 +23,8 @@ A substitution matches any string that satisfies the `"ugly"` pattern, visually 
 
 ### Scopes
 
+*Note: scope support is experimental and only available on versions of vscode older than 1.21.1*.
+
 By default, regular expressions match against a whole line of text. If `"scope"` is specified, then regular expression matches will only be performed on the parsed [TextMate] tokens that match the given scope. A small subset of TextMate scope expressions are supported. For example, a substitution with scope `"source.js comment"` will match a token with scope `"text.html.basic source.js comment.block.html"`. A scoped `"ugly"` regular expression must match the entire token by default -- i.e. `"pre"` and `"post"` are respectively set to `"^"` and `"$"` by default when a scope is specified. However, `"pre"` and `"post"` can be overriden to allow multiple substitutions within a single token (e.g. a comment).
 
 *Tip: use [scope-info](https://marketplace.visualstudio.com/items?itemName=siegebell.scope-info) to see the scope assigned to each token in your source.*

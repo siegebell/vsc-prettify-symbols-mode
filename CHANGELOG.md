@@ -1,3 +1,7 @@
+## 0.4.1
+* fix #33: vscode has removed vscode-text (see https://github.com/Microsoft/vscode/issues/46281)
+* fix #34, #30, #28: symbols are displayed very large.
+
 ## 0.4.0
 * feature: copy "pretty" text - copy with substitutions (#22)
 * fix #21: combining tokens is too eager
