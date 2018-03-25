@@ -63,14 +63,25 @@ export interface Registry {
   grammarForScopeName(scopeName: string): IGrammar;
 }  
 
+const dummyGrammar: IGrammar = {
+  tokenizeLine(lineText: string, prevState: StackElement): ITokenizeLineResult {
+    return {
+      tokens: [],
+      ruleStack: prevState,
+    }        
+  }
+}
+
 class DummyRegistry {
   public constructor(locator?: IGrammarLocator) {}
-  loadGrammar(initialScopeName: string, callback: (err: any, grammar: IGrammar) => void) {}
+  loadGrammar(initialScopeName: string, callback: (err: any, grammar: IGrammar) => void) {
+    callback(new Error("textmate cannot be loaded"), undefined);
+  }
   loadGrammarFromPathSync(path: string): IGrammar {
-    throw "TextMate is not available"
+    return dummyGrammar;
   }
   grammarForScopeName(scopeName: string): IGrammar {
-    throw "TextMate is not available";
+    return dummyGrammar;
   }
 }
 

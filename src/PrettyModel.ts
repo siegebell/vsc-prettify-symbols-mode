@@ -217,14 +217,18 @@ export class PrettyModel implements vscode.Disposable {
     return {range: uglyRange, prettyIndex: matchIdx-1, lastIndex: end};
   }
 
-  private refreshTokensOnLine(line: string, lineNumber: number) : {tokens: tm.IToken[], invalidated: boolean} {
+  private refreshTokensOnLine(line: string, lineNumber: number) : {tokens: tm.IToken[], invalidated: boolean} {    
     if(!this.grammar)
       return {tokens: [], invalidated: false};
-    const prevState = this.grammarState[lineNumber-1] || null;
-    const lineTokens = this.grammar.tokenizeLine(line, prevState);
-    const invalidated = !this.grammarState[lineNumber] || !lineTokens.ruleStack.equals(this.grammarState[lineNumber])
-    this.grammarState[lineNumber] = lineTokens.ruleStack;
-    return {tokens: lineTokens.tokens, invalidated: invalidated};
+    try {
+      const prevState = this.grammarState[lineNumber-1] || null;
+      const lineTokens = this.grammar.tokenizeLine(line, prevState);
+      const invalidated = !this.grammarState[lineNumber] || !lineTokens.ruleStack.equals(this.grammarState[lineNumber])
+      this.grammarState[lineNumber] = lineTokens.ruleStack;
+      return {tokens: lineTokens.tokens, invalidated: invalidated};
+    } catch (error) {
+      return {tokens: [], invalidated: false};
+    }
   }
 
   /** Iterates over all the uglies that match within a scoped token

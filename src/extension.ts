@@ -274,8 +274,12 @@ async function openDocument(doc: vscode.TextDocument) {
         const usesScopes = language.substitutions.some(s => s.scope !== undefined);
         let grammar : tm.IGrammar = undefined;
         if(textMateRegistry && usesScopes) {
-          const scopeName = language.textMateInitialScope || getLanguageScopeName(doc.languageId);
+          try {
+            const scopeName = language.textMateInitialScope || getLanguageScopeName(doc.languageId);
             grammar = await loadGrammar(scopeName);
+          } catch (error) {
+            console.error(error);
+          }
         }
         documents.set(doc.uri, new PrettyDocumentController(doc, language, {hideTextMethod: settings.hideTextMethod, textMateGrammar: grammar}));
       }
