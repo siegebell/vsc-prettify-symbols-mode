@@ -1,3 +1,6 @@
+## 0.4.2
+* fix #36: scopes break PSM
+
 ## 0.4.1
 * fix #33: vscode has removed vscode-text (see https://github.com/Microsoft/vscode/issues/46281)
 * fix #34, #30, #28: symbols are displayed very large.
