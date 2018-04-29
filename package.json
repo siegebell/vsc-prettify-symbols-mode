@@ -955,6 +955,12 @@
                               "post": "\\b"
                             },
                             {
+                              "ugly": "\\\\ref|\\\\cref|\\\\autoref|\\\\cite",
+                              "post": "{.+?}",
+                              "pretty": "※",
+                              "style": {"color": "cyan"}
+                            },
+                            {
                               "ugly": "\\\\leq",
                               "pretty": "≤",
                               "post": "\\b"
