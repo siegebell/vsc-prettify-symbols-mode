@@ -1,974 +1,1639 @@
 {
-    "name": "prettify-symbols-mode",
-    "displayName": "Prettify Symbols Mode",
-    "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
-    "version": "0.4.2",
-    "publisher": "siegebell",
-    "license": "MIT license (MIT)",
-    "engines": {
-        "vscode": "^1.20.0"
-    },
-    "categories": [
-        "Other"
+  "name": "prettify-symbols-mode",
+  "displayName": "Prettify Symbols Mode",
+  "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
+  "version": "0.4.2",
+  "publisher": "siegebell",
+  "license": "MIT license (MIT)",
+  "engines": {
+    "vscode": "^1.20.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "prettifySymbolsMode.copyWithSubstitutions",
+        "title": "Copy with Substitutions",
+        "category": "Prettify Symbols Mode"
+      },
+      {
+        "command": "prettifySymbolsMode.enablePrettySymbols",
+        "title": "Enable",
+        "category": "Prettify Symbols Mode"
+      },
+      {
+        "command": "prettifySymbolsMode.disablePrettySymbols",
+        "title": "Disable",
+        "category": "Prettify Symbols Mode"
+      },
+      {
+        "command": "prettifySymbolsMode.togglePrettySymbols",
+        "title": "Toggle",
+        "category": "Prettify Symbols Mode"
+      }
     ],
-    "activationEvents": [
-        "*"
-    ],
-    "main": "./out/src/extension",
-    "contributes": {
-        "commands": [
-            {
-                "command": "prettifySymbolsMode.copyWithSubstitutions",
-                "title": "Copy with Substitutions",
-                "category": "Prettify Symbols Mode"
-            },
-            {
-                "command": "prettifySymbolsMode.enablePrettySymbols",
-                "title": "Enable",
-                "category": "Prettify Symbols Mode"
-            },
-            {
-                "command": "prettifySymbolsMode.disablePrettySymbols",
-                "title": "Disable",
-                "category": "Prettify Symbols Mode"
-            },
-            {
-                "command": "prettifySymbolsMode.togglePrettySymbols",
-                "title": "Toggle",
-                "category": "Prettify Symbols Mode"
-            }
-        ],
-        "configuration": {
+    "configuration": {
+      "type": "object",
+      "title": "Prettify symbols mode",
+      "properties": {
+        "prettifySymbolsMode.revealOn": {
+          "enum": [
+            "cursor",
+            "cursor-inside",
+            "active-line",
+            "selection",
+            "none"
+          ],
+          "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal. This option may be overriden per-language by specifying 'revealOn' in a language entry.",
+          "default": "cursor"
+        },
+        "prettifySymbolsMode.adjustCursorMovement": {
+          "type": "boolean",
+          "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations). This option may be overriden per-language by specifying 'adjustCursorMovement' in a language entry.",
+          "default": false
+        },
+        "prettifySymbolsMode.prettyCursor": {
+          "enum": [
+            "boxed",
+            "none"
+          ],
+          "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change. This option may be overriden per-language by specifying 'prettyCursor' in a language entry.",
+          "default": "boxed"
+        },
+        "prettifySymbolsMode.substitutions": {
+          "type": "array",
+          "description": "A list of substitution settings can be specified for each language.",
+          "items": {
             "type": "object",
-            "title": "Prettify symbols mode",
             "properties": {
-                "prettifySymbolsMode.revealOn": {
-                    "enum": [
-                        "cursor",
-                        "cursor-inside",
-                        "active-line",
-                        "selection",
-                        "none"
-                    ],
-                    "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal. This option may be overriden per-language by specifying 'revealOn' in a language entry.",
-                    "default": "cursor"
-                },
-                "prettifySymbolsMode.adjustCursorMovement": {
-                    "type": "boolean",
-                    "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations). This option may be overriden per-language by specifying 'adjustCursorMovement' in a language entry.",
-                    "default": false
-                },
-                "prettifySymbolsMode.prettyCursor": {
-                    "enum": [
-                        "boxed",
-                        "none"
-                    ],
-                    "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change. This option may be overriden per-language by specifying 'prettyCursor' in a language entry.",
-                    "default": "boxed"
-                },
-                "prettifySymbolsMode.substitutions": {
+              "language": {
+                "description": "A pattern, or list of patterns, to specify which languages to apply these substitutions on.",
+                "anyOf": [
+                  {
                     "type": "array",
-                    "description": "A list of substitution settings can be specified for each language.",
                     "items": {
-                        "type": "object",
-                        "properties": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
+                        },
+                        {
+                          "type": "object",
+                          "description": "A complex filter",
+                          "properties": {
                             "language": {
-                                "description": "A pattern, or list of patterns, to specify which languages to apply these substitutions on.",
-                                "anyOf": [
-                                    {
-                                        "type": "array",
-                                        "items": {
-                                            "anyOf": [
-                                                {
-                                                    "type": "string",
-                                                    "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
-                                                },
-                                                {
-                                                    "type": "object",
-                                                    "description": "A complex filter",
-                                                    "properties": {
-                                                        "language": {
-                                                            "type": "string",
-                                                            "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
-                                                        },
-                                                        "pattern": {
-                                                            "type": "string",
-                                                            "description": "glob pattern"
-                                                        },
-                                                        "scheme": {
-                                                            "type": "string",
-                                                            "description": "e.g. 'https' or 'file'"
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    {
-                                        "type": "string",
-                                        "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
-                                    },
-                                    {
-                                        "type": "object",
-                                        "description": "A complex filter",
-                                        "properties": {
-                                            "language": {
-                                                "type": "string",
-                                                "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
-                                            },
-                                            "pattern": {
-                                                "type": "string",
-                                                "description": "glob pattern"
-                                            },
-                                            "scheme": {
-                                                "type": "string",
-                                                "description": "e.g. 'https' or 'file'"
-                                            }
-                                        }
-                                    }
-                                ],
-                                "default": [
-                                    "coq",
-                                    {
-                                        "pattern": "**/*.v"
-                                    }
-                                ]
+                              "type": "string",
+                              "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
                             },
-                            "revealOn": {
-                                "enum": [
-                                    "cursor",
-                                    "cursor-inside",
-                                    "active-line",
-                                    "selection",
-                                    "none"
-                                ],
-                                "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal.",
-                                "default": "cursor"
+                            "pattern": {
+                              "type": "string",
+                              "description": "glob pattern"
                             },
-                            "adjustCursorMovement": {
-                                "type": "boolean",
-                                "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations).",
-                                "default": false
-                            },
-                            "hideTextMethod": {
-                                "enum": [
-                                    "hack-fontSize",
-                                    "hack-letterSpacing",
-                                    "none"
-                                ],
-                                "description": "How to hide substituted text",
-                                "default": "hack-letterSpacing"
-                            },
-                            "prettyCursor": {
-                                "enum": [
-                                    "boxed",
-                                    "none"
-                                ],
-                                "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change",
-                                "default": "none"
-                            },
-                            "substitutions": {
-                                "type": "array",
-                                "description": "A list of substitutions",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "ugly": {
-                                            "type": "string",
-                                            "default": "\\b(Qed.)",
-                                            "description": "A Javascript regular expression to specify the 'ugly' string to be replaced. For example, '\\\\\\b' matches a word boundary. Remember to escape your strings!! Writing '\\b' instead of '\\\\\\b' will denote a backspace instead of a word boundary. To match a literal backslash, you must write '\\\\\\\\\\\\\\' because it will be escaped by both JSON and Javascript's RegExp library. You may use non-matching groups, i.e. '(?:...)', but using matching groups, i.e. '(...)', will break substitutions."
-                                        },
-                                        "pretty": {
-                                            "type": "string",
-                                            "default": "∎",
-                                            "description": "The text to replace an 'ugly' string with. You may use fancy unicode symbols and multiple characters."
-                                        },
-                                        "pre": {
-                                            "type": "string",
-                                            "description": "If specified, the text before the 'ugly' text must match this pattern. E.g. '\\\\\\b'"
-                                        },
-                                        "post": {
-                                            "type": "string",
-                                            "description": "If specified, the text following the 'ugly' text must match this pattern. E.g. '\\\\\\b'"
-                                        },
-                                        "style": {
-                                            "type": "object",
-                                            "properties": {
-                                                "hackCSS": { "type": "string", "description": "Hack: attempt to inject arbitrary CSS; this is unsupported and may cause problems" },
-                                                "border": { "type": "string", "description": "CSS border property" },
-                                                "textDecoration": { "type": "string", "description": "CSS text-decoration property", "anyOf": [{"pattern": "[^;]*"}, {"enum": ["underline", "overline", "line-through"]}] },
-                                                "color": { "type": "string", "description": "CSS color property" },
-                                                "backgroundColor": { "type": "string", "description": "CSS background-color property" },
-                                                "light": {
-                                                    "type": "object",
-                                                    "description": "Styling options for vscode light themes",
-                                                    "properties": {
-                                                        "hackCSS": { "type": "string", "description": "Hack: attempt to inject arbitrary CSS; this is unsupported and may cause problems" },
-                                                        "border": { "type": "string", "description": "CSS border property" },
-                                                        "textDecoration": { "type": "string", "description": "CSS text-decoration property", "anyOf": [{"pattern": "[^;]*"}, {"enum": ["underline", "overline", "line-through"]}] },
-                                                        "color": { "type": "string", "description": "CSS color property" },
-                                                        "backgroundColor": { "type": "string", "description": "CSS background-color property" }
-                                                    }
-                                                },
-                                                "dark": {
-                                                    "type": "object",
-                                                    "description": "Styling options for vscode dark themes",
-                                                    "properties": {
-                                                        "hackCSS": { "type": "string", "description": "Hack: attempt to inject arbitrary CSS; this is unsupported and may cause problems" },
-                                                        "border": { "type": "string", "description": "CSS border property" },
-                                                        "textDecoration": { "type": "string", "description": "CSS text-decoration property", "anyOf": [{"pattern": "[^;]*"}, {"enum": ["underline", "overline", "line-through"]}] },
-                                                        "color": { "type": "string", "description": "CSS color property" },
-                                                        "backgroundColor": { "type": "string", "description": "CSS background-color property" }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "dependencies": {
-                                        "pretty": ["ugly"],
-                                        "style": ["ugly"]
-                                    },
-                                    "oneOf": [
-                                        {"required": ["pretty"]},
-                                        {"required": ["style"]}
-                                    ]
-                                }
+                            "scheme": {
+                              "type": "string",
+                              "description": "e.g. 'https' or 'file'"
                             }
-                        },
-                        "required": [
-                            "language",
-                            "substitutions"
-                        ]
-                    },
-                    "default": [
-                        {
-                            "language": [
-                                "coq",
-                                {
-                                    "pattern": "**/*.v"
-                                }
-                            ],
-                            "substitutions": [
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "forall",
-                                    "post": "\\b",
-                                    "pretty": "∀"
-                                },
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "exists",
-                                    "post": "\\b",
-                                    "pretty": "∃"
-                                },
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "fun",
-                                    "post": "\\b",
-                                    "pretty": "λ"
-                                },
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "False",
-                                    "post": "\\b",
-                                    "pretty": "⊥"
-                                },
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "True",
-                                    "post": "\\b",
-                                    "pretty": "⊤"
-                                },
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "Defined[.]",
-                                    "post": "(?:$|\\s)",
-                                    "pretty": "□"
-                                },
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "Admitted[.]",
-                                    "post": "(?:$|\\s)",
-                                    "pretty": "😱"
-                                },
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "Proof[.]",
-                                    "post": "(?:$|\\s)",
-                                    "pretty": "∵"
-                                },
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "Qed[.]",
-                                    "post": "(?:$|\\s)",
-                                    "pretty": "∎"
-                                },
-                                {
-                                    "pre": "\\b",
-                                    "ugly": "nat",
-                                    "post": "\\b",
-                                    "pretty": "ℕ"
-                                },
-                                {
-                                    "pre": "[a-zA-Z]",
-                                    "ugly": "_1",
-                                    "post": "\\b",
-                                    "pretty": "₁"
-                                },
-                                {
-                                    "pre": "[a-zA-Z]",
-                                    "ugly": "_2",
-                                    "post": "\\b",
-                                    "pretty": "₂"
-                                },
-                                {
-                                    "pre": "[a-zA-Z]",
-                                    "ugly": "_3",
-                                    "post": "\\b",
-                                    "pretty": "₃"
-                                },
-                                {
-                                    "pre": "[a-zA-Z]",
-                                    "ugly": "_4",
-                                    "post": "\\b",
-                                    "pretty": "₄"
-                                },
-                                {
-                                    "pre": "[a-zA-Z]",
-                                    "ugly": "_5",
-                                    "post": "\\b",
-                                    "pretty": "₅"
-                                },
-                                {
-                                    "pre": "[a-zA-Z]",
-                                    "ugly": "_6",
-                                    "post": "\\b",
-                                    "pretty": "₆"
-                                },
-                                {
-                                    "pre": "[a-zA-Z]",
-                                    "ugly": "_7",
-                                    "post": "\\b",
-                                    "pretty": "₇"
-                                },
-                                {
-                                    "pre": "[a-zA-Z]",
-                                    "ugly": "_8",
-                                    "post": "\\b",
-                                    "pretty": "₈"
-                                },
-                                {
-                                    "pre": "[a-zA-Z]",
-                                    "ugly": "_9",
-                                    "post": "\\b",
-                                    "pretty": "₉"
-                                },
-                                {
-                                    "pre": "[a-zA-Z]",
-                                    "ugly": "_0",
-                                    "post": "\\b",
-                                    "pretty": "₀"
-                                },
-                                {
-                                    "ugly": "/\\\\",
-                                    "pretty": "∧"
-                                },
-                                {
-                                    "ugly": "\\\\/",
-                                    "pretty": "∨"
-                                },
-                                {
-                                    "ugly": "=>",
-                                    "pretty": "⇒"
-                                },
-                                {
-                                    "ugly": ":=",
-                                    "pretty": "≜"
-                                },
-                                {
-                                    "ugly": "<->",
-                                    "pretty": "⟷"
-                                },
-                                {
-                                    "ugly": "->",
-                                    "pretty": "⟶"
-                                },
-                                {
-                                    "ugly": "<-",
-                                    "pretty": "←"
-                                },
-                                {
-                                    "ugly": "<>",
-                                    "pretty": "≠"
-                                }
-                            ]
-                        },
-                        {
-                            "language": "haskell",
-                            "substitutions": [
-                                {
-                                    "ugly": "\\\\",
-                                    "pretty": "λ",
-                                    "post": "\\s*(?:\\w|_).*?\\s*->"
-                                },
-                                {
-                                    "ugly": "<-",
-                                    "pretty": "←"
-                                },
-                                {
-                                    "ugly": "->",
-                                    "pretty": "→"
-                                },
-                                {
-                                    "ugly": "==",
-                                    "pretty": "≡"
-                                },
-                                {
-                                    "ugly": "/=",
-                                    "pretty": "≢"
-                                },
-                                {
-                                    "ugly": "\\(\\)",
-                                    "pretty": "∅"
-                                },
-                                {
-                                    "ugly": "sqrt\\s?",
-                                    "pretty": "√",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "&&",
-                                    "pretty": "∧"
-                                },
-                                {
-                                    "ugly": "\\|\\|",
-                                    "pretty": "∨"
-                                },
-                                {
-                                    "ugly": "not\\s?",
-                                    "pretty": "¬",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": ">",
-                                    "pretty": ">",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "<",
-                                    "pretty": "<",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": ">=",
-                                    "pretty": "≥",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "<=",
-                                    "pretty": "≤",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "alpha",
-                                    "pretty": "α",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "beta",
-                                    "pretty": "β",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "gamma",
-                                    "pretty": "γ",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "delta",
-                                    "pretty": "δ",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "''",
-                                    "pretty": "″"
-                                },
-                                {
-                                    "ugly": "'",
-                                    "pretty": "′"
-                                },
-                                {
-                                    "ugly": "!!",
-                                    "pretty": "‼"
-                                },
-                                {
-                                    "ugly": "\\.\\.",
-                                    "pretty": "…"
-                                },
-                                {
-                                    "ugly": "undefined",
-                                    "pretty": "⊥"
-                                },
-                                {
-                                    "ugly": "`elem`",
-                                    "pretty": "∈"
-                                },
-                                {
-                                    "ugly": "`notElem`",
-                                    "pretty": "∉"
-                                },
-                                {
-                                    "ugly": "`isSubsetOf`",
-                                    "pretty": "⊆"
-                                },
-                                {
-                                    "ugly": "`union`",
-                                    "pretty": "⋃"
-                                },
-                                {
-                                    "ugly": "`intersect`",
-                                    "pretty": "⋂"
-                                }
-                            ]
-                        },
-                        {
-                            "language": "idris",
-                            "substitutions": [
-                                {
-                                    "ugly": "\\\\",
-                                    "pretty": "λ",
-                                    "post": "\\s*(?:\\w|_).*?\\s*=>"
-                                },
-                                {
-                                    "ugly": "<-",
-                                    "pretty": "←"
-                                },
-                                {
-                                    "ugly": "->",
-                                    "pretty": "→"
-                                },
-                                {
-                                    "ugly": "==",
-                                    "pretty": "≡"
-                                },
-                                {
-                                    "ugly": "/=",
-                                    "pretty": "≢"
-                                },
-                                {
-                                    "ugly": "\\(\\)",
-                                    "pretty": "∅"
-                                },
-                                {
-                                    "ugly": "sqrt\\s?",
-                                    "pretty": "√",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "&&",
-                                    "pretty": "∧"
-                                },
-                                {
-                                    "ugly": "\\|\\|",
-                                    "pretty": "∨"
-                                },
-                                {
-                                    "ugly": "not\\s?",
-                                    "pretty": "¬",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": ">",
-                                    "pretty": ">",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "<",
-                                    "pretty": "<",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": ">=",
-                                    "pretty": "≥",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "<=",
-                                    "pretty": "≤",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "alpha",
-                                    "pretty": "α",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "beta",
-                                    "pretty": "β",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "gamma",
-                                    "pretty": "γ",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "delta",
-                                    "pretty": "δ",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "''",
-                                    "pretty": "″"
-                                },
-                                {
-                                    "ugly": "'",
-                                    "pretty": "′"
-                                },
-                                {
-                                    "ugly": "=>",
-                                    "pretty": "⇒"
-                                },
-                                {
-                                    "ugly": "\\\\\\\\",
-                                    "pretty": "∖"
-                                }
-                            ]
-                        },
-                        {
-                            "language": "ocaml",
-                            "substitutions": [
-                                {
-                                    "ugly": "fun",
-                                    "pretty": "λ",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "<-",
-                                    "pretty": "←"
-                                },
-                                {
-                                    "ugly": "->",
-                                    "pretty": "→"
-                                },
-                                {
-                                    "ugly": "=",
-                                    "pretty": "=",
-                                    "pre": "[^<>=!]|^",
-                                    "post": "[^<>=]|$"
-                                },
-                                {
-                                    "ugly": "==",
-                                    "pretty": "≡"
-                                },
-                                {
-                                    "ugly": "!=",
-                                    "pretty": "≢"
-                                },
-                                {
-                                    "ugly": "<>",
-                                    "pretty": "≠"
-                                },
-                                {
-                                    "ugly": "\\[\\]",
-                                    "pretty": "ε"
-                                },
-                                {
-                                    "ugly": "sqrt\\s?",
-                                    "pretty": "√",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "&&",
-                                    "pretty": "∧"
-                                },
-                                {
-                                    "ugly": "\\|\\|",
-                                    "pretty": "∨"
-                                },
-                                {
-                                    "ugly": "not\\s?",
-                                    "pretty": "¬",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": ">",
-                                    "pretty": ">",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "<",
-                                    "pretty": "<",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": ">=",
-                                    "pretty": "≥",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "<=",
-                                    "pretty": "≤",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "alpha",
-                                    "pretty": "α",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "beta",
-                                    "pretty": "β",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "gamma",
-                                    "pretty": "γ",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "delta",
-                                    "pretty": "δ",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "''",
-                                    "pretty": "″"
-                                },
-                                {
-                                    "ugly": "'",
-                                    "pretty": "′"
-                                },
-                                {
-                                    "ugly": "List[.]for_all",
-                                    "pretty": "∀",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "List[.]exists",
-                                    "pretty": "∃",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "List[.]mem",
-                                    "pretty": "∈",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "\\|",
-                                    "pretty": "║",
-                                    "pre": "^\\s+"
-                                }
-                            ]
-                        },
-                        {
-                            "language": "fsharp",
-                            "substitutions": [
-                                {
-                                    "ugly": "fun",
-                                    "pretty": "λ",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "<-",
-                                    "pretty": "←"
-                                },
-                                {
-                                    "ugly": "->",
-                                    "pretty": "→"
-                                },
-                                {
-                                    "ugly": "=",
-                                    "pretty": "=",
-                                    "pre": "[^<>=!]|^",
-                                    "post": "[^<>=]|$"
-                                },
-                                {
-                                    "ugly": "==",
-                                    "pretty": "≡"
-                                },
-                                {
-                                    "ugly": "!=",
-                                    "pretty": "≢"
-                                },
-                                {
-                                    "ugly": "<>",
-                                    "pretty": "≠"
-                                },
-                                {
-                                    "ugly": "sqrt\\s?",
-                                    "pretty": "√",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "&&",
-                                    "pretty": "∧"
-                                },
-                                {
-                                    "ugly": "\\|\\|",
-                                    "pretty": "∨"
-                                },
-                                {
-                                    "ugly": "not\\s?",
-                                    "pretty": "¬",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": ">",
-                                    "pretty": ">",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "<",
-                                    "pretty": "<",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": ">=",
-                                    "pretty": "≥",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "<=",
-                                    "pretty": "≤",
-                                    "pre": "[^=\\-<>]|^",
-                                    "post": "[^=\\-<>]|$"
-                                },
-                                {
-                                    "ugly": "alpha",
-                                    "pretty": "α",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "beta",
-                                    "pretty": "β",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "gamma",
-                                    "pretty": "γ",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "delta",
-                                    "pretty": "δ",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "''",
-                                    "pretty": "″"
-                                },
-                                {
-                                    "ugly": "'",
-                                    "pretty": "′"
-                                },
-                                {
-                                    "ugly": "List[.]forall",
-                                    "pretty": "∀",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "List[.]exists",
-                                    "pretty": "∃",
-                                    "pre": "\\b",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": ">>",
-                                    "pretty": "≫",
-                                    "pre": "[^=<>]|^",
-                                    "post": "[^=<>]|$"
-                                },
-                                {
-                                    "ugly": "<<",
-                                    "pretty": "≪",
-                                    "pre": "[^=<>]|^",
-                                    "post": "[^=<>]|$"
-                                },
-                                {
-                                    "ugly": "\\|",
-                                    "pretty": "║",
-                                    "pre": "^\\s+"
-                                }
-                            ]
+                          }
                         }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "string",
+                    "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
+                  },
+                  {
+                    "type": "object",
+                    "description": "A complex filter",
+                    "properties": {
+                      "language": {
+                        "type": "string",
+                        "description": "A language-id (e.g. 'plaintext' or 'fsharp')"
+                      },
+                      "pattern": {
+                        "type": "string",
+                        "description": "glob pattern"
+                      },
+                      "scheme": {
+                        "type": "string",
+                        "description": "e.g. 'https' or 'file'"
+                      }
+                    }
+                  }
+                ],
+                "default": [
+                  "coq",
+                  {
+                    "pattern": "**/*.v"
+                  }
+                ]
+              },
+              "revealOn": {
+                "enum": [
+                  "cursor",
+                  "cursor-inside",
+                  "active-line",
+                  "selection",
+                  "none"
+                ],
+                "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal.",
+                "default": "cursor"
+              },
+              "adjustCursorMovement": {
+                "type": "boolean",
+                "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations).",
+                "default": false
+              },
+              "hideTextMethod": {
+                "enum": [
+                  "hack-fontSize",
+                  "hack-letterSpacing",
+                  "none"
+                ],
+                "description": "How to hide substituted text",
+                "default": "hack-letterSpacing"
+              },
+              "prettyCursor": {
+                "enum": [
+                  "boxed",
+                  "none"
+                ],
+                "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change",
+                "default": "none"
+              },
+              "substitutions": {
+                "type": "array",
+                "description": "A list of substitutions",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ugly": {
+                      "type": "string",
+                      "default": "\\b(Qed.)",
+                      "description": "A Javascript regular expression to specify the 'ugly' string to be replaced. For example, '\\\\\\b' matches a word boundary. Remember to escape your strings!! Writing '\\b' instead of '\\\\\\b' will denote a backspace instead of a word boundary. To match a literal backslash, you must write '\\\\\\\\\\\\\\' because it will be escaped by both JSON and Javascript's RegExp library. You may use non-matching groups, i.e. '(?:...)', but using matching groups, i.e. '(...)', will break substitutions."
+                    },
+                    "pretty": {
+                      "type": "string",
+                      "default": "∎",
+                      "description": "The text to replace an 'ugly' string with. You may use fancy unicode symbols and multiple characters."
+                    },
+                    "pre": {
+                      "type": "string",
+                      "description": "If specified, the text before the 'ugly' text must match this pattern. E.g. '\\\\\\b'"
+                    },
+                    "post": {
+                      "type": "string",
+                      "description": "If specified, the text following the 'ugly' text must match this pattern. E.g. '\\\\\\b'"
+                    },
+                    "style": {
+                      "type": "object",
+                      "properties": {
+                        "hackCSS": {
+                          "type": "string",
+                          "description": "Hack: attempt to inject arbitrary CSS; this is unsupported and may cause problems"
+                        },
+                        "border": {
+                          "type": "string",
+                          "description": "CSS border property"
+                        },
+                        "textDecoration": {
+                          "type": "string",
+                          "description": "CSS text-decoration property",
+                          "anyOf": [
+                            {
+                              "pattern": "[^;]*"
+                            },
+                            {
+                              "enum": [
+                                "underline",
+                                "overline",
+                                "line-through"
+                              ]
+                            }
+                          ]
+                        },
+                        "color": {
+                          "type": "string",
+                          "description": "CSS color property"
+                        },
+                        "backgroundColor": {
+                          "type": "string",
+                          "description": "CSS background-color property"
+                        },
+                        "light": {
+                          "type": "object",
+                          "description": "Styling options for vscode light themes",
+                          "properties": {
+                            "hackCSS": {
+                              "type": "string",
+                              "description": "Hack: attempt to inject arbitrary CSS; this is unsupported and may cause problems"
+                            },
+                            "border": {
+                              "type": "string",
+                              "description": "CSS border property"
+                            },
+                            "textDecoration": {
+                              "type": "string",
+                              "description": "CSS text-decoration property",
+                              "anyOf": [
+                                {
+                                  "pattern": "[^;]*"
+                                },
+                                {
+                                  "enum": [
+                                    "underline",
+                                    "overline",
+                                    "line-through"
+                                  ]
+                                }
+                              ]
+                            },
+                            "color": {
+                              "type": "string",
+                              "description": "CSS color property"
+                            },
+                            "backgroundColor": {
+                              "type": "string",
+                              "description": "CSS background-color property"
+                            }
+                          }
+                        },
+                        "dark": {
+                          "type": "object",
+                          "description": "Styling options for vscode dark themes",
+                          "properties": {
+                            "hackCSS": {
+                              "type": "string",
+                              "description": "Hack: attempt to inject arbitrary CSS; this is unsupported and may cause problems"
+                            },
+                            "border": {
+                              "type": "string",
+                              "description": "CSS border property"
+                            },
+                            "textDecoration": {
+                              "type": "string",
+                              "description": "CSS text-decoration property",
+                              "anyOf": [
+                                {
+                                  "pattern": "[^;]*"
+                                },
+                                {
+                                  "enum": [
+                                    "underline",
+                                    "overline",
+                                    "line-through"
+                                  ]
+                                }
+                              ]
+                            },
+                            "color": {
+                              "type": "string",
+                              "description": "CSS color property"
+                            },
+                            "backgroundColor": {
+                              "type": "string",
+                              "description": "CSS background-color property"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "dependencies": {
+                    "pretty": [
+                      "ugly"
+                    ],
+                    "style": [
+                      "ugly"
                     ]
+                  },
+                  "oneOf": [
+                    {
+                      "required": [
+                        "pretty"
+                      ]
+                    }
+                  ]
                 }
+              }
+            },
+            "required": [
+              "language",
+              "substitutions"
+            ]
+          },
+          "default": [
+            {
+              "language": [
+                "coq",
+                {
+                  "pattern": "**/*.v"
+                }
+              ],
+              "substitutions": [
+                {
+                  "pre": "\\b",
+                  "ugly": "forall",
+                  "post": "\\b",
+                  "pretty": "∀"
+                },
+                {
+                  "pre": "\\b",
+                  "ugly": "exists",
+                  "post": "\\b",
+                  "pretty": "∃"
+                },
+                {
+                  "pre": "\\b",
+                  "ugly": "fun",
+                  "post": "\\b",
+                  "pretty": "λ"
+                },
+                {
+                  "pre": "\\b",
+                  "ugly": "False",
+                  "post": "\\b",
+                  "pretty": "⊥"
+                },
+                {
+                  "pre": "\\b",
+                  "ugly": "True",
+                  "post": "\\b",
+                  "pretty": "⊤"
+                },
+                {
+                  "pre": "\\b",
+                  "ugly": "Defined[.]",
+                  "post": "(?:$|\\s)",
+                  "pretty": "□"
+                },
+                {
+                  "pre": "\\b",
+                  "ugly": "Admitted[.]",
+                  "post": "(?:$|\\s)",
+                  "pretty": "😱"
+                },
+                {
+                  "pre": "\\b",
+                  "ugly": "Proof[.]",
+                  "post": "(?:$|\\s)",
+                  "pretty": "∵"
+                },
+                {
+                  "pre": "\\b",
+                  "ugly": "Qed[.]",
+                  "post": "(?:$|\\s)",
+                  "pretty": "∎"
+                },
+                {
+                  "pre": "\\b",
+                  "ugly": "nat",
+                  "post": "\\b",
+                  "pretty": "ℕ"
+                },
+                {
+                  "pre": "[a-zA-Z]",
+                  "ugly": "_1",
+                  "post": "\\b",
+                  "pretty": "₁"
+                },
+                {
+                  "pre": "[a-zA-Z]",
+                  "ugly": "_2",
+                  "post": "\\b",
+                  "pretty": "₂"
+                },
+                {
+                  "pre": "[a-zA-Z]",
+                  "ugly": "_3",
+                  "post": "\\b",
+                  "pretty": "₃"
+                },
+                {
+                  "pre": "[a-zA-Z]",
+                  "ugly": "_4",
+                  "post": "\\b",
+                  "pretty": "₄"
+                },
+                {
+                  "pre": "[a-zA-Z]",
+                  "ugly": "_5",
+                  "post": "\\b",
+                  "pretty": "₅"
+                },
+                {
+                  "pre": "[a-zA-Z]",
+                  "ugly": "_6",
+                  "post": "\\b",
+                  "pretty": "₆"
+                },
+                {
+                  "pre": "[a-zA-Z]",
+                  "ugly": "_7",
+                  "post": "\\b",
+                  "pretty": "₇"
+                },
+                {
+                  "pre": "[a-zA-Z]",
+                  "ugly": "_8",
+                  "post": "\\b",
+                  "pretty": "₈"
+                },
+                {
+                  "pre": "[a-zA-Z]",
+                  "ugly": "_9",
+                  "post": "\\b",
+                  "pretty": "₉"
+                },
+                {
+                  "pre": "[a-zA-Z]",
+                  "ugly": "_0",
+                  "post": "\\b",
+                  "pretty": "₀"
+                },
+                {
+                  "ugly": "/\\\\",
+                  "pretty": "∧"
+                },
+                {
+                  "ugly": "\\\\/",
+                  "pretty": "∨"
+                },
+                {
+                  "ugly": "=>",
+                  "pretty": "⇒"
+                },
+                {
+                  "ugly": ":=",
+                  "pretty": "≜"
+                },
+                {
+                  "ugly": "<->",
+                  "pretty": "⟷"
+                },
+                {
+                  "ugly": "->",
+                  "pretty": "⟶"
+                },
+                {
+                  "ugly": "<-",
+                  "pretty": "←"
+                },
+                {
+                  "ugly": "<>",
+                  "pretty": "≠"
+                }
+              ]
+            },
+            {
+              "language": "haskell",
+              "substitutions": [
+                {
+                  "ugly": "\\\\",
+                  "pretty": "λ",
+                  "post": "\\s*(?:\\w|_).*?\\s*->"
+                },
+                {
+                  "ugly": "<-",
+                  "pretty": "←"
+                },
+                {
+                  "ugly": "->",
+                  "pretty": "→"
+                },
+                {
+                  "ugly": "==",
+                  "pretty": "≡"
+                },
+                {
+                  "ugly": "/=",
+                  "pretty": "≢"
+                },
+                {
+                  "ugly": "\\(\\)",
+                  "pretty": "∅"
+                },
+                {
+                  "ugly": "sqrt\\s?",
+                  "pretty": "√",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "&&",
+                  "pretty": "∧"
+                },
+                {
+                  "ugly": "\\|\\|",
+                  "pretty": "∨"
+                },
+                {
+                  "ugly": "not\\s?",
+                  "pretty": "¬",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": ">",
+                  "pretty": ">",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "<",
+                  "pretty": "<",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": ">=",
+                  "pretty": "≥",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "<=",
+                  "pretty": "≤",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "alpha",
+                  "pretty": "α",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "beta",
+                  "pretty": "β",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "gamma",
+                  "pretty": "γ",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "delta",
+                  "pretty": "δ",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "''",
+                  "pretty": "″"
+                },
+                {
+                  "ugly": "'",
+                  "pretty": "′"
+                },
+                {
+                  "ugly": "!!",
+                  "pretty": "‼"
+                },
+                {
+                  "ugly": "\\.\\.",
+                  "pretty": "…"
+                },
+                {
+                  "ugly": "undefined",
+                  "pretty": "⊥"
+                },
+                {
+                  "ugly": "`elem`",
+                  "pretty": "∈"
+                },
+                {
+                  "ugly": "`notElem`",
+                  "pretty": "∉"
+                },
+                {
+                  "ugly": "`isSubsetOf`",
+                  "pretty": "⊆"
+                },
+                {
+                  "ugly": "`union`",
+                  "pretty": "⋃"
+                },
+                {
+                  "ugly": "`intersect`",
+                  "pretty": "⋂"
+                }
+              ]
+            },
+            {
+              "language": "idris",
+              "substitutions": [
+                {
+                  "ugly": "\\\\",
+                  "pretty": "λ",
+                  "post": "\\s*(?:\\w|_).*?\\s*=>"
+                },
+                {
+                  "ugly": "<-",
+                  "pretty": "←"
+                },
+                {
+                  "ugly": "->",
+                  "pretty": "→"
+                },
+                {
+                  "ugly": "==",
+                  "pretty": "≡"
+                },
+                {
+                  "ugly": "/=",
+                  "pretty": "≢"
+                },
+                {
+                  "ugly": "\\(\\)",
+                  "pretty": "∅"
+                },
+                {
+                  "ugly": "sqrt\\s?",
+                  "pretty": "√",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "&&",
+                  "pretty": "∧"
+                },
+                {
+                  "ugly": "\\|\\|",
+                  "pretty": "∨"
+                },
+                {
+                  "ugly": "not\\s?",
+                  "pretty": "¬",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": ">",
+                  "pretty": ">",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "<",
+                  "pretty": "<",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": ">=",
+                  "pretty": "≥",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "<=",
+                  "pretty": "≤",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "alpha",
+                  "pretty": "α",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "beta",
+                  "pretty": "β",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "gamma",
+                  "pretty": "γ",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "delta",
+                  "pretty": "δ",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "''",
+                  "pretty": "″"
+                },
+                {
+                  "ugly": "'",
+                  "pretty": "′"
+                },
+                {
+                  "ugly": "=>",
+                  "pretty": "⇒"
+                },
+                {
+                  "ugly": "\\\\\\\\",
+                  "pretty": "∖"
+                }
+              ]
+            },
+            {
+              "language": "latex",
+              "substitutions": [
+                {
+                  "ugly": "\\\\leq",
+                  "pretty": "≤"
+                },
+                {
+                  "ugly": "\\\\geq",
+                  "pretty": "≥"
+                },
+                {
+                  "ugly": "\\\\cdots",
+                  "pretty": "⋯"
+                },
+                {
+                  "ugly": "\\\\vdots",
+                  "pretty": "⋮"
+                },
+                {
+                  "ugly": "\\\\ldots",
+                  "pretty": "…"
+                },
+                {
+                  "ugly": "\\\\ldots",
+                  "pretty": "…"
+                },
+                {
+                  "ugly": "\\\\top",
+                  "pretty": "⊤"
+                },
+                {
+                  "ugly": "\\\\bot",
+                  "pretty": "⊥"
+                },
+                {
+                  "ugly": "\\\\topbot",
+                  "pretty": "⌶"
+                },
+                {
+                  "ugly": "\\\\wedge",
+                  "pretty": "∧"
+                },
+                {
+                  "ugly": "\\\\vee",
+                  "pretty": "∨"
+                },
+                {
+                  "ugly": "\\\\cup",
+                  "pretty": "∪"
+                },
+                {
+                  "ugly": "\\\\cap",
+                  "pretty": "∩"
+                },
+                {
+                  "ugly": "\\\\otimes",
+                  "pretty": "⊗"
+                },
+                {
+                  "ugly": "\\\\forall",
+                  "pretty": "∀"
+                },
+                {
+                  "ugly": "\\\\exists",
+                  "pretty": "∃"
+                },
+                {
+                  "ugly": "\\\\nexists",
+                  "pretty": "∄"
+                },
+                {
+                  "ugly": "\\\\neq",
+                  "pretty": "≠"
+                },
+                {
+                  "ugly": "\\\\equiv",
+                  "pretty": "≡"
+                },
+                {
+                  "ugly": "\\\\mapsto",
+                  "pretty": "↦"
+                },
+                {
+                  "ugly": "\\\\mapsfrom",
+                  "pretty": "↤"
+                },
+                {
+                  "ugly": "\\\\Mapsto",
+                  "pretty": "⤇"
+                },
+                {
+                  "ugly": "\\\\Mapsfrom",
+                  "pretty": "⤆"
+                },
+                {
+                  "ugly": "\\\\longmapsto",
+                  "pretty": "⟼"
+                },
+                {
+                  "ugly": "\\\\mapsfrom",
+                  "pretty": "⟻"
+                },
+                {
+                  "ugly": "\\\\Longmapsto",
+                  "pretty": "⟾"
+                },
+                {
+                  "ugly": "\\\\Longmapsfrom",
+                  "pretty": "⟽"
+                },
+                {
+                  "ugly": "\\\\leftarrow",
+                  "pretty": "←"
+                },
+                {
+                  "ugly": "\\\\rightarrow",
+                  "pretty": "→"
+                },
+                {
+                  "ugly": "\\\\to",
+                  "pretty": "→"
+                },
+                {
+                  "ugly": "\\\\leftrightarrow",
+                  "pretty": "↔"
+                },
+                {
+                  "ugly": "\\\\Leftarrow",
+                  "pretty": "⇐"
+                },
+                {
+                  "ugly": "\\\\Rightarrow",
+                  "pretty": "⇒"
+                },
+                {
+                  "ugly": "\\\\Leftrightarrow",
+                  "pretty": "⇔"
+                },
+                {
+                  "ugly": "\\\\longleftarrow",
+                  "pretty": "⟵"
+                },
+                {
+                  "ugly": "\\\\longrightarrow",
+                  "pretty": "⟶"
+                },
+                {
+                  "ugly": "\\\\longleftrightarrow",
+                  "pretty": "⟷"
+                },
+                {
+                  "ugly": "\\\\Longrightarrow",
+                  "pretty": "⟹"
+                },
+                {
+                  "ugly": "\\\\implies",
+                  "pretty": "⟹"
+                },
+                {
+                  "ugly": "\\\\Longleftarrow",
+                  "pretty": "⟸"
+                },
+                {
+                  "ugly": "\\\\impliedby",
+                  "pretty": "⟸"
+                },
+                {
+                  "ugly": "\\\\Longleftrightarrow",
+                  "pretty": "⟺"
+                },
+                {
+                  "ugly": "\\\\iff",
+                  "pretty": "⟺"
+                },
+                {
+                  "ugly": "\\\\in",
+                  "pretty": "∈"
+                },
+                {
+                  "ugly": "\\\\notin",
+                  "pretty": "∉"
+                },
+                {
+                  "ugly": "\\\\pm",
+                  "pretty": "±"
+                },
+                {
+                  "ugly": "\\\\times",
+                  "pretty": "×"
+                },
+                {
+                  "ugly": "\\\\infty",
+                  "pretty": "∞"
+                },
+                {
+                  "ugly": "\\\\sum",
+                  "pretty": "∑"
+                },
+                {
+                  "ugly": "\\\\prod",
+                  "pretty": "∏"
+                },
+                {
+                  "ugly": "\\\\int",
+                  "pretty": "∫"
+                },
+                {
+                  "ugly": "\\\\iint",
+                  "pretty": "∬"
+                },
+                {
+                  "ugly": "\\\\iiint",
+                  "pretty": "∭"
+                },
+                {
+                  "ugly": "\\\\oint",
+                  "pretty": "∮"
+                },
+                {
+                  "ugly": "\\\\oiint",
+                  "pretty": "∯"
+                },
+                {
+                  "ugly": "\\\\oiiint",
+                  "pretty": "∰"
+                },
+                {
+                  "ugly": "\\\\Gamma",
+                  "pretty": "Γ"
+                },
+                {
+                  "ugly": "\\\\Delta",
+                  "pretty": "Δ"
+                },
+                {
+                  "ugly": "\\\\Theta",
+                  "pretty": "Θ"
+                },
+                {
+                  "ugly": "\\\\Lambda",
+                  "pretty": "Λ"
+                },
+                {
+                  "ugly": "\\\\Xi",
+                  "pretty": "Ξ"
+                },
+                {
+                  "ugly": "\\\\Pi",
+                  "pretty": "Π"
+                },
+                {
+                  "ugly": "\\\\Sigma",
+                  "pretty": "Σ"
+                },
+                {
+                  "ugly": "\\\\Upsilon",
+                  "pretty": "Υ"
+                },
+                {
+                  "ugly": "\\\\Phi",
+                  "pretty": "Φ"
+                },
+                {
+                  "ugly": "\\\\Psi",
+                  "pretty": "Ψ"
+                },
+                {
+                  "ugly": "\\\\Omega",
+                  "pretty": "Ω"
+                },
+                {
+                  "ugly": "\\\\alpha",
+                  "pretty": "α"
+                },
+                {
+                  "ugly": "\\\\beta",
+                  "pretty": "β"
+                },
+                {
+                  "ugly": "\\\\gamma",
+                  "pretty": "γ"
+                },
+                {
+                  "ugly": "\\\\delta",
+                  "pretty": "δ"
+                },
+                {
+                  "ugly": "\\\\epsilon",
+                  "pretty": "ε"
+                },
+                {
+                  "ugly": "\\\\zeta",
+                  "pretty": "ζ"
+                },
+                {
+                  "ugly": "\\\\eta",
+                  "pretty": "η"
+                },
+                {
+                  "ugly": "\\\\theta",
+                  "pretty": "θ"
+                },
+                {
+                  "ugly": "\\\\iota",
+                  "pretty": "ι"
+                },
+                {
+                  "ugly": "\\\\kappa",
+                  "pretty": "κ"
+                },
+                {
+                  "ugly": "\\\\lambda",
+                  "pretty": "λ"
+                },
+                {
+                  "ugly": "\\\\mu",
+                  "pretty": "μ"
+                },
+                {
+                  "ugly": "\\\\nu",
+                  "pretty": "ν"
+                },
+                {
+                  "ugly": "\\\\xi",
+                  "pretty": "ξ"
+                },
+                {
+                  "ugly": "\\\\pi",
+                  "pretty": "π"
+                },
+                {
+                  "ugly": "\\\\rho",
+                  "pretty": "ρ"
+                },
+                {
+                  "ugly": "\\\\varsigma",
+                  "pretty": "ς"
+                },
+                {
+                  "ugly": "\\\\sigma",
+                  "pretty": "σ"
+                },
+                {
+                  "ugly": "\\\\tau",
+                  "pretty": "τ"
+                },
+                {
+                  "ugly": "\\\\upsilon",
+                  "pretty": "υ"
+                },
+                {
+                  "ugly": "\\\\phi",
+                  "pretty": "φ"
+                },
+                {
+                  "ugly": "\\\\chi",
+                  "pretty": "χ"
+                },
+                {
+                  "ugly": "\\\\psi",
+                  "pretty": "ψ"
+                },
+                {
+                  "ugly": "\\\\omega",
+                  "pretty": "ω"
+                },
+                {
+                  "ugly": "\\\\mathbb{A}",
+                  "pretty": "𝔸"
+                },
+                {
+                  "ugly": "\\\\mathbb{B}",
+                  "pretty": "𝔹"
+                },
+                {
+                  "ugly": "\\\\mathbb{C}",
+                  "pretty": "ℂ"
+                },
+                {
+                  "ugly": "\\\\mathbb{D}",
+                  "pretty": "𝔻"
+                },
+                {
+                  "ugly": "\\\\mathbb{E}",
+                  "pretty": "𝔼"
+                },
+                {
+                  "ugly": "\\\\mathbb{F}",
+                  "pretty": "𝔽"
+                },
+                {
+                  "ugly": "\\\\mathbb{G}",
+                  "pretty": "𝔾"
+                },
+                {
+                  "ugly": "\\\\mathbb{H}",
+                  "pretty": "ℍ"
+                },
+                {
+                  "ugly": "\\\\mathbb{I}",
+                  "pretty": "𝕀"
+                },
+                {
+                  "ugly": "\\\\mathbb{J}",
+                  "pretty": "𝕁"
+                },
+                {
+                  "ugly": "\\\\mathbb{K}",
+                  "pretty": "𝕂"
+                },
+                {
+                  "ugly": "\\\\mathbb{L}",
+                  "pretty": "𝕃"
+                },
+                {
+                  "ugly": "\\\\mathbb{M}",
+                  "pretty": "𝕄"
+                },
+                {
+                  "ugly": "\\\\mathbb{N}",
+                  "pretty": "ℕ"
+                },
+                {
+                  "ugly": "\\\\mathbb{O}",
+                  "pretty": "𝕆"
+                },
+                {
+                  "ugly": "\\\\mathbb{P}",
+                  "pretty": "ℙ"
+                },
+                {
+                  "ugly": "\\\\mathbb{Q}",
+                  "pretty": "ℚ"
+                },
+                {
+                  "ugly": "\\\\mathbb{R}",
+                  "pretty": "ℝ"
+                },
+                {
+                  "ugly": "\\\\mathbb{S}",
+                  "pretty": "𝕊"
+                },
+                {
+                  "ugly": "\\\\mathbb{T}",
+                  "pretty": "𝕋"
+                },
+                {
+                  "ugly": "\\\\mathbb{U}",
+                  "pretty": "𝕌"
+                },
+                {
+                  "ugly": "\\\\mathbb{V}",
+                  "pretty": "𝕍"
+                },
+                {
+                  "ugly": "\\\\mathbb{W}",
+                  "pretty": "𝕎"
+                },
+                {
+                  "ugly": "\\\\mathbb{X}",
+                  "pretty": "𝕏"
+                },
+                {
+                  "ugly": "\\\\mathbb{Y}",
+                  "pretty": "𝕐"
+                },
+                {
+                  "ugly": "\\\\mathbb{Z}",
+                  "pretty": "ℤ"
+                },
+                {
+                  "ugly": "\\\\mathbb{a}",
+                  "pretty": "𝕒"
+                },
+                {
+                  "ugly": "\\\\mathbb{b}",
+                  "pretty": "𝕓"
+                },
+                {
+                  "ugly": "\\\\mathbb{c}",
+                  "pretty": "𝕔"
+                },
+                {
+                  "ugly": "\\\\mathbb{d}",
+                  "pretty": "𝕕"
+                },
+                {
+                  "ugly": "\\\\mathbb{e}",
+                  "pretty": "𝕖"
+                },
+                {
+                  "ugly": "\\\\mathbb{f}",
+                  "pretty": "𝕗"
+                },
+                {
+                  "ugly": "\\\\mathbb{g}",
+                  "pretty": "𝕘"
+                },
+                {
+                  "ugly": "\\\\mathbb{h}",
+                  "pretty": "𝕙"
+                },
+                {
+                  "ugly": "\\\\mathbb{i}",
+                  "pretty": "𝕚"
+                },
+                {
+                  "ugly": "\\\\mathbb{j}",
+                  "pretty": "𝕛"
+                },
+                {
+                  "ugly": "\\\\mathbb{k}",
+                  "pretty": "𝕜"
+                },
+                {
+                  "ugly": "\\\\mathbb{l}",
+                  "pretty": "𝕝"
+                },
+                {
+                  "ugly": "\\\\mathbb{m}",
+                  "pretty": "𝕞"
+                },
+                {
+                  "ugly": "\\\\mathbb{n}",
+                  "pretty": "𝕟"
+                },
+                {
+                  "ugly": "\\\\mathbb{o}",
+                  "pretty": "𝕠"
+                },
+                {
+                  "ugly": "\\\\mathbb{p}",
+                  "pretty": "𝕡"
+                },
+                {
+                  "ugly": "\\\\mathbb{q}",
+                  "pretty": "𝕢"
+                },
+                {
+                  "ugly": "\\\\mathbb{r}",
+                  "pretty": "𝕣"
+                },
+                {
+                  "ugly": "\\\\mathbb{s}",
+                  "pretty": "𝕤"
+                },
+                {
+                  "ugly": "\\\\mathbb{t}",
+                  "pretty": "𝕥"
+                },
+                {
+                  "ugly": "\\\\mathbb{u}",
+                  "pretty": "𝕦"
+                },
+                {
+                  "ugly": "\\\\mathbb{v}",
+                  "pretty": "𝕧"
+                },
+                {
+                  "ugly": "\\\\mathbb{w}",
+                  "pretty": "𝕨"
+                },
+                {
+                  "ugly": "\\\\mathbb{x}",
+                  "pretty": "𝕩"
+                },
+                {
+                  "ugly": "\\\\mathbb{y}",
+                  "pretty": "𝕪"
+                },
+                {
+                  "ugly": "\\\\mathbb{z}",
+                  "pretty": "𝕫"
+                }
+              ]
+            },
+            {
+              "language": "ocaml",
+              "substitutions": [
+                {
+                  "ugly": "fun",
+                  "pretty": "λ",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "<-",
+                  "pretty": "←"
+                },
+                {
+                  "ugly": "->",
+                  "pretty": "→"
+                },
+                {
+                  "ugly": "=",
+                  "pretty": "=",
+                  "pre": "[^<>=!]|^",
+                  "post": "[^<>=]|$"
+                },
+                {
+                  "ugly": "==",
+                  "pretty": "≡"
+                },
+                {
+                  "ugly": "!=",
+                  "pretty": "≢"
+                },
+                {
+                  "ugly": "<>",
+                  "pretty": "≠"
+                },
+                {
+                  "ugly": "\\[\\]",
+                  "pretty": "ε"
+                },
+                {
+                  "ugly": "sqrt\\s?",
+                  "pretty": "√",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "&&",
+                  "pretty": "∧"
+                },
+                {
+                  "ugly": "\\|\\|",
+                  "pretty": "∨"
+                },
+                {
+                  "ugly": "not\\s?",
+                  "pretty": "¬",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": ">",
+                  "pretty": ">",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "<",
+                  "pretty": "<",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": ">=",
+                  "pretty": "≥",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "<=",
+                  "pretty": "≤",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "alpha",
+                  "pretty": "α",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "beta",
+                  "pretty": "β",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "gamma",
+                  "pretty": "γ",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "delta",
+                  "pretty": "δ",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "''",
+                  "pretty": "″"
+                },
+                {
+                  "ugly": "'",
+                  "pretty": "′"
+                },
+                {
+                  "ugly": "List[.]for_all",
+                  "pretty": "∀",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "List[.]exists",
+                  "pretty": "∃",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "List[.]mem",
+                  "pretty": "∈",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "\\|",
+                  "pretty": "║",
+                  "pre": "^\\s+"
+                }
+              ]
+            },
+            {
+              "language": "fsharp",
+              "substitutions": [
+                {
+                  "ugly": "fun",
+                  "pretty": "λ",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "<-",
+                  "pretty": "←"
+                },
+                {
+                  "ugly": "->",
+                  "pretty": "→"
+                },
+                {
+                  "ugly": "=",
+                  "pretty": "=",
+                  "pre": "[^<>=!]|^",
+                  "post": "[^<>=]|$"
+                },
+                {
+                  "ugly": "==",
+                  "pretty": "≡"
+                },
+                {
+                  "ugly": "!=",
+                  "pretty": "≢"
+                },
+                {
+                  "ugly": "<>",
+                  "pretty": "≠"
+                },
+                {
+                  "ugly": "sqrt\\s?",
+                  "pretty": "√",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "&&",
+                  "pretty": "∧"
+                },
+                {
+                  "ugly": "\\|\\|",
+                  "pretty": "∨"
+                },
+                {
+                  "ugly": "not\\s?",
+                  "pretty": "¬",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": ">",
+                  "pretty": ">",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "<",
+                  "pretty": "<",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": ">=",
+                  "pretty": "≥",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "<=",
+                  "pretty": "≤",
+                  "pre": "[^=\\-<>]|^",
+                  "post": "[^=\\-<>]|$"
+                },
+                {
+                  "ugly": "alpha",
+                  "pretty": "α",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "beta",
+                  "pretty": "β",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "gamma",
+                  "pretty": "γ",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "delta",
+                  "pretty": "δ",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "''",
+                  "pretty": "″"
+                },
+                {
+                  "ugly": "'",
+                  "pretty": "′"
+                },
+                {
+                  "ugly": "List[.]forall",
+                  "pretty": "∀",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": "List[.]exists",
+                  "pretty": "∃",
+                  "pre": "\\b",
+                  "post": "\\b"
+                },
+                {
+                  "ugly": ">>",
+                  "pretty": "≫",
+                  "pre": "[^=<>]|^",
+                  "post": "[^=<>]|$"
+                },
+                {
+                  "ugly": "<<",
+                  "pretty": "≪",
+                  "pre": "[^=<>]|^",
+                  "post": "[^=<>]|$"
+                },
+                {
+                  "ugly": "\\|",
+                  "pretty": "║",
+                  "pre": "^\\s+"
+                }
+              ]
             }
+          ]
         }
-    },
-    "scripts": {
-        "vscode:prepublish": "tsc -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "watch": "tsc -watch -p ./",
-        "compile": "tsc -p ./",
-        "test": "tsc -p ./ && mocha -u tdd ./out/test",
-		"test-debug": "tsc -p ./ && mocha -u tdd --debug-brk=5858 ./out/test"
-    },
-    "dependencies": {
-        "copy-paste": "1.3.0",
-        "@types/copy-paste": "1.1.30"
-    },
-    "devDependencies": {
-        "typescript": "2.1.4",
-        "vscode": "^1.0.3",
-        "mocha": "^3.1.1",
-        "proxyquire": "1.7.10",
-        "@types/proxyquire": "1.3.27",
-        "@types/mocha": "^2.2.32",
-		"@types/node": "^6.0.40"
-    },
-    "bugs": {
-        "url": "https://github.com/siegebell/vsc-prettify-symbols-mode/issues"
-    },
-    "homepage": "https://github.com/siegebell/vsc-prettify-symbols-mode/blob/master/README.md",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/siegebell/vsc-prettify-symbols-mode.git"
+      }
     }
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "watch": "tsc -watch -p ./",
+    "compile": "tsc -p ./",
+    "test": "tsc -p ./ && mocha -u tdd ./out/test",
+    "test-debug": "tsc -p ./ && mocha -u tdd --debug-brk=5858 ./out/test"
+  },
+  "dependencies": {
+    "copy-paste": "1.3.0",
+    "@types/copy-paste": "1.1.30"
+  },
+  "devDependencies": {
+    "typescript": "2.1.4",
+    "vscode": "^1.0.3",
+    "mocha": "^3.1.1",
+    "proxyquire": "1.7.10",
+    "@types/proxyquire": "1.3.27",
+    "@types/mocha": "^2.2.32",
+    "@types/node": "^6.0.40"
+  },
+  "bugs": {
+    "url": "https://github.com/siegebell/vsc-prettify-symbols-mode/issues"
+  },
+  "homepage": "https://github.com/siegebell/vsc-prettify-symbols-mode/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siegebell/vsc-prettify-symbols-mode.git"
+  }
 }
