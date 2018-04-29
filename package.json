@@ -961,6 +961,30 @@
                               "style": {"color": "cyan"}
                             },
                             {
+                              "ugly": "\\\\chapter",
+                              "post": "{.+?}",
+                              "pretty": "§",
+                              "style": {"color": "red"}
+                            },
+                            {
+                              "ugly": "\\\\section",
+                              "post": "{.+?}",
+                              "pretty": "§§",
+                              "style": {"color": "red"}
+                            },
+                            {
+                              "ugly": "\\\\subsection",
+                              "post": "{.+?}",
+                              "pretty": "§§§",
+                              "style": {"color": "red"}
+                            },
+                            {
+                              "ugly": "\\\\subsubsection",
+                              "post": "{.+?}",
+                              "pretty": "§§§§",
+                              "style": {"color": "red"}
+                            },
+                            {
                               "ugly": "\\\\leq",
                               "pretty": "≤",
                               "post": "\\b"
