@@ -941,6 +941,15 @@
                           "language": "latex",
                           "substitutions": [
                             {
+                              "ugly": "\\\\begin",
+                              "post": "{\\w+}",
+                              "pretty": "⯆"
+                            },
+                            {
+                              "ugly": "\\\\end{\\w+}",
+                              "pretty": "⯅"
+                            },
+                            {
                               "ugly": "\\\\leq",
                               "pretty": "≤",
                               "post": "\\b"
