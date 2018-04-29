@@ -951,7 +951,7 @@
                             },
                             {
                               "ugly": "\\\\item",
-                              "pretty": "▶",
+                              "pretty": "⮚",
                               "post": "\\b"
                             },
                             {
