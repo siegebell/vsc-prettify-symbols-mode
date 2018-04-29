@@ -1040,6 +1040,16 @@
                               "post": "\\b"
                             },
                             {
+                              "ugly": "\\\\because",
+                              "pretty": "∵",
+                              "post": "\\b"
+                            },
+                            {
+                              "ugly": "\\\\therefore",
+                              "pretty": "∴",
+                              "post": "\\b"
+                            },
+                            {
                               "ugly": "\\\\neq",
                               "pretty": "≠",
                               "post": "\\b"
