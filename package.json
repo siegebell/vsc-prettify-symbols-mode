@@ -950,6 +950,10 @@
                               "pretty": "⯅"
                             },
                             {
+                              "ugly": "\\\\item",
+                              "pretty": "▶"
+                            },
+                            {
                               "ugly": "\\\\leq",
                               "pretty": "≤",
                               "post": "\\b"
