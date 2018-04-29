@@ -942,367 +942,458 @@
                           "substitutions": [
                             {
                               "ugly": "\\\\leq",
-                              "pretty": "≤"
+                              "pretty": "≤",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\geq",
-                              "pretty": "≥"
+                              "pretty": "≥",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\cdots",
-                              "pretty": "⋯"
+                              "pretty": "⋯",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\vdots",
-                              "pretty": "⋮"
+                              "pretty": "⋮",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\ldots",
-                              "pretty": "…"
+                              "pretty": "…",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\ldots",
-                              "pretty": "…"
+                              "pretty": "…",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\top",
-                              "pretty": "⊤"
+                              "pretty": "⊤",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\bot",
-                              "pretty": "⊥"
+                              "pretty": "⊥",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\topbot",
-                              "pretty": "⌶"
+                              "pretty": "⌶",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\wedge",
-                              "pretty": "∧"
+                              "pretty": "∧",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\vee",
-                              "pretty": "∨"
+                              "pretty": "∨",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\cup",
-                              "pretty": "∪"
+                              "pretty": "∪",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\cap",
-                              "pretty": "∩"
+                              "pretty": "∩",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\otimes",
-                              "pretty": "⊗"
+                              "pretty": "⊗",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\forall",
-                              "pretty": "∀"
+                              "pretty": "∀",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\exists",
-                              "pretty": "∃"
+                              "pretty": "∃",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\nexists",
-                              "pretty": "∄"
+                              "pretty": "∄",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\neq",
-                              "pretty": "≠"
+                              "pretty": "≠",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\equiv",
-                              "pretty": "≡"
+                              "pretty": "≡",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\mapsto",
-                              "pretty": "↦"
+                              "pretty": "↦",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\mapsfrom",
-                              "pretty": "↤"
+                              "pretty": "↤",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Mapsto",
-                              "pretty": "⤇"
+                              "pretty": "⤇",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Mapsfrom",
-                              "pretty": "⤆"
+                              "pretty": "⤆",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\longmapsto",
-                              "pretty": "⟼"
+                              "pretty": "⟼",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\mapsfrom",
-                              "pretty": "⟻"
+                              "pretty": "⟻",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Longmapsto",
-                              "pretty": "⟾"
+                              "pretty": "⟾",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Longmapsfrom",
-                              "pretty": "⟽"
+                              "pretty": "⟽",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\leftarrow",
-                              "pretty": "←"
+                              "pretty": "←",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\rightarrow",
-                              "pretty": "→"
+                              "pretty": "→",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\to",
-                              "pretty": "→"
+                              "pretty": "→",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\leftrightarrow",
-                              "pretty": "↔"
+                              "pretty": "↔",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Leftarrow",
-                              "pretty": "⇐"
+                              "pretty": "⇐",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Rightarrow",
-                              "pretty": "⇒"
+                              "pretty": "⇒",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Leftrightarrow",
-                              "pretty": "⇔"
+                              "pretty": "⇔",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\longleftarrow",
-                              "pretty": "⟵"
+                              "pretty": "⟵",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\longrightarrow",
-                              "pretty": "⟶"
+                              "pretty": "⟶",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\longleftrightarrow",
-                              "pretty": "⟷"
+                              "pretty": "⟷",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Longrightarrow",
-                              "pretty": "⟹"
+                              "pretty": "⟹",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\implies",
-                              "pretty": "⟹"
+                              "pretty": "⟹",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Longleftarrow",
-                              "pretty": "⟸"
+                              "pretty": "⟸",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\impliedby",
-                              "pretty": "⟸"
+                              "pretty": "⟸",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Longleftrightarrow",
-                              "pretty": "⟺"
+                              "pretty": "⟺",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\iff",
-                              "pretty": "⟺"
+                              "pretty": "⟺",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\in",
-                              "pretty": "∈"
+                              "pretty": "∈",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\notin",
-                              "pretty": "∉"
+                              "pretty": "∉",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\pm",
-                              "pretty": "±"
+                              "pretty": "±",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\times",
-                              "pretty": "×"
+                              "pretty": "×",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\infty",
-                              "pretty": "∞"
+                              "pretty": "∞",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\sum",
-                              "pretty": "∑"
+                              "pretty": "∑",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\prod",
-                              "pretty": "∏"
+                              "pretty": "∏",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\int",
-                              "pretty": "∫"
+                              "pretty": "∫",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\iint",
-                              "pretty": "∬"
+                              "pretty": "∬",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\iiint",
-                              "pretty": "∭"
+                              "pretty": "∭",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\oint",
-                              "pretty": "∮"
+                              "pretty": "∮",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\oiint",
-                              "pretty": "∯"
+                              "pretty": "∯",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\oiiint",
-                              "pretty": "∰"
+                              "pretty": "∰",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Gamma",
-                              "pretty": "Γ"
+                              "pretty": "Γ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Delta",
-                              "pretty": "Δ"
+                              "pretty": "Δ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Theta",
-                              "pretty": "Θ"
+                              "pretty": "Θ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Lambda",
-                              "pretty": "Λ"
+                              "pretty": "Λ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Xi",
-                              "pretty": "Ξ"
+                              "pretty": "Ξ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Pi",
-                              "pretty": "Π"
+                              "pretty": "Π",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Sigma",
-                              "pretty": "Σ"
+                              "pretty": "Σ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Upsilon",
-                              "pretty": "Υ"
+                              "pretty": "Υ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Phi",
-                              "pretty": "Φ"
+                              "pretty": "Φ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Psi",
-                              "pretty": "Ψ"
+                              "pretty": "Ψ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\Omega",
-                              "pretty": "Ω"
+                              "pretty": "Ω",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\alpha",
-                              "pretty": "α"
+                              "pretty": "α",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\beta",
-                              "pretty": "β"
+                              "pretty": "β",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\gamma",
-                              "pretty": "γ"
+                              "pretty": "γ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\delta",
-                              "pretty": "δ"
+                              "pretty": "δ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\epsilon",
-                              "pretty": "ε"
+                              "pretty": "ε",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\zeta",
-                              "pretty": "ζ"
+                              "pretty": "ζ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\eta",
-                              "pretty": "η"
+                              "pretty": "η",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\theta",
-                              "pretty": "θ"
+                              "pretty": "θ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\iota",
-                              "pretty": "ι"
+                              "pretty": "ι",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\kappa",
-                              "pretty": "κ"
+                              "pretty": "κ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\lambda",
-                              "pretty": "λ"
+                              "pretty": "λ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\mu",
-                              "pretty": "μ"
+                              "pretty": "μ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\nu",
-                              "pretty": "ν"
+                              "pretty": "ν",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\xi",
-                              "pretty": "ξ"
+                              "pretty": "ξ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\pi",
-                              "pretty": "π"
+                              "pretty": "π",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\rho",
-                              "pretty": "ρ"
+                              "pretty": "ρ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\varsigma",
-                              "pretty": "ς"
+                              "pretty": "ς",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\sigma",
-                              "pretty": "σ"
+                              "pretty": "σ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\tau",
-                              "pretty": "τ"
+                              "pretty": "τ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\upsilon",
-                              "pretty": "υ"
+                              "pretty": "υ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\phi",
-                              "pretty": "φ"
+                              "pretty": "φ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\chi",
-                              "pretty": "χ"
+                              "pretty": "χ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\psi",
-                              "pretty": "ψ"
+                              "pretty": "ψ",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\omega",
-                              "pretty": "ω"
+                              "pretty": "ω",
+                              "post": "\\b"
                             },
                             {
                               "ugly": "\\\\mathbb{A}",
