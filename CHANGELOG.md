@@ -1,3 +1,7 @@
+## 0.4.3
+* fix #35
+* *restores* scope support
+
 ## 0.4.2
 * fix #36: scopes break PSM
 

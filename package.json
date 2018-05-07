@@ -2,7 +2,7 @@
     "name": "prettify-symbols-mode",
     "displayName": "Prettify Symbols Mode",
     "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "publisher": "siegebell",
     "license": "MIT license (MIT)",
     "engines": {
@@ -167,6 +167,19 @@
                                 "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change",
                                 "default": "none"
                             },
+                            "combineIdenticalScopes": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "If `true`, combine adjacent tokens if they have the same scope"
+                            },
+                            "textMateGrammar": {
+                                "type": "string",
+                                "description": "Specify the TextMate grammar file used to generate scope information for matching substitutions. If not specified, PSM will attempt to automatically find the grammar file that vscode uses."
+                            },
+                            "textMateInitialScope": {
+                                "type": "string",
+                                "description": "Override the initial scope used to identify the grammar. If undefined, then the initial scope will be inferred by searching for installed extensions that provide grammars for the current language."
+                            },
                             "substitutions": {
                                 "type": "array",
                                 "description": "A list of substitutions",
@@ -190,6 +203,10 @@
                                         "post": {
                                             "type": "string",
                                             "description": "If specified, the text following the 'ugly' text must match this pattern. E.g. '\\\\\\b'"
+                                        },
+                                        "scope": {
+                                            "type": "string",
+                                            "description": "A scope expression: a whitespace-separated list of scope-names. If specified, then the `ugly` regular expression is only checked against individual tokens of matching scopes."
                                         },
                                         "style": {
                                             "type": "object",

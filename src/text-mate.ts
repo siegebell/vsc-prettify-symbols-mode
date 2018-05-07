@@ -1,12 +1,22 @@
 import * as path from 'path';
+import * as vscode from 'vscode';
 const tm = loadTextMate();
 
-function loadTextMate(): any {
+// From https://github.com/siegebell/scope-info/issues/5
+function getNodeModule(moduleName) {
   try {
-    require(path.join(require.main.filename, '../../node_modules/vscode-textmate/release/main.js'));
-  } catch(error) {
-    return null;
-  }
+    console.log(`${vscode.env.appRoot}/node_modules.asar/${moduleName}`)
+    return require(`${vscode.env.appRoot}/node_modules.asar/${moduleName}`);
+  } catch(err) { }
+  try {
+    console.log(`>>> ${vscode.env.appRoot}/node_modules/${moduleName}`)
+    return require(`${vscode.env.appRoot}/node_modules/${moduleName}`);
+  } catch(err) {}
+  return null;
+}
+
+function loadTextMate(): any {
+  return getNodeModule('vscode-textmate')
 }
 
 // namespace N {
