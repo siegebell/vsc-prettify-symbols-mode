@@ -2,3 +2,4 @@ out
 node_modules
 typings
 *.vsix
+package-lock.json
