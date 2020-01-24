@@ -2,7 +2,7 @@
     "name": "vsc-conceal",
     "displayName": "Conceal",
     "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "publisher": "BRBoer",
     "license": "MIT license (MIT)",
     "engines": {
@@ -18,31 +18,31 @@
     "contributes": {
         "commands": [
             {
-                "command": "prettifySymbolsMode.copyWithSubstitutions",
+                "command": "conceal.copyWithSubstitutions",
                 "title": "Copy with Substitutions",
-                "category": "Prettify Symbols Mode"
+                "category": "Conceal"
             },
             {
-                "command": "prettifySymbolsMode.enablePrettySymbols",
+                "command": "conceal.enablePrettySymbols",
                 "title": "Enable",
-                "category": "Prettify Symbols Mode"
+                "category": "Conceal"
             },
             {
-                "command": "prettifySymbolsMode.disablePrettySymbols",
+                "command": "conceal.disablePrettySymbols",
                 "title": "Disable",
-                "category": "Prettify Symbols Mode"
+                "category": "Conceal"
             },
             {
-                "command": "prettifySymbolsMode.togglePrettySymbols",
+                "command": "conceal.togglePrettySymbols",
                 "title": "Toggle",
-                "category": "Prettify Symbols Mode"
+                "category": "Conceal"
             }
         ],
         "configuration": {
             "type": "object",
-            "title": "Prettify symbols mode",
+            "title": "Conceal",
             "properties": {
-                "prettifySymbolsMode.revealOn": {
+                "conceal.revealOn": {
                     "enum": [
                         "cursor",
                         "cursor-inside",
@@ -53,20 +53,20 @@
                     "description": "When to reveal the original text. Options are -- 'cursor': reveal when a cursor contacts a symbol; 'cursor-inside': reveal when a cursor is inside a symbol; 'active-line': reveal all symbols on the same line as a cursor; 'selection': reveal all symbols that are selected or contact a cursor; 'none': do not reveal. This option may be overriden per-language by specifying 'revealOn' in a language entry.",
                     "default": "cursor"
                 },
-                "prettifySymbolsMode.adjustCursorMovement": {
+                "conceal.adjustCursorMovement": {
                     "type": "boolean",
                     "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations). This option may be overriden per-language by specifying 'adjustCursorMovement' in a language entry.",
                     "default": false
                 },
-                "prettifySymbolsMode.prettyCursor": {
+                "conceal.prettyCursor": {
                     "enum": [
                         "boxed",
                         "none"
                     ],
-                    "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change. This option may be overriden per-language by specifying 'prettyCursor' in a language entry.",
+                    "description": "Controls how a 'concealed' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change. This option may be overriden per-language by specifying 'prettyCursor' in a language entry.",
                     "default": "boxed"
                 },
-                "prettifySymbolsMode.substitutions": {
+                "conceal.substitutions": {
                     "type": "array",
                     "description": "A list of substitution settings can be specified for each language.",
                     "items": {
@@ -147,7 +147,7 @@
                             },
                             "adjustCursorMovement": {
                                 "type": "boolean",
-                                "description": "If enabled, cursor movement will treat 'pretty' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations).",
+                                "description": "If enabled, cursor movement will treat 'concealed' symbols as one character instead of stepping through the underlying 'ugly' text (this does not currently cover all situations).",
                                 "default": false
                             },
                             "hideTextMethod": {
@@ -164,7 +164,7 @@
                                     "boxed",
                                     "none"
                                 ],
-                                "description": "Controls how a 'pretty' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change",
+                                "description": "Controls how a 'conceal' symbol is rendered when contacted by a cursor. Options are -- 'boxed': render an outline around the symbol; 'none': no change",
                                 "default": "none"
                             },
                             "combineIdenticalScopes": {
@@ -1050,60 +1050,6 @@
                         {
                             "language": "latex",
                             "substitutions": [
-                                {
-                                    "ugly": "\\\\begin",
-                                    "post": "{\\w+}",
-                                    "pretty": "⯆"
-                                },
-                                {
-                                    "ugly": "\\\\end{\\w+}",
-                                    "pretty": "⯅"
-                                },
-                                {
-                                    "ugly": "\\\\item",
-                                    "pretty": "⮚",
-                                    "post": "\\b"
-                                },
-                                {
-                                    "ugly": "\\\\ref|\\\\cref|\\\\autoref|\\\\cite",
-                                    "post": "{.+?}",
-                                    "pretty": "※",
-                                    "style": {
-                                        "color": "cyan"
-                                    }
-                                },
-                                {
-                                    "ugly": "\\\\chapter",
-                                    "post": "{.+?}",
-                                    "pretty": "§",
-                                    "style": {
-                                        "color": "red"
-                                    }
-                                },
-                                {
-                                    "ugly": "\\\\section",
-                                    "post": "{.+?}",
-                                    "pretty": "§§",
-                                    "style": {
-                                        "color": "red"
-                                    }
-                                },
-                                {
-                                    "ugly": "\\\\subsection",
-                                    "post": "{.+?}",
-                                    "pretty": "§§§",
-                                    "style": {
-                                        "color": "red"
-                                    }
-                                },
-                                {
-                                    "ugly": "\\\\subsubsection",
-                                    "post": "{.+?}",
-                                    "pretty": "§§§§",
-                                    "style": {
-                                        "color": "red"
-                                    }
-                                },
                                 {
                                     "ugly": "\\\\leq",
                                     "pretty": "≤",

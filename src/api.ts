@@ -2,25 +2,25 @@ import * as vscode from 'vscode';
 
 /** Essentially mirrors vscode.DecorationRenderOptions, but restricted to the
  * properties that apply to both :before/:after decorations and plain decorations */
-export interface PrettyStyleProperties {
+export interface ConcealStyleProperties {
   border?: string,
 	textDecoration?: string,
 	color?: string,
 	backgroundColor?: string,
   hackCSS?: string,
 }
-export interface PrettyStyle extends PrettyStyleProperties {
-	dark?: PrettyStyleProperties,
-	light?: PrettyStyleProperties,
+export interface ConcealStyle extends ConcealStyleProperties {
+	dark?: ConcealStyleProperties,
+	light?: ConcealStyleProperties,
 }
 
 /** An individual substitution */
 export interface Substitution {
 	ugly: string;        // regular expression describing the text to replace
-	pretty: string;      // plain-text symbol to show instead
+  pretty: string;      // plain-text symbol to show instead
 	pre?: string;        // regular expression guard on text before "ugly"
 	post?: string;       // regular expression guard on text after "ugly"
-	style?: PrettyStyle; // stylings to apply to the "pretty" text, if specified, or else the ugly text
+	style?: ConcealStyle; // stylings to apply to the pretty text, if specified, or else the ugly text
 	scope?: string,      // TextMate scope; if specified, the ugly portion's range must be exactly within the given scope
 }
 
@@ -36,7 +36,7 @@ export interface LanguageEntry {
 }
 
 
-export interface PrettifySymbolsMode {
+export interface ConcealSymbolsMode {
   /** Register a handler to receive notifications when PSM is enabled or disabled.
    * @returns a disposable object to unregister the handler
    */

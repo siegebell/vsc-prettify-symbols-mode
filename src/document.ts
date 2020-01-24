@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as copyPaste from 'copy-paste';
 
-import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor, PrettyStyleProperties, PrettyStyle, assignStyleProperties, HideTextMethod} from './configuration';
+import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor, ConcealStyleProperties, ConcealStyle, assignStyleProperties, HideTextMethod} from './configuration';
 import * as pos from './position';
 import {RangeSet} from './RangeSet';
 import {DisjointRangeSet} from './DisjointRangeSet';

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor, PrettyStyleProperties, PrettyStyle, assignStyleProperties, HideTextMethod} from './configuration';
+import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor, ConcealStyleProperties, ConcealStyle, assignStyleProperties, HideTextMethod} from './configuration';
 
 export function makePrettyDecoration_fontSize_hack(prettySubst: Substitution) {
   const showAttachmentStyling = '';

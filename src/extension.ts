@@ -69,7 +69,7 @@ const grammarLocator : tm.IGrammarLocator = {
 }
 
 /** initialize everything; main entry point */
-export function activate(context: vscode.ExtensionContext) : api.PrettifySymbolsMode {
+export function activate(context: vscode.ExtensionContext) : api.ConcealSymbolsMode {
 	function registerTextEditorCommand(commandId:string, run:(editor:vscode.TextEditor,edit:vscode.TextEditorEdit,...args:any[])=>void): void {
     context.subscriptions.push(vscode.commands.registerTextEditorCommand(commandId, run));
   }
@@ -77,10 +77,10 @@ export function activate(context: vscode.ExtensionContext) : api.PrettifySymbols
     context.subscriptions.push(vscode.commands.registerCommand(commandId, run));
   }
 
-  registerTextEditorCommand('prettifySymbolsMode.copyWithSubstitutions', copyWithSubstitutions);
-  registerCommand('prettifySymbolsMode.disablePrettySymbols', disablePrettySymbols);
-  registerCommand('prettifySymbolsMode.enablePrettySymbols', enablePrettySymbols);
-  registerCommand('prettifySymbolsMode.togglePrettySymbols', (editor: vscode.TextEditor) => {
+  registerTextEditorCommand('conceal.copyWithSubstitutions', copyWithSubstitutions);
+  registerCommand('conceal.disablePrettySymbols', disablePrettySymbols);
+  registerCommand('conceal.enablePrettySymbols', enablePrettySymbols);
+  registerCommand('conceal.togglePrettySymbols', (editor: vscode.TextEditor) => {
     if(prettySymbolsEnabled) {
       disablePrettySymbols();
     } else {
@@ -88,9 +88,9 @@ export function activate(context: vscode.ExtensionContext) : api.PrettifySymbols
     }
   });
 
-  registerCommand('extension.disablePrettySymbols', () => { vscode.window.showErrorMessage('Command "extension.disablePrettySymbols" is deprecated; use "prettifySymbolsMode.disablePrettySymbols" instead.') });
-  registerCommand('extension.enablePrettySymbols', () => { vscode.window.showErrorMessage('Command "extension.enablePrettySymbols" is deprecated; use "prettifySymbolsMode.enablePrettySymbols" instead.') });
-  registerCommand('extension.togglePrettySymbols', () => { vscode.window.showErrorMessage('Command "extension.togglePrettySymbols" is deprecated; use "prettifySymbolsMode.togglePrettySymbols" instead.') });
+  registerCommand('extension.disablePrettySymbols', () => { vscode.window.showErrorMessage('Command "extension.disablePrettySymbols" is deprecated; use "conceal.disablePrettySymbols" instead.') });
+  registerCommand('extension.enablePrettySymbols', () => { vscode.window.showErrorMessage('Command "extension.enablePrettySymbols" is deprecated; use "conceal.enablePrettySymbols" instead.') });
+  registerCommand('extension.togglePrettySymbols', () => { vscode.window.showErrorMessage('Command "extension.togglePrettySymbols" is deprecated; use "conceal.togglePrettySymbols" instead.') });
 
   context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(selectionChanged));
 
@@ -102,7 +102,7 @@ export function activate(context: vscode.ExtensionContext) : api.PrettifySymbols
 
   reloadConfiguration();
 
-  const result : api.PrettifySymbolsMode = {
+  const result : api.ConcealSymbolsMode = {
     onDidEnabledChange: function(handler: (enabled:boolean)=>void) : vscode.Disposable {
       onEnabledChangeHandlers.add(handler);
       return {
@@ -177,7 +177,7 @@ function reloadConfiguration() {
     console.error(err);
   }
 
-  const configuration = vscode.workspace.getConfiguration("prettifySymbolsMode");
+  const configuration = vscode.workspace.getConfiguration("conceal");
   settings = {
     substitutions: configuration.get<LanguageEntry[]>("substitutions",[]),
     revealOn: configuration.get<UglyRevelation>("revealOn","cursor"),

@@ -15,20 +15,20 @@ export type PrettyCursor =
 
 /** Essentially mirrors vscode.DecorationRenderOptions, but restricted to the
  * properties that apply to both :before/:after decorations and plain decorations */
-export interface PrettyStyleProperties {
+export interface ConcealStyleProperties {
   border?: string,
 	textDecoration?: string,
 	color?: string | vscode.ThemeColor,
 	backgroundColor?: string | vscode.ThemeColor,
 	hackCSS?: string,
 }
-export interface PrettyStyle extends PrettyStyleProperties {
-	dark?: PrettyStyleProperties,
-	light?: PrettyStyleProperties,
+export interface ConcealStyle extends ConcealStyleProperties {
+	dark?: ConcealStyleProperties,
+	light?: ConcealStyleProperties,
 }
 
 /** Copy all defined stying properties to the target */
-export function assignStyleProperties(target: PrettyStyleProperties, source: PrettyStyleProperties) {
+export function assignStyleProperties(target: ConcealStyleProperties, source: ConcealStyleProperties) {
 	if(target===undefined || source===undefined)
 		return;
 	if(source.backgroundColor)
@@ -49,7 +49,7 @@ export interface Substitution {
 	pretty: string,      // plain-text symbol to show instead
 	pre?: string,        // regular expression guard on text before "ugly"
 	post?: string,       // regular expression guard on text after "ugly"
-	style?: PrettyStyle, // stylings to apply to the "pretty" text, if specified, or else the ugly text
+	style?: ConcealStyle, // stylings to apply to the "pretty" text, if specified, or else the ugly text
 	scope?: string,      // TextMate scope; if specified, the ugly portion's range must be exactly within the given scope
 }
 
