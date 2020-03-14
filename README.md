@@ -1,6 +1,6 @@
 # Conceal for VSCode
 
-Prettify symbols mode makes *visual* substitutions to your source code, e.g. displaying `fun` as `λ`, while never touching your code.
+Conceal makes *visual* substitutions to your source code, e.g. displaying `fun` as `λ`, while never touching your code.
 
 This feature is inspired by [prettify-symbols-mode for Emacs](https://www.emacswiki.org/emacs/PrettySymbol) and is the unofficial successor of [vsc-prettify-symbols-mode](https://github.com/siegebell/vsc-prettify-symbols-mode).
 
