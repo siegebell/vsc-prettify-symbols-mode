@@ -2,7 +2,7 @@
   "name": "vsc-conceal",
   "displayName": "Conceal",
   "description": "Displays identifiers & symbols using more aesthetically pleasing symbols.",
-  "version": "1.1.0",
+  "version": "0.2.1",
   "publisher": "BRBoer",
   "license": "MIT license (MIT)",
   "engines": {
