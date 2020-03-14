@@ -1051,6 +1051,18 @@
               "language": "latex",
               "substitutions": [
                 {
+                  "ugly": "\\$",
+                  "pretty": "\null"
+                },
+                {
+                  "ugly": "\\\\\\[",
+                  "pretty": "\null"
+                },
+                {
+                  "ugly": "\\\\]",
+                  "pretty": "\null"
+                },
+                {
                   "ugly": "\\\\leq",
                   "pretty": "≤",
                   "post": "\\b|_"
