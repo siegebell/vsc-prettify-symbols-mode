@@ -98,6 +98,7 @@ Check out [*Monospacifier*](https://github.com/cpitclaudel/monospacifier) to fix
 *Tip: [submit new issues on github](https://github.com/BRBoer/vsc-conceal/issues)*
 * You can write bad regular expressions that break substitutions and you will not get an error message.
 * The substitutions sometimes get into an inconsistent state when editing. To resolve, reenable prettify-symbols-mode -- this will cause the whole document to be reparsed.
+* The Live Snippets feature from the LaTeX Utilities extension will not function when `"conceal.adjustCursorMovement"` is set to `true`
 
 ## Examples
 [See the wiki for more examples &hyphen; and contribute your own!](https://github.com/siegebell/vsc-prettify-symbols-mode/wiki)
