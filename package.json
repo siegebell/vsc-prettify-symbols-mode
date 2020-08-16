@@ -1418,7 +1418,7 @@
                   "post": "\\b|_"
                 },
                 {
-                  "ugly": "\\\\b|_eta",
+                  "ugly": "\\\\beta",
                   "pretty": "β",
                   "post": "\\b|_"
                 },
