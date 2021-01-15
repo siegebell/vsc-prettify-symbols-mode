@@ -1098,7 +1098,7 @@
                   "post": "\\b|_"
                 },
                 {
-                  "ugly": "\\\\b|_ot",
+                  "ugly": "\\\\bot",
                   "pretty": "⊥",
                   "post": "\\b|_"
                 },
@@ -1133,6 +1133,16 @@
                   "post": "\\b|_"
                 },
                 {
+                  "ugly": "\\\\oplus",
+                  "pretty": "⊕",
+                  "post": "\\b|_"
+                },
+                {
+                  "ugly": "\\\\bigoplus",
+                  "pretty": "⨁",
+                  "post": "\\b|_"
+                },
+                {
                   "ugly": "\\\\neg",
                   "pretty": "¬",
                   "post": "\\b|_"
@@ -1153,7 +1163,7 @@
                   "post": "\\b|_"
                 },
                 {
-                  "ugly": "\\\\b|_ecause",
+                  "ugly": "\\\\because",
                   "pretty": "∵",
                   "post": "\\b|_"
                 },
@@ -1739,6 +1749,110 @@
                 {
                   "ugly": "\\\\mathbb{z}",
                   "pretty": "𝕫"
+                },
+                {
+                    "ugly": "\\\\mathcal{A}",
+                    "pretty": "𝒜"
+                },
+                {
+                    "ugly": "\\\\mathcal{B}",
+                    "pretty": "ℬ"
+                },
+                {
+                    "ugly": "\\\\mathcal{C}",
+                    "pretty": "𝒞"
+                },
+                {
+                    "ugly": "\\\\mathcal{D}",
+                    "pretty": "𝒟"
+                },
+                {
+                    "ugly": "\\\\mathcal{E}",
+                    "pretty": "ℰ"
+                },
+                {
+                    "ugly": "\\\\mathcal{F}",
+                    "pretty": "ℱ"
+                },
+                {
+                    "ugly": "\\\\mathcal{G}",
+                    "pretty": "𝒢"
+                },
+                {
+                    "ugly": "\\\\mathcal{H}",
+                    "pretty": "ℋ"
+                },
+                {
+                    "ugly": "\\\\mathcal{I}",
+                    "pretty": "ℐ"
+                },
+                {
+                    "ugly": "\\\\mathcal{J}",
+                    "pretty": "𝒥"
+                },
+                {
+                    "ugly": "\\\\mathcal{K}",
+                    "pretty": "𝒦"
+                },
+                {
+                    "ugly": "\\\\mathcal{L}",
+                    "pretty": "ℒ"
+                },
+                {
+                    "ugly": "\\\\mathcal{M}",
+                    "pretty": "ℳ"
+                },
+                {
+                    "ugly": "\\\\mathcal{N}",
+                    "pretty": "𝒩"
+                },
+                {
+                    "ugly": "\\\\mathcal{O}",
+                    "pretty": "𝒪"
+                },
+                {
+                    "ugly": "\\\\mathcal{P}",
+                    "pretty": "𝒫"
+                },
+                {
+                    "ugly": "\\\\mathcal{Q}",
+                    "pretty": "𝒬"
+                },
+                {
+                    "ugly": "\\\\mathcal{R}",
+                    "pretty": "ℛ"
+                },
+                {
+                    "ugly": "\\\\mathcal{S}",
+                    "pretty": "𝒮"
+                },
+                {
+                    "ugly": "\\\\mathcal{T}",
+                    "pretty": "𝒯"
+                },
+                {
+                    "ugly": "\\\\mathcal{U}",
+                    "pretty": "𝒰"
+                },
+                {
+                    "ugly": "\\\\mathcal{V}",
+                    "pretty": "𝒱"
+                },
+                {
+                    "ugly": "\\\\mathcal{W}",
+                    "pretty": "𝒲"
+                },
+                {
+                    "ugly": "\\\\mathcal{X}",
+                    "pretty": "𝒳"
+                },
+                {
+                    "ugly": "\\\\mathcal{Y}",
+                    "pretty": "𝒴"
+                },
+                {
+                    "ugly": "\\\\mathcal{Z}",
+                    "pretty": "𝒵"
                 }
               ]
             }
