@@ -1869,6 +1869,70 @@
                 {
                     "ugly": "\\\\gimel",
                     "pretty": "ג"
+                },
+                {
+                    "ugly": "\\\\vartheta",
+                    "pretty": "ϑ"
+                },
+                {
+                    "ugly": "\\\\varOmega",
+                    "pretty": "𝛺"
+                },
+                {
+                    "ugly": "\\\\varXi",
+                    "pretty": "𝛯"
+                },
+                {
+                    "ugly": "\\\\varPhi",
+                    "pretty": "𝛷"
+                },
+                {
+                    "ugly": "\\\\varPsi",
+                    "pretty": "𝛹"
+                },
+                {
+                    "ugly": "\\\\varPi",
+                    "pretty": "𝛱"
+                },
+                {
+                    "ugly": "\\\\varUpsilon",
+                    "pretty": "𝛶"
+                },
+                {
+                    "ugly": "\\\\varSigma",
+                    "pretty": "𝛴"
+                },
+                {
+                    "ugly": "\\\\varGamma",
+                    "pretty": "𝛤"
+                },
+                {
+                    "ugly": "\\\\varepsilon",
+                    "pretty": "ε"
+                },
+                {
+                    "ugly": "\\\\varpi",
+                    "pretty": "𝜛"
+                },
+                {
+                    "ugly": "\\\\varrho",
+                    "pretty": "𝜚"
+                },
+                {
+                    "ugly": "\\\\varphi",
+                    "pretty": "φ"
+                },
+                {
+                    "ugly": "\\\\varDelta",
+                    "pretty": "𝛥"
+                },
+                {
+                    "ugly": "\\\\varTheta",
+                    "pretty": "𝛩"
+                },
+                {
+                    "ugly": "\\\\varLambda",
+                    "pretty": "𝛬"
                 }
               ]
             }
