@@ -1444,7 +1444,7 @@
                 },
                 {
                   "ugly": "\\\\epsilon",
-                  "pretty": "ε",
+                  "pretty": "𝜖",
                   "post": "\\b|_"
                 },
                 {
