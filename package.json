@@ -2121,6 +2121,10 @@
                 {
                     "ugly": "\\\\Rrightarrow",
                     "pretty": "⇛"
+                },
+                {
+                    "ugly": "\\\\multimap",
+                    "pretty": "⊸"
                 }
               ]
             }
