@@ -2158,7 +2158,8 @@
                 },
                 {
                     "ugly": "\\\\diamond",
-                    "pretty": "⋄"
+                    "pretty": "⋄",
+                    "post": "\\b|_"
                 },
                 {
                     "ugly": "\\\\div",
