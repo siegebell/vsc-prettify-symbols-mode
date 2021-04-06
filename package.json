@@ -2192,6 +2192,22 @@
                 {
                     "ugly": "\\\\ominus",
                     "pretty": "⊖"
+                },
+                {
+                    "ugly": "\\\\dotplus",
+                    "pretty": "∔"
+                },
+                {
+                    "ugly": "\\\\divideontimes",
+                    "pretty": "⋇"
+                },
+                {
+                    "ugly": "\\\\mp",
+                    "pretty": "∓"
+                },
+                {
+                    "ugly": "\\\\wr",
+                    "pretty": "≀"
                 }
               ]
             }
