@@ -2208,6 +2208,22 @@
                 {
                     "ugly": "\\\\wr",
                     "pretty": "≀"
+                },
+                {
+                    "ugly": "\\\\boxplus",
+                    "pretty": "⊞"
+                },
+                {
+                    "ugly": "\\\\boxminus",
+                    "pretty": "⊟"
+                },
+                {
+                    "ugly": "\\\\boxtimes",
+                    "pretty": "⊠"
+                },
+                {
+                    "ugly": "\\\\boxdot",
+                    "pretty": "⊡"
                 }
               ]
             }
