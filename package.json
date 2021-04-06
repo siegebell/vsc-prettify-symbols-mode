@@ -2125,6 +2125,10 @@
                 {
                     "ugly": "\\\\multimap",
                     "pretty": "⊸"
+                },
+                {
+                    "ugly": "\\\\coprod",
+                    "pretty": "∐"
                 }
               ]
             }
