@@ -1933,6 +1933,194 @@
                 {
                     "ugly": "\\\\varLambda",
                     "pretty": "𝛬"
+                },
+                {
+                    "ugly": "\\\\uparrow",
+                    "pretty": "↑"
+                },
+                {
+                    "ugly": "\\\\downarrow",
+                    "pretty": "↓"
+                },
+                {
+                    "ugly": "\\\\updownarrow",
+                    "pretty": "↕"
+                },
+                {
+                    "ugly": "\\\\Uparrow",
+                    "pretty": "⇑"
+                },
+                {
+                    "ugly": "\\\\Downarrow",
+                    "pretty": "⇓"
+                },
+                {
+                    "ugly": "\\\\Updownarrow",
+                    "pretty": "⇕"
+                },
+                {
+                    "ugly": "\\\\hookleftarrow",
+                    "pretty": "↩"
+                },
+                {
+                    "ugly": "\\\\hookrightarrow",
+                    "pretty": "↪"
+                },
+                {
+                    "ugly": "\\\\leftharpoonup",
+                    "pretty": "↼"
+                },
+                {
+                    "ugly": "\\\\rightharpoonup",
+                    "pretty": "⇀"
+                },
+                {
+                    "ugly": "\\\\leftharpoondown",
+                    "pretty": "↽"
+                },
+                {
+                    "ugly": "\\\\rightharpoondown",
+                    "pretty": "⇁"
+                },
+                {
+                    "ugly": "\\\\rightleftharpoons",
+                    "pretty": "⇌"
+                },
+                {
+                    "ugly": "\\\\leftrightharpoons",
+                    "pretty": "⇋"
+                },
+                {
+                    "ugly": "\\\\upharpoonleft",
+                    "pretty": "↿"
+                },
+                {
+                    "ugly": "\\\\downharpoonleft",
+                    "pretty": "⇃"
+                },
+                {
+                    "ugly": "\\\\upharpoonright",
+                    "pretty": "↾"
+                },
+                {
+                    "ugly": "\\\\downharpoonright",
+                    "pretty": "⇂"
+                },
+                {
+                    "ugly": "\\\\leadsto",
+                    "pretty": "↝"
+                },
+                {
+                    "ugly": "\\\\nearrow",
+                    "pretty": "↗"
+                },
+                {
+                    "ugly": "\\\\searrow",
+                    "pretty": "↘"
+                },
+                {
+                    "ugly": "\\\\nwarrow",
+                    "pretty": "↖"
+                },
+                {
+                    "ugly": "\\\\swarrow",
+                    "pretty": "↙"
+                },
+                {
+                    "ugly": "\\\\dashrightarrow",
+                    "pretty": "⇢"
+                },
+                {
+                    "ugly": "\\\\dashleftarrow",
+                    "pretty": "⇠"
+                },
+                {
+                    "ugly": "\\\\leftleftarrows",
+                    "pretty": "⇇"
+                },
+                {
+                    "ugly": "\\\\rightrightarrows",
+                    "pretty": "⇉"
+                },
+                {
+                    "ugly": "\\\\leftrightarrows",
+                    "pretty": "⇆"
+                },
+                {
+                    "ugly": "\\\\rightleftarrows",
+                    "pretty": "⇄"
+                },
+                {
+                    "ugly": "\\\\upuparrows",
+                    "pretty": "⇈"
+                },
+                {
+                    "ugly": "\\\\downdownarrows",
+                    "pretty": "⇊"
+                },
+                {
+                    "ugly": "\\\\twoheadleftarrow",
+                    "pretty": "↞"
+                },
+                {
+                    "ugly": "\\\\twoheadrightarrow",
+                    "pretty": "↠"
+                },
+                {
+                    "ugly": "\\\\leftarrowtail",
+                    "pretty": "↢"
+                },
+                {
+                    "ugly": "\\\\rightarrowtail",
+                    "pretty": "↣"
+                },
+                {
+                    "ugly": "\\\\rightsquigarrow",
+                    "pretty": "⇝"
+                },
+                {
+                    "ugly": "\\\\leftrightsquigarrow",
+                    "pretty": "↭"
+                },
+                {
+                    "ugly": "\\\\curvearrowleft",
+                    "pretty": "↶"
+                },
+                {
+                    "ugly": "\\\\curvearrowright",
+                    "pretty": "↷"
+                },
+                {
+                    "ugly": "\\\\circlearrowleft",
+                    "pretty": "↺"
+                },
+                {
+                    "ugly": "\\\\circlearrowright",
+                    "pretty": "↻"
+                },
+                {
+                    "ugly": "\\\\looparrowleft",
+                    "pretty": "↫"
+                },
+                {
+                    "ugly": "\\\\looparrowright",
+                    "pretty": "↬"
+                },
+                {
+                    "ugly": "\\\\Lsh",
+                    "pretty": "↰"
+                },
+                {
+                    "ugly": "\\\\Rsh",
+                    "pretty": "↱"
+                },
+                {
+                    "ugly": "\\\\Lleftarrow",
+                    "pretty": "⇚"
+                },
+                {
+                    "ugly": "\\\\Rrightarrow",
+                    "pretty": "⇛"
                 }
               ]
             }
