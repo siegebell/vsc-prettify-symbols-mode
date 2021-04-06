@@ -2129,6 +2129,41 @@
                 {
                     "ugly": "\\\\coprod",
                     "pretty": "∐"
+                },
+                {
+                    "ugly": "\\\\ast",
+                    "pretty": "∗",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\star",
+                    "pretty": "⋆"
+                },
+                {
+                    "ugly": "\\\\cdot",
+                    "pretty": "⋅"
+                },
+                {
+                    "ugly": "\\\\bullet",
+                    "pretty": "∙"
+                },
+                {
+                    "ugly": "\\\\circ",
+                    "pretty": "∘",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\bigcirc",
+                    "pretty": "◯"
+                },
+                {
+                    "ugly": "\\\\diamond",
+                    "pretty": "⋄"
+                },
+                {
+                    "ugly": "\\\\div",
+                    "pretty": "÷",
+                    "post": "\\b|_"
                 }
               ]
             }
