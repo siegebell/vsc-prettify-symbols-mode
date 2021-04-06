@@ -1853,6 +1853,22 @@
                 {
                     "ugly": "\\\\mathcal{Z}",
                     "pretty": "𝒵"
+                },
+                {
+                    "ugly": "\\\\aleph",
+                    "pretty": "ℵ"
+                },
+                {
+                    "ugly": "\\\\beth",
+                    "pretty": "ב"
+                },
+                {
+                    "ugly": "\\\\daleth",
+                    "pretty": "ד"
+                },
+                {
+                    "ugly": "\\\\gimel",
+                    "pretty": "ג"
                 }
               ]
             }
