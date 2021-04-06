@@ -2164,6 +2164,34 @@
                     "ugly": "\\\\div",
                     "pretty": "÷",
                     "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\circledast",
+                    "pretty": "⊛"
+                },
+                {
+                    "ugly": "\\\\circledcirc",
+                    "pretty": "⊚"
+                },
+                {
+                    "ugly": "\\\\circleddash",
+                    "pretty": "⊝"
+                },
+                {
+                    "ugly": "\\\\odot",
+                    "pretty": "⊙"
+                },
+                {
+                    "ugly": "\\\\oplus",
+                    "pretty": "⊕"
+                },
+                {
+                    "ugly": "\\\\oslash",
+                    "pretty": "⊘"
+                },
+                {
+                    "ugly": "\\\\ominus",
+                    "pretty": "⊖"
                 }
               ]
             }
