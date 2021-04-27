@@ -2511,6 +2511,138 @@
                 {
                     "ugly": "\\\\ggg",
                     "pretty": "⋙"
+                },
+                {
+                    "ugly": "\\\\lessdot",
+                    "pretty": "⋖"
+                },
+                {
+                    "ugly": "\\\\gtrdot",
+                    "pretty": "⋗"
+                },
+                {
+                    "ugly": "\\\\lesssim",
+                    "pretty": "≲"
+                },
+                {
+                    "ugly": "\\\\gtrsim",
+                    "pretty": "≳"
+                },
+                {
+                    "ugly": "\\\\eqslantless",
+                    "pretty": "⪕"
+                },
+                {
+                    "ugly": "\\\\eqslantgtr",
+                    "pretty": "⪖"
+                },
+                {
+                    "ugly": "\\\\precsim",
+                    "pretty": "≾"
+                },
+                {
+                    "ugly": "\\\\succsim",
+                    "pretty": "≿"
+                },
+                {
+                    "ugly": "\\\\precapprox",
+                    "pretty": "⪷"
+                },
+                {
+                    "ugly": "\\\\succapprox",
+                    "pretty": "⪸"
+                },
+                {
+                    "ugly": "\\\\Subset",
+                    "pretty": "⋐"
+                },
+                {
+                    "ugly": "\\\\Supset",
+                    "pretty": "⋑"
+                },
+                {
+                    "ugly": "\\\\subseteqq",
+                    "pretty": "⫅"
+                },
+                {
+                    "ugly": "\\\\supseteqq",
+                    "pretty": "⫆"
+                },
+                {
+                    "ugly": "\\\\preccurlyeq",
+                    "pretty": "≼"
+                },
+                {
+                    "ugly": "\\\\succcurlyeq",
+                    "pretty": "≽"
+                },
+                {
+                    "ugly": "\\\\curlyeqprec",
+                    "pretty": "⋞"
+                },
+                {
+                    "ugly": "\\\\curlyeqsucc",
+                    "pretty": "⋟"
+                },
+                {
+                    "ugly": "\\\\blacktriangleleft",
+                    "pretty": "◀"
+                },
+                {
+                    "ugly": "\\\\blacktriangleright",
+                    "pretty": "▶"
+                },
+                {
+                    "ugly": "\\\\trianglelefteq",
+                    "pretty": "⊴"
+                },
+                {
+                    "ugly": "\\\\trianglerighteq",
+                    "pretty": "⊵"
+                },
+                {
+                    "ugly": "\\\\vartriangleleft",
+                    "pretty": "⊲"
+                },
+                {
+                    "ugly": "\\\\vartriangleright",
+                    "pretty": "⊳"
+                },
+                {
+                    "ugly": "\\\\lessgtr",
+                    "pretty": "≶"
+                },
+                {
+                    "ugly": "\\\\lesseqgtr",
+                    "pretty": "⋚"
+                },
+                {
+                    "ugly": "\\\\lesseqqgtr",
+                    "pretty": "⪋"
+                },
+                {
+                    "ugly": "\\\\gtreqqless",
+                    "pretty": "⪌"
+                },
+                {
+                    "ugly": "\\\\gtreqless",
+                    "pretty": "⋛"
+                },
+                {
+                    "ugly": "\\\\gtrless",
+                    "pretty": "≷"
+                },
+                {
+                    "ugly": "\\\\backepsilon",
+                    "pretty": "϶"
+                },
+                {
+                    "ugly": "\\\\between",
+                    "pretty": "≬"
+                },
+                {
+                    "ugly": "\\\\pitchfork",
+                    "pretty": "⋔"
                 }
               ]
             }
