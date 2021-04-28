@@ -2643,6 +2643,160 @@
                 {
                     "ugly": "\\\\pitchfork",
                     "pretty": "⋔"
+                },
+                {
+                    "ugly": "\\\\Vdash",
+                    "pretty": "⊩"
+                },
+                {
+                    "ugly": "\\\\vDash",
+                    "pretty": "⊨"
+                },
+                {
+                    "ugly": "\\\\Vvdash",
+                    "pretty": "⊪"
+                },
+                {
+                    "ugly": "\\\\ncong",
+                    "pretty": "≇"
+                },
+                {
+                    "ugly": "\\\\nmid",
+                    "pretty": "∤"
+                },
+                {
+                    "ugly": "\\\\nparallel",
+                    "pretty": "∦"
+                },
+                {
+                    "ugly": "\\\\nsim",
+                    "pretty": "≁"
+                },
+                {
+                    "ugly": "\\\\nVdash",
+                    "pretty": "⊮"
+                },
+                {
+                    "ugly": "\\\\nvDash",
+                    "pretty": "⊭"
+                },
+                {
+                    "ugly": "\\\\ntriangleleft",
+                    "pretty": "⋪",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\ntrianglelefteq",
+                    "pretty": "⋬"
+                },
+                {
+                    "ugly": "\\\\ntriangleright",
+                    "pretty": "⋫",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\ntrianglerighteq",
+                    "pretty": "⋭"
+                },
+                {
+                    "ugly": "\\\\nprec",
+                    "pretty": "⊀",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\nsucc",
+                    "pretty": "⊁",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\precnapprox",
+                    "pretty": "⪹"
+                },
+                {
+                    "ugly": "\\\\succnapprox",
+                    "pretty": "⪺"
+                },
+                {
+                    "ugly": "\\\\precnsim",
+                    "pretty": "⋨"
+                },
+                {
+                    "ugly": "\\\\succnsim",
+                    "pretty": "⋩"
+                },
+                {
+                    "ugly": "\\\\lnapprox",
+                    "pretty": "⪉"
+                },
+                {
+                    "ugly": "\\\\gnapprox",
+                    "pretty": "⪊"
+                },
+                {
+                    "ugly": "\\\\lneq",
+                    "pretty": "⪇",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\gneq",
+                    "pretty": "⪈",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\lneqq",
+                    "pretty": "≨"
+                },
+                {
+                    "ugly": "\\\\gneqq",
+                    "pretty": "≩"
+                },
+                {
+                    "ugly": "\\\\lnsim",
+                    "pretty": "⋦"
+                },
+                {
+                    "ugly": "\\\\gnsim",
+                    "pretty": "⋧"
+                },
+                {
+                    "ugly": "\\\\nsubseteq",
+                    "pretty": "⊈",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\nsupseteq",
+                    "pretty": "⊉",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\subsetneq",
+                    "pretty": "⊊",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\supsetneq",
+                    "pretty": "⊋",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\subsetneqq",
+                    "pretty": "⫋"
+                },
+                {
+                    "ugly": "\\\\supsetneqq",
+                    "pretty": "⫌"
+                },
+                {
+                    "ugly": "\\\\land",
+                    "pretty": "∧"
+                },
+                {
+                    "ugly": "\\\\lor",
+                    "pretty": "∨"
+                },
+                {
+                    "ugly": "\\\\lnot",
+                    "pretty": "¬"
                 }
               ]
             }
