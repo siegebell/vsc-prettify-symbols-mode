@@ -2797,6 +2797,160 @@
                 {
                     "ugly": "\\\\lnot",
                     "pretty": "¬"
+                },
+                {
+                    "ugly": "\\\\nabla",
+                    "pretty": "∇"
+                },
+                {
+                    "ugly": "\\\\partial",
+                    "pretty": "∂"
+                },
+                {
+                    "ugly": "\\\\eth",
+                    "pretty": "ð"
+                },
+                {
+                    "ugly": "\\\\clubsuit",
+                    "pretty": "♣"
+                },
+                {
+                    "ugly": "\\\\diamondsuit",
+                    "pretty": "♢"
+                },
+                {
+                    "ugly": "\\\\heartsuit",
+                    "pretty": "♡"
+                },
+                {
+                    "ugly": "\\\\spadesuit",
+                    "pretty": "♠"
+                },
+                {
+                    "ugly": "\\\\ddots",
+                    "pretty": "⋱"
+                },
+                {
+                    "ugly": "\\\\Im",
+                    "pretty": "ℑ"
+                },
+                {
+                    "ugly": "\\\\Re",
+                    "pretty": "ℜ"
+                },
+                {
+                    "ugly": "\\\\emptyset",
+                    "pretty": "∅"
+                },
+                {
+                    "ugly": "\\\\imath",
+                    "pretty": "𝚤"
+                },
+                {
+                    "ugly": "\\\\jmath",
+                    "pretty": "𝚥"
+                },
+                {
+                    "ugly": "\\\\ell",
+                    "pretty": "ℓ"
+                },
+                {
+                    "ugly": "\\\\sharp",
+                    "pretty": "♯"
+                },
+                {
+                    "ugly": "\\\\flat",
+                    "pretty": "♭"
+                },
+                {
+                    "ugly": "\\\\natural",
+                    "pretty": "♮"
+                },
+                {
+                    "ugly": "\\\\diagdown",
+                    "pretty": "╲"
+                },
+                {
+                    "ugly": "\\\\diagup",
+                    "pretty": "╱"
+                },
+                {
+                    "ugly": "\\\\Finv",
+                    "pretty": "Ⅎ"
+                },
+                {
+                    "ugly": "\\\\Game",
+                    "pretty": "⅁"
+                },
+                {
+                    "ugly": "\\\\hslash",
+                    "pretty": "ℏ"
+                },
+                {
+                    "ugly": "\\\\mho",
+                    "pretty": "℧"
+                },
+                {
+                    "ugly": "\\\\prime",
+                    "pretty": "′"
+                },
+                {
+                    "ugly": "\\\\backprime",
+                    "pretty": "‵"
+                },
+                {
+                    "ugly": "\\\\surd",
+                    "pretty": "√"
+                },
+                {
+                    "ugly": "\\\\wp",
+                    "pretty": "℘"
+                },
+                {
+                    "ugly": "\\\\angle",
+                    "pretty": "∠"
+                },
+                {
+                    "ugly": "\\\\measuredangle",
+                    "pretty": "∡"
+                },
+                {
+                    "ugly": "\\\\sphericalangle",
+                    "pretty": "∢"
+                },
+                {
+                    "ugly": "\\\\complement",
+                    "pretty": "∁"
+                },
+                {
+                    "ugly": "\\\\triangledown",
+                    "pretty": "▽"
+                },
+                {
+                    "ugly": "\\\\triangle",
+                    "pretty": "△",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\blacklozenge",
+                    "pretty": "◆"
+                },
+                {
+                    "ugly": "\\\\blacksquare",
+                    "pretty": "◼"
+                },
+                {
+                    "ugly": "\\\\blacktriangle",
+                    "pretty": "▲",
+                    "post": "\\b|_"
+                },
+                {
+                    "ugly": "\\\\blacktriangledown",
+                    "pretty": "▼"
+                },
+                {
+                    "ugly": "\\\\circledS",
+                    "pretty": "ⓢ"
                 }
               ]
             }
