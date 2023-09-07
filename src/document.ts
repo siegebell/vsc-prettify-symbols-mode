@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
 import * as copyPaste from 'copy-paste';
 
-import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor, ConcealStyleProperties, ConcealStyle, assignStyleProperties, HideTextMethod} from './configuration';
+import {LanguageEntry, HideTextMethod} from './configuration';
 import * as pos from './position';
-import {RangeSet} from './RangeSet';
-import {DisjointRangeSet} from './DisjointRangeSet';
-import * as drangeset from './DisjointRangeSet';
-import * as textUtil from './text-util';
+//import {RangeSet} from './RangeSet';
+//import {DisjointRangeSet} from './DisjointRangeSet';
+//import * as drangeset from './DisjointRangeSet';
+//import * as textUtil from './text-util';
 import * as tm from './text-mate';
-import {MatchResult, iterateMatches, iterateMatchArray, mapIterator} from './regexp-iteration';
-import * as decorations from './decorations';
+//import {MatchResult, iterateMatches, iterateMatchArray, mapIterator} from './regexp-iteration';
+//import * as decorations from './decorations';
 import {PrettyModel, UpdateDecorationEntry, UpdateDecorationInstanceEntry} from './PrettyModel';
 
-const debugging = false;
+//const debugging = false;
 const activeEditorDecorationTimeout = 100;
 const updateSelectionTimeout = 20;
 const inactiveEditorDecorationTimeout = 500;
@@ -90,12 +90,12 @@ export class PrettyDocumentController implements vscode.Disposable {
       });
   }
 
-  public gotFocus(editor: vscode.TextEditor) {
+  public gotFocus() {
     this.applyDecorations(this.getEditors(), this.currentDecorations);
   }
 
   public copyDecorated(editor: vscode.TextEditor) : Promise<void> {
-    function doCopy(x: any) {
+    function doCopy(x: string) {
       return new Promise<void>((resolve, reject) => copyPaste.copy(x, (err) => err ? reject(err) : resolve()));
     }
     const copy = editor.selections.map(sel => this.model.getDecoratedText(sel));
@@ -176,8 +176,8 @@ export class PrettyDocumentController implements vscode.Disposable {
   private lastSelections = new Map<vscode.TextEditor, vscode.Selection[]>();
   public adjustCursor(editor: vscode.TextEditor): null|vscode.Selection[] {
     let updated = false;
-    let adjustedSelections : vscode.Selection[] = [];
-    let before = this.lastSelections.get(editor);
+    const adjustedSelections : vscode.Selection[] = [];
+    const before = this.lastSelections.get(editor);
     if(!before) {
       this.lastSelections.set(editor,editor.selections);
       return editor.selections;

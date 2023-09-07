@@ -6,18 +6,18 @@
  * Models the substitutions within a text document
  */
 import * as vscode from 'vscode';
-import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor, ConcealStyleProperties, ConcealStyle, assignStyleProperties, HideTextMethod} from './configuration';
+import {Substitution, LanguageEntry, HideTextMethod} from './configuration';
 import {RangeSet} from './RangeSet';
 import {DisjointRangeSet} from './DisjointRangeSet';
-import * as drangeset from './DisjointRangeSet';
+//import * as drangeset from './DisjointRangeSet';
 import * as textUtil from './text-util';
 import * as tm from './text-mate';
 import {MatchResult, iterateMatches, iterateMatchArray, mapIterator} from './regexp-iteration';
 import * as decorations from './decorations';
 
 const debugging = false;
-const activeEditorDecorationTimeout = 20;
-const inactiveEditorDecorationTimeout = 200;
+/* const activeEditorDecorationTimeout = 20;
+const inactiveEditorDecorationTimeout = 200; */
 
 interface PrettySubstitution {
 	ugly: RegExp,
@@ -209,7 +209,7 @@ export class PrettyModel implements vscode.Disposable {
     const matchIdx = matches[matches.length-1].index;
     const matchStr = match[matchIdx];
     const matchStart = match.index;
-    const matchEnd = matchStart + match[0].length;
+    //const matchEnd = matchStart + match[0].length;
     const start = matchStart + match[0].indexOf(matchStr);
     const end = start + matchStr.length;
     const uglyRange = new vscode.Range(line,start,line,end);
@@ -242,11 +242,11 @@ export class PrettyModel implements vscode.Disposable {
       if(token.startIndex < jumpOffset || token.endIndex===token.startIndex)
         continue nextToken; // advance to the next offset we're interested in
       const tokenStr = line.substring(token.startIndex,token.endIndex);
-      let matchScopes = this.prettyDecorations.scoped
+      const matchScopes = this.prettyDecorations.scoped
         .filter(s => tm.matchScope(s.scope, token.scopes));
-      let matchIter = iterateMatchArray(tokenStr, matchScopes.map(ms => ms.ugly))
+      const matchIter = iterateMatchArray(tokenStr, matchScopes.map(ms => ms.ugly))
       let match = matchIter.next();
-      for(; !match.done; match = matchIter.next(jumpOffset!==undefined ? jumpOffset - token.startIndex : undefined)) {
+      for(; !match.done; match = matchIter.next()) {
         const newOffset = yield {
           start: token.startIndex + match.value.start,
           end: token.startIndex + match.value.end,
@@ -270,8 +270,8 @@ export class PrettyModel implements vscode.Disposable {
 
   private *iterateLineUglies(line: string, tokens: tm.IToken[]) : IterableIterator<MatchResult & {type: "scoped"|"unscoped"}> {
     type T = "scoped" | "unscoped";
-    let offset = 0;
-    const tokensOld = tokens;
+    //let offset = 0;
+    //const tokensOld = tokens;
     if(this.combineIdenticalScopes)
       tokens = tm.combineIdenticalTokenScopes(tokens);
     const scopedUgliesIter = this.iterateScopedUglies(line, tokens);
@@ -329,7 +329,7 @@ export class PrettyModel implements vscode.Disposable {
       const {tokens: tokens, invalidated: invalidated} = this.refreshTokensOnLine(line, lineIdx);
       invalidatedTokenState = invalidated;
 
-      for(let ugly of this.iterateLineUglies(line, tokens)) {
+      for(const ugly of this.iterateLineUglies(line, tokens)) {
         const uglyRange = new vscode.Range(lineIdx, ugly.start, lineIdx, ugly.end);
         newConditionalRanges.add(new vscode.Range(lineIdx, ugly.matchStart, lineIdx, ugly.matchEnd));
         if(ugly.type === "scoped") {
@@ -385,7 +385,7 @@ export class PrettyModel implements vscode.Disposable {
 
   private debugDecorations : {dec:vscode.TextEditorDecorationType, ranges: vscode.Range[]}[] = 
     [ {dec: vscode.window.createTextEditorDecorationType({textDecoration: 'line-through'}), ranges: []} // affected uglies
-  	, {dec: vscode.window.createTextEditorDecorationType({backgroundColor: 'yellow',}), ranges: []} // reparsed text
+    , {dec: vscode.window.createTextEditorDecorationType({backgroundColor: 'yellow',}), ranges: []} // reparsed text
     , {dec: vscode.window.createTextEditorDecorationType({outlineColor: 'black', outlineStyle: 'solid', outlineWidth: '1pt'}), ranges: []} // editRange
     ];
 
@@ -439,7 +439,7 @@ export class PrettyModel implements vscode.Disposable {
       }
     }
 
-    for(let range of adjustedReparseRanges.getRanges()) {
+    for(const range of adjustedReparseRanges.getRanges()) {
       const reparsed = this.reparsePretties(range);
       this.debugDecorations[1].ranges.push(reparsed);
     }
@@ -490,21 +490,21 @@ export class PrettyModel implements vscode.Disposable {
     const text = this.document.getText(range);
     const substitutions : {start: number, end: number, subst: string}[] = []
 
-    for(let subst of this.prettyDecorations.unscoped) {
+    for(const subst of this.prettyDecorations.unscoped) {
       if(!subst.pretty)
         continue;
       const substRanges = subst.ranges.getOverlapRanges(range);
-      for(let sr of substRanges) {
+      for(const sr of substRanges) {
         const start = textUtil.relativeOffsetAtAbsolutePosition(text, range.start, sr.start);
         const end = textUtil.relativeOffsetAtAbsolutePosition(text, range.start, sr.end);
         substitutions.push({start: start, end: end, subst: subst.pretty})
       }
     }
-    for(let subst of this.prettyDecorations.scoped) {
+    for(const subst of this.prettyDecorations.scoped) {
       if(!subst.pretty)
         continue;
       const substRanges = subst.ranges.getOverlapRanges(range);
-      for(let sr of substRanges) {
+      for(const sr of substRanges) {
         const start = textUtil.relativeOffsetAtAbsolutePosition(text, range.start, sr.start);
         const end = textUtil.relativeOffsetAtAbsolutePosition(text, range.start, sr.end);
         substitutions.push({start: start, end: end, subst: subst.pretty})
@@ -515,7 +515,7 @@ export class PrettyModel implements vscode.Disposable {
     const sortedSubst = substitutions.sort((a,b) => a.start < b.start ? 1 : a.start === b.start ? 0 : -1);
 
     let result = text;
-    for(let subst of sortedSubst) {
+    for(const subst of sortedSubst) {
       result = result.slice(0,subst.start) + subst.subst + result.slice(subst.end);
     }
 

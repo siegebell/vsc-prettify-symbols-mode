@@ -1,4 +1,4 @@
-import * as path from 'path';
+//import * as path from 'path';
 import * as vscode from 'vscode';
 const tm = loadTextMate();
 
@@ -7,15 +7,19 @@ function getNodeModule(moduleName) {
   try {
     console.log(`${vscode.env.appRoot}/node_modules.asar/${moduleName}`)
     return require(`${vscode.env.appRoot}/node_modules.asar/${moduleName}`);
-  } catch(err) { }
+  } catch(err) {
+    console.log(err);
+   }
   try {
     console.log(`>>> ${vscode.env.appRoot}/node_modules/${moduleName}`)
     return require(`${vscode.env.appRoot}/node_modules/${moduleName}`);
-  } catch(err) {}
+  } catch(err) {
+    console.log(err);
+  }
   return null;
 }
 
-function loadTextMate(): any {
+function loadTextMate() {
   return getNodeModule('vscode-textmate')
 }
 
@@ -47,7 +51,7 @@ export function matchScope(scope: string, scopes: string[]) : boolean {
     return true;
   const parts = scope.split(/\s+/);
   let idx = 0;
-  for(let part of parts) {
+  for(const part of parts) {
     while(idx < scopes.length && !scopes[idx].startsWith(part))
       ++idx;
     if(idx >= scopes.length)
@@ -62,7 +66,7 @@ export interface Registry {
   /**
    * Load the grammar for `scopeName` and all referenced included grammars asynchronously.
    */
-  loadGrammar(initialScopeName: string, callback: (err: any, grammar: IGrammar) => void): void;
+  loadGrammar(initialScopeName: string, callback: (err, grammar: IGrammar) => void): void;
   /**
    * Load the grammar at `path` synchronously.
    */
@@ -83,19 +87,19 @@ const dummyGrammar: IGrammar = {
 }
 
 class DummyRegistry {
-  public constructor(locator?: IGrammarLocator) {}
-  loadGrammar(initialScopeName: string, callback: (err: any, grammar: IGrammar) => void) {
+  public constructor() {}
+  loadGrammar(initialScopeName: string, callback: (err, grammar: IGrammar) => void) {
     callback(new Error("textmate cannot be loaded"), undefined);
   }
-  loadGrammarFromPathSync(path: string): IGrammar {
+  loadGrammarFromPathSync(): IGrammar {
     return dummyGrammar;
   }
-  grammarForScopeName(scopeName: string): IGrammar {
+  grammarForScopeName(): IGrammar {
     return dummyGrammar;
   }
 }
 
-export const Registry : Registry = tm == null ? (DummyRegistry as any) : tm.Registry;
+export const Registry : Registry = tm == null ? (DummyRegistry) : tm.Registry;
 
 /**
  * A registry helper that can locate grammar file paths given scope names.

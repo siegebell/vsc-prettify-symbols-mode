@@ -83,7 +83,7 @@ export class Range {
   }
 
 	public contains(positionOrRange: Position | Range): boolean {
-    if(positionOrRange.hasOwnProperty('line'))
+    if(Object.hasOwnProperty.call(positionOrRange, 'line'))
       return this.start.isBeforeOrEqual(positionOrRange as Position) && this.end.isAfter(positionOrRange as Position);
     else
       return this.start.isBeforeOrEqual((positionOrRange as Range).start) && this.end.isAfterOrEqual((positionOrRange as Range).end);

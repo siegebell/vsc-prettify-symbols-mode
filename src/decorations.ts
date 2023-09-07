@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
-import {Substitution, UglyRevelation, LanguageEntry, PrettyCursor, ConcealStyleProperties, ConcealStyle, assignStyleProperties, HideTextMethod} from './configuration';
+import {Substitution, assignStyleProperties, } from './configuration';
 
 export function makePrettyDecoration_fontSize_hack(prettySubst: Substitution) {
   const showAttachmentStyling = '';
 
-  let styling : vscode.DecorationRenderOptions = {
+  const styling : vscode.DecorationRenderOptions = {
     after: {},
     dark: {after: {}},
     light: {after: {}},
@@ -34,7 +34,7 @@ export function makePrettyDecoration_letterSpacing_hack(prettySubst: Substitutio
   // const showAttachmentStyling = '; font-size: 10em; letter-spacing: normal; visibility: visible';
   const showAttachmentStyling = '; letter-spacing: normal; visibility: visible';
 
-  let styling : vscode.DecorationRenderOptions = {
+  const styling : vscode.DecorationRenderOptions = {
     after: {},
     dark: {after: {}},
     light: {after: {}},
@@ -61,9 +61,9 @@ export function makePrettyDecoration_letterSpacing_hack(prettySubst: Substitutio
 }
 
 export function makePrettyDecoration_noPretty(prettySubst: Substitution) {
-  const showAttachmentStyling = '';
+  //const showAttachmentStyling = '';
 
-  let styling : vscode.DecorationRenderOptions = {
+  const styling : vscode.DecorationRenderOptions = {
     dark: {},
     light: {},
     rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
@@ -82,7 +82,7 @@ export function makePrettyDecoration_noPretty(prettySubst: Substitution) {
 export function makePrettyDecoration_noHide(prettySubst: Substitution) {
   const showAttachmentStyling = '';
 
-  let styling : vscode.DecorationRenderOptions = {
+  const styling : vscode.DecorationRenderOptions = {
     after: {},
     dark: {after: {}},
     light: {after: {}},

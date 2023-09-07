@@ -10,7 +10,7 @@ import * as assert from 'assert';
 // import * as vscode from './vscode-shunt';
 // const rs = proxyquire('../src/RangeSet', {'vscode': {extname: function(file){return './vscode-shunt'}, '@global': true}});
 import * as vscode from 'vscode';
-import * as rs from '../src/RangeSet';
+import * as rs from '../../src/RangeSet';
 
 // Defines a Mocha test suite to group tests of similar kind together
 suite("RangeSet", () => {

@@ -8,42 +8,47 @@
 
 // A task runner that calls a custom npm script that compiles the extension.
 {
-	"version": "0.1.0",
+	"version": "2.0.0",
 
 	// we want to run npm
-	"command": "npm",
-
-	// the command is a shell script
-	"isShellCommand": true,
-
-  "suppressTaskName": true,
-
-	// show the output window only if unrecognized errors occur.
-	"showOutput": "silent",
+  "command": "npm",
 
 	"tasks": [
-	{
-		"taskName": "watch",
-		"args": ["run", "watch"],
-		"isWatching": true,
-		"isBuildCommand": true,
-		"isTestCommand": false,
-		"problemMatcher": "$tsc-watch"
-	},
-	{
-		"taskName": "test",
-		"args": ["test"],
-		"isBuildCommand": false,
-		"isTestCommand": true,
-		"showOutput": "always"
-	},
-	{
-		"taskName": "test-debug",
-		"args": ["run", "test-debug"],
-		"isBuildCommand": false,
-		"isTestCommand": false,
-		"showOutput": "always"
-	}
-]
+    {
+      "label": "watch",
+      "type": "shell",
+      "args": [
+        "run",
+        "watch"
+      ],
+      "isBackground": true,
+      "problemMatcher": "$tsc-watch",
+      "group": {
+        "_id": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "args": [
+        "test"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "_id": "test",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "test-debug",
+      "type": "shell",
+      "args": [
+        "run",
+        "test-debug"
+      ],
+      "problemMatcher": []
+    }
+  ]
 
 }

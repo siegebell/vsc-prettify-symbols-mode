@@ -15,7 +15,7 @@ export interface MatchResult {
 export function *iterateMatches(str: string, re: RegExp, start?: number) : IterableIterator<MatchResult> {
   re.lastIndex = start===undefined ? 0 : start;
   let match : RegExpExecArray;
-  while(match = re.exec(str)) {
+  while((match = re.exec(str))) {
     if(match.length <= 1)
       return;
     const validMatches = match

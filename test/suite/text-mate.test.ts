@@ -5,7 +5,6 @@
 
 // The module 'assert' provides assertion methods from node
 import * as assert from 'assert';
-import * as path from 'path';
 
 // const proxyquire =  require('proxyquire').noCallThru();
 // const textMateModule = path.join(require.main.filename, '../../node_modules/vscode-textmate/release/main.js');
@@ -13,8 +12,7 @@ import * as path from 'path';
 // mockModules['vscode'] = {extname: function(file){return './vscode-shunt'}, '@global': true};
 // mockModules[textMateModule] = {extname: function(file){return './vscode-shunt'}, '@global': true};
 // const tm = proxyquire('../src/text-mate', mockModules);
-import * as vscode from 'vscode';
-import * as tm from '../src/text-mate';
+import * as tm from '../../src/text-mate';
 
 // Defines a Mocha test suite to group tests of similar kind together
 suite("text-mate", () => {

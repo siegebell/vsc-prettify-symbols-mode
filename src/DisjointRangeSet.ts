@@ -57,7 +57,7 @@ export class DisjointRangeSet {
     if(next && totalRange.end.isAfter(next.start))
       return false;
     // not overlapping!
-    this.ranges.splice.apply(this.ranges,(<any[]>[insertionIdx, 0]).concat(newRanges.ranges));
+    this.ranges.splice(insertionIdx, 0, ...newRanges.ranges);
   }
 
  /**
@@ -102,7 +102,7 @@ export class DisjointRangeSet {
   public subtractRanges(ranges: DisjointRangeSet) : DisjointRangeSet {
     let idx1 = 0;
     const newRanges = this.ranges.filter((r) => {
-      let idx = ranges.ranges.indexOf(r, idx1);
+      const idx = ranges.ranges.indexOf(r, idx1);
       if(idx != -1) {
         idx1 = idx; // take advantage of the fact the ranges are sorted
         return false; // discard
@@ -297,7 +297,7 @@ export class DisjointRangeSet {
     if(this.ranges.length == 0 || (delta.linesDelta == 0 && delta.endCharactersDelta == 0))
       return new vscode.Range(delta.start, delta.end);
 
-    let firstIdx = this.findIndex(delta.start);
+    const firstIdx = this.findIndex(delta.start);
     let idx = firstIdx;    
 
     if(delta.linesDelta != 0) {

@@ -1,10 +1,10 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import * as util from 'util';
+//import * as util from 'util';
 import * as path from 'path';
-import * as fs from 'fs';
-import { Settings, LanguageEntry, Substitution, UglyRevelation, PrettyCursor, HideTextMethod } from './configuration';
+//import * as fs from 'fs';
+import { Settings, LanguageEntry, UglyRevelation, PrettyCursor, HideTextMethod } from './configuration';
 import { PrettyDocumentController } from './document';
 import * as api from './api';
 import * as tm from './text-mate';
@@ -13,7 +13,7 @@ import * as tm from './text-mate';
 let prettySymbolsEnabled = true;
 
 /** Tracks all documents that substitutions are being applied to */
-let documents = new Map<vscode.Uri, PrettyDocumentController>();
+const documents = new Map<vscode.Uri, PrettyDocumentController>();
 /** The current configuration */
 let settings: Settings;
 
@@ -43,7 +43,9 @@ function getLanguageScopeName(languageId: string): string {
       console.info(`Mapping language ${languageId} to initial scope ${matchingLanguages[0].scopeName}`);
       return matchingLanguages[0].scopeName;
     }
-  } catch (err) { }
+  } catch (err) { 
+    console.log(err);
+  }
   console.info(`Cannot find a mapping for language ${languageId}; assigning default scope source.${languageId}`);
   return 'source.' + languageId;
 }
@@ -63,24 +65,26 @@ const grammarLocator: tm.IGrammarLocator = {
         console.info(`Found grammar for ${scopeName} at ${file}`)
         return file;
       }
-    } catch (err) { }
+    } catch (err) { 
+      console.log(err);
+    }
     return undefined;
   }
 }
 
 /** initialize everything; main entry point */
 export function activate(context: vscode.ExtensionContext): api.ConcealSymbolsMode {
-  function registerTextEditorCommand(commandId: string, run: (editor: vscode.TextEditor, edit: vscode.TextEditorEdit, ...args: any[]) => void): void {
+  function registerTextEditorCommand(commandId: string, run: (editor: vscode.TextEditor, edit: vscode.TextEditorEdit, ...args: string[]) => void): void {
     context.subscriptions.push(vscode.commands.registerTextEditorCommand(commandId, run));
   }
-  function registerCommand(commandId: string, run: (...args: any[]) => void): void {
+  function registerCommand(commandId: string, run: (...args: string[]) => void): void {
     context.subscriptions.push(vscode.commands.registerCommand(commandId, run));
   }
 
   registerTextEditorCommand('conceal.copyWithSubstitutions', copyWithSubstitutions);
   registerCommand('conceal.disablePrettySymbols', disablePrettySymbols);
   registerCommand('conceal.enablePrettySymbols', enablePrettySymbols);
-  registerCommand('conceal.togglePrettySymbols', (editor: vscode.TextEditor) => {
+  registerCommand('conceal.togglePrettySymbols', () => {
     if (prettySymbolsEnabled) {
       disablePrettySymbols();
     } else {
@@ -137,6 +141,7 @@ function copyWithSubstitutions(editor: vscode.TextEditor) {
     if (prettyDoc)
       prettyDoc.copyDecorated(editor);
   } catch (e) {
+    console.log(e);
   }
 }
 
@@ -146,8 +151,9 @@ function changeActiveTextEditor(editor: vscode.TextEditor) {
       return;
     const prettyDoc = documents.get(editor.document.uri);
     if (prettyDoc)
-      prettyDoc.gotFocus(editor);
+      prettyDoc.gotFocus();
   } catch (e) {
+    console.log(e);
   }
 }
 
@@ -226,7 +232,7 @@ function getLanguageEntry(doc: vscode.TextDocument): LanguageEntry {
     .filter(score => score.rank > 0)
     .sort((x, y) => (x.rank > y.rank) ? -1 : (x.rank == y.rank) ? 0 : 1);
 
-  let entry: LanguageEntry = rankings.length > 0
+  const entry: LanguageEntry = rankings.length > 0
     ? Object.assign({}, rankings[0].entry)
     : {
       language: doc.languageId,
@@ -284,7 +290,9 @@ async function openDocument(doc: vscode.TextDocument) {
         documents.set(doc.uri, new PrettyDocumentController(doc, language, { hideTextMethod: settings.hideTextMethod, textMateGrammar: grammar }));
       }
     }
-  } catch (err) { }
+  } catch (err) { 
+    console.log(err);
+  }
 }
 
 function closeDocument(doc: vscode.TextDocument) {

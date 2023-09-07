@@ -60,18 +60,23 @@ export function positionAtRelative(start: vscode.Position, text: string, offset:
   let line = start.line;
   let currentOffset = 0;  // offset into text we are current at; <= `offset`
   let lineOffset = start.character;
-  let lastIndex = start.character;
-  while(true) {
+  //let lastIndex = start.character;
+  let found = false; 
+  let pos = null;
+  while(!found) {
     const match = lineEndingRE.exec(text.substring(currentOffset));
     // match[0] -- characters plus newline
     // match[1] -- characters up to newline
     // match[2] -- newline (\n, \r, or \r\n)
-    if(!match || match[0].length === 0 || currentOffset + match[1].length >= offset)
-      return new vscode.Position(line, lineOffset + Math.max(offset - currentOffset, 0))
+    if(!match || match[0].length === 0 || currentOffset + match[1].length >= offset) {
+      found = true;
+      pos = new vscode.Position(line, lineOffset + Math.max(offset - currentOffset, 0))
+    }
     currentOffset+= match[0].length;
     lineOffset = 0;
     ++line;
   }
+  return pos;
 }
 
 
@@ -83,13 +88,18 @@ export function positionAt(text: string, offset: number) : vscode.Position {
     offset = text.length;
   let line = 0;
   let lastIndex = 0;
-  while(true) {
+  let found = false;
+  let pos = null;
+  while(!found) {
     const match = lineEndingRE.exec(text.substring(lastIndex));
-    if(lastIndex + match[1].length >= offset)
-      return new vscode.Position(line, Math.max(0, offset - lastIndex))
+    if(lastIndex + match[1].length >= offset) {
+      found = true;
+      pos = new vscode.Position(line, Math.max(0, offset - lastIndex));
+    }
     lastIndex+= match[0].length;
     ++line;
   }
+  return pos;
 }
 
 /**

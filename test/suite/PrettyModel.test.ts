@@ -5,13 +5,12 @@
 
 // The module 'assert' provides assertion methods from node
 import * as assert from 'assert';
-const proxyquire =  require('proxyquire').noCallThru();
 
 // import * as vscode from './vscode-shunt';
 // const pm = proxyquire('../src/PrettyModel', {'vscode': {extname: function(file){return './vscode-shunt'}, '@global': true}});
 import * as vscode from 'vscode';
-import * as pm from '../src/PrettyModel';
-import * as textUtil from '../src/text-util';
+import * as pm from '../../src/PrettyModel';
+import * as textUtil from '../../src/text-util';
 
 class MockDocumentModel {
   constructor(public lines: string[]) {}

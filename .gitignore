@@ -3,3 +3,5 @@ node_modules
 typings
 *.vsix
 package-lock.json
+yarn-error.log
+.vscode-test/
